@@ -1,3 +1,4 @@
+wget -O zipfiles/2019.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2019.json.zip
 wget -O zipfiles/2018.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2018.json.zip
 wget -O zipfiles/2017.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2017.json.zip
 wget -O zipfiles/2016.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2016.json.zip
