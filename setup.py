@@ -3,10 +3,8 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, 'README.txt')) as f:
+with open(os.path.join(here, 'README.md')) as f:
     README = f.read()
-with open(os.path.join(here, 'CHANGES.txt')) as f:
-    CHANGES = f.read()
 
 requires = [
     'plaster_pastedeploy',
@@ -29,14 +27,13 @@ tests_require = [
     'pytest-cov',
 ]
 console_scripts = [
-    'initialize_asset_tracker_db=asset_tracker.scripts.initialize_db:main',
 ]
 
 setup(
-    name='asset_tracker',
+    name='vulnerability-report',
     version='0.0',
-    description='asset_tracker',
-    long_description=README + '\n\n' + CHANGES,
+    description='vulnerability report',
+    long_description=README,
     classifiers=[
         'Programming Language :: Python',
         'Framework :: Pyramid',
@@ -56,7 +53,7 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = asset_tracker:main',
+            'main = vulnerability_report:main',
         ],
         'console_scripts': console_scripts,
     },
