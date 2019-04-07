@@ -21,6 +21,7 @@ requires = [
     'zope.sqlalchemy',
     'fuzzywuzzy',
     'pymongo',
+    'packaging',
 ]
 
 tests_require = [
