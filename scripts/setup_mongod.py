@@ -1,21 +1,29 @@
 import json
-import os
-from itertools import chain
+from argparse import ArgumentParser
+from glob import glob
+from os.path import expanduser, join
 from pymongo import MongoClient
 
 
-if __name__ == '__main__':
-    client = MongoClient('localhost', 27017, connect=False)
-    db = client['Vulnerabilities']
-    collection = db['NVD']
-    document = collection['CVE_Items']
+SOURCE_FOLDER = expanduser('~/Experiments/nvd')
 
-    datafolder = 'datasets'
-    cve_items = []
-    for f in os.listdir(datafolder):
-        path = os.path.join(datafolder, f)
+
+if __name__ == '__main__':
+    p = ArgumentParser()
+    p.add_argument('--source_folder', default=SOURCE_FOLDER)
+    p.add_argument('--refresh', action='store_true')
+    a = p.parse_args()
+
+    client = MongoClient()
+    vulnerability_database = client['vulnerability']
+    nvd_collection = vulnerability_database['nvd']
+    if a.refresh:
+        nvd_collection.drop()
+    source_paths = glob(join(a.source_folder, '*.json'))
+    for path in sorted(source_paths):
         with open(path) as f:
             j = json.load(f)
-            cve_items.append(j['CVE_Items'])
-
-    document.insert_many(chain(*cve_items))
+            cve_items = j['CVE_Items']
+            print(path, len(cve_items))
+            nvd_collection.insert_many(cve_items)
+    print(nvd_collection.count_documents({}))
