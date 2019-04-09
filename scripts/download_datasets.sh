@@ -1,3 +1,6 @@
+mkdir ~/Experiments/nvd -p
+pushd ~/Experiments/nvd
+
 wget -O zipfiles/2019.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2019.json.zip
 wget -O zipfiles/2018.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2018.json.zip
 wget -O zipfiles/2017.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2017.json.zip
@@ -21,3 +24,5 @@ for f in `ls zipfiles/*zip`
 do
     unzip -d datasets/ $f
 done
+
+popd

@@ -79,8 +79,7 @@ def main(vendor=None, product=None):
         {},
         {
             'cve.affects.vendor.vendor_data.vendor_name': 1,
-            'cve.affects.vendor.vendor_data'
-            '.product.product_data.product_name': 1,
+            'cve.affects.vendor.vendor_data.product.product_data.product_name': 1,
             '_id': 0,
         }
     )
@@ -107,13 +106,11 @@ def main(vendor=None, product=None):
 def get_mongo_connection():
     URL = 'mongodb://localhost:27017/Vulnerabilities'
     MONGO_DICT = dict(
-        database='Vulnerabilities',
-        collection='NVD',
-        document='CVE_Items')
+        database='vulnerability',
+        collection='nvd')
     client = MongoClient(URL)
     database = client[MONGO_DICT['database']]
-    collection = database[MONGO_DICT['collection']]
-    return collection[MONGO_DICT['document']]
+    return database[MONGO_DICT['collection']]
 
 
 if __name__ == '__main__':

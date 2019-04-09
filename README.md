@@ -1,15 +1,17 @@
 # Asset Vulnerability Report
 
-## Configure MongoDB
+## Configure Update Scripts
 
     sudo dnf install mongodb mongodb-server
     sudo systemctl start mongod
 
-## Configure Update Scripts
-
-    cd asset-vulnerability-report
+    cd ~/Projects/asset-vulnerability-report
     pip install --user --upgrade pipenv
     pipenv install --three -e .
+
+    pipenv shell
+    bash scripts/download_datasets.sh
+    python update_database.py --refresh
 
 ## Configure Asset Tracker Server
 
