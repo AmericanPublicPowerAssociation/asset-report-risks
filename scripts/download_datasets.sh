@@ -1,4 +1,4 @@
-mkdir ~/Experiments/nvd -p
+mkdir ~/Experiments/nvd/zipfiles -p
 pushd ~/Experiments/nvd
 
 wget -O zipfiles/2019.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2019.json.zip

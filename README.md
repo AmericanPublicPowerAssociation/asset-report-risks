@@ -11,7 +11,7 @@
 
     pipenv shell
     bash scripts/download_datasets.sh
-    python update_database.py --refresh
+    python scripts/update_database.py --refresh
 
 ## Configure Asset Tracker Server
 
