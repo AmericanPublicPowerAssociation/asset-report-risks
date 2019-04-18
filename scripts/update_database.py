@@ -1,25 +1,26 @@
 import json
 from argparse import ArgumentParser
 from glob import glob
-from os.path import expanduser, join
-from pymongo import MongoClient, ASCENDING
+from os.path import join
+from pymongo import ASCENDING
+
+from asset_vulnerability_report.routines import get_nvd_database
+from asset_vulnerability_report.settings import FOLDER
 
 
-SOURCE_FOLDER = expanduser('~/Experiments/nvd/datasets')
+DATASET_FOLDER = join(FOLDER, 'datasets')
 
 
 if __name__ == '__main__':
     p = ArgumentParser()
-    p.add_argument('--source_folder', default=SOURCE_FOLDER)
+    p.add_argument('--source_folder', default=DATASET_FOLDER)
     p.add_argument('--refresh', action='store_true')
     a = p.parse_args()
 
-    client = MongoClient()
-    vulnerability_database = client['vulnerability']
-    nvd_collection = vulnerability_database['nvd']
+    nvd_database = get_nvd_database()
     if a.refresh:
-        nvd_collection.drop()
-    nvd_collection.create_index([
+        nvd_database.drop()
+    nvd_database.create_index([
         ('cve.CVE_data_meta.ID', ASCENDING),
     ], unique=True)
 
@@ -29,5 +30,5 @@ if __name__ == '__main__':
             j = json.load(f)
             cve_items = j['CVE_Items']
             print(path, len(cve_items))
-            nvd_collection.insert_many(cve_items)
-    print('document_count =', nvd_collection.count_documents({}))
+            nvd_database.insert_many(cve_items)
+    print('document_count =', nvd_database.count_documents({}))

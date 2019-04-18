@@ -20,9 +20,9 @@ wget -O zipfiles/2004.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-200
 wget -O zipfiles/2003.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2003.json.zip
 wget -O zipfiles/2002.zip https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-2002.json.zip
 
-for f in `ls zipfiles/*zip`
+for f in $(ls zipfiles/*.zip)
 do
-    unzip -d datasets/ $f
+    unzip -d datasets $f
 done
 
 popd
