@@ -11,6 +11,7 @@ APP_REQUIREMENTS = [
     'fuzzywuzzy',
     'packaging',
     'pymongo',
+    'python-Levenshtein',
 ]
 TEST_REQUIREMENTS = [
 ]
