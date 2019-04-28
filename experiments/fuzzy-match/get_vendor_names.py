@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 
 from asset_vulnerability_report.routines import (
+    get_matching_component_types,
     get_vendor_names,
     load_cve,
     select_matches)
@@ -15,15 +16,13 @@ if __name__ == '__main__':
     a = p.parse_args()
     print(a)
     cve = load_cve()
-    component_types = cve.keys() if a.component_type == '*' else [
-        a.component_type]
-
     vendor_names = set()
-    for component_type in component_types:
+    matching_component_types = get_matching_component_types(
+        cve, a.component_type)
+    for component_type in matching_component_types:
         vendor_names.update(get_vendor_names(cve, component_type))
-
     # !!! If vendor_name is blank, return most frequently used vendors
-    selected_vendor_names = select_matches([
-        a.vendor_name], vendor_names, a.minimum_score, a.maximum_count)
+    selected_vendor_names = select_matches(
+        a.vendor_name, vendor_names, a.minimum_score, a.maximum_count)
     for vendor_name in selected_vendor_names:
         print(vendor_name)
