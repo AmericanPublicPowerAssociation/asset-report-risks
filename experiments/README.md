@@ -1,6 +1,5 @@
 1. [Done] Download nvd by year monthly
-2. Extract only the information that we need
-    cve_id
+2. [Done] Extract only the information that we need
 3. [Done] Replace nvd database in mongodb
 4. [Done] Prepare lookup table
 
