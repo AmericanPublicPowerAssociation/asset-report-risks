@@ -6,7 +6,8 @@ from itertools import chain
 from os.path import join
 from pymongo import ASCENDING
 
-from asset_vulnerability_report.routines import get_nvd_database
+from asset_vulnerability_report.routines import (
+    get_nvd_database, normalize_version)
 from asset_vulnerability_report.settings import DATASET_FOLDER
 
 
@@ -96,7 +97,8 @@ def extract_version_pack(cpe_match, product_version):
         b_including = cpe_match['versionEndIncluding']
     if 'versionEndExcluding' in cpe_match:
         b_excluding = cpe_match['versionEndExcluding']
-    return a_excluding, a_including, b_including, b_excluding
+    return [normalize_version(_) for _ in (
+        a_excluding, a_including, b_including, b_excluding)]
 
 
 if __name__ == '__main__':

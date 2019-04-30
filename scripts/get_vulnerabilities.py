@@ -1,10 +1,10 @@
 from argparse import ArgumentParser
-from packaging.version import parse as parse_version
 
 from asset_vulnerability_report.routines import (
     get_matching_component_types,
     get_matching_product_names,
     get_matching_vendor_names,
+    is_product_version_vulnerable,
     load_cve)
 
 
@@ -15,11 +15,11 @@ def get_nvd_ids(
         approximate_product_name,
         approximate_product_version,
         minimum_similarity):
-    nvd_ids = set()
+    matching_nvd_ids = set()
 
     approximate_vendor_name = approximate_vendor_name.strip()
     if not approximate_vendor_name:
-        return nvd_ids
+        return matching_nvd_ids
     matching_component_types = get_matching_component_types(
         cve, approximate_component_type)
 
@@ -31,15 +31,15 @@ def get_nvd_ids(
                     cve, component_type, approximate_vendor_name,
                     minimum_similarity):
                 for product_name in cve[component_type][vendor_name]:
-                    for nvd_id in cve[component_type][vendor_name][
+                    for nvd_ids in cve[component_type][vendor_name][
                             product_name].values():
-                        nvd_ids.update(nvd_id)
+                        matching_nvd_ids.update(nvd_ids)
 
         for component_type in matching_component_types:
             update_nvd_ids(component_type)
         if component_type == 'h':
             update_nvd_ids('o')
-        return nvd_ids
+        return matching_nvd_ids
 
     approximate_product_version = approximate_product_version.strip()
     if not approximate_product_version:
@@ -51,17 +51,15 @@ def get_nvd_ids(
                 for product_name in get_matching_product_names(
                         cve, component_type, vendor_name,
                         approximate_product_name, minimum_similarity):
-                    for nvd_id in cve[component_type][vendor_name][
+                    for nvd_ids in cve[component_type][vendor_name][
                             product_name].values():
-                        nvd_ids.update(nvd_id)
+                        matching_nvd_ids.update(nvd_ids)
 
         for component_type in matching_component_types:
             update_nvd_ids(component_type)
         if component_type == 'h':
             update_nvd_ids('o')
-        return nvd_ids
-
-    product_version = parse_version(approximate_product_version)
+        return matching_nvd_ids
 
     def update_nvd_ids(component_type):
         for vendor_name in get_matching_vendor_names(
@@ -70,31 +68,17 @@ def get_nvd_ids(
             for product_name in get_matching_product_names(
                     cve, component_type, vendor_name, approximate_product_name,
                     minimum_similarity):
-                for version_pack, nvd_id in cve[component_type][vendor_name][
+                for version_pack, nvd_ids in cve[component_type][vendor_name][
                         product_name].items():
-                    [
-                        greater_than_version,
-                        greater_than_or_equal_to_version,
-                        less_than_or_equal_to_version,
-                        less_than_version,
-                    ] = [
-                        parse_version(_) for _ in version_pack
-                    ]
-                    if product_version <= greater_than_version:
-                        continue
-                    if product_version < greater_than_or_equal_to_version:
-                        continue
-                    if product_version > less_than_or_equal_to_version:
-                        continue
-                    if product_version >= less_than_version:
-                        continue
-                    nvd_ids.add(nvd_id)
+                    if is_product_version_vulnerable(
+                            approximate_product_version, version_pack):
+                        matching_nvd_ids.update(nvd_ids)
 
     for component_type in matching_component_types:
         update_nvd_ids(component_type)
     if component_type == 'h':
         update_nvd_ids('o')
-    return nvd_ids
+    return matching_nvd_ids
 
 
 def get_nvd_attributes(nvd_ids):
