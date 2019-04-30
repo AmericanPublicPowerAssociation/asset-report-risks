@@ -10,8 +10,13 @@
     pipenv install --three -e .
 
     pipenv shell
-    bash scripts/download_datasets.sh
+    python scripts/download_datasets.py --refresh
     python scripts/update_database.py --refresh
+    python scripts/prepare_lookup.py
+    python scripts/get_vendor_names.py -h
+    python scripts/get_product_names.py -h
+    python scripts/get_product_versions.py -h
+    python scripts/get_vulnerabilities.py -h
 
 ## Configure Asset Tracker Server
 
