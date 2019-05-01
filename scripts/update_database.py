@@ -1,20 +1,52 @@
-'''
-https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-recent.meta
-https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-modified.meta
-https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-modified.json.zip
-'''
 import json
 from argparse import ArgumentParser
 from datetime import datetime
 from glob import glob
-from invisibleroads_macros.disk import get_file_stem
 from itertools import chain
-from os.path import join
+from os.path import join, splitext
 from pymongo import ASCENDING
 
 from asset_vulnerability_report.routines import (
     get_nvd_database, normalize_version)
 from asset_vulnerability_report.settings import DATASET_FOLDER
+
+
+def run(nvd_database, source_folder, dataset_name, from_scratch, quietly):
+    if from_scratch:
+        nvd_database.drop()
+        nvd_database.create_index([('id', ASCENDING)], unique=True)
+    if not dataset_name:
+        for file_path in sorted(glob(join(source_folder, '*.json'))):
+            file_stem = splitext(file_path)[0]
+            if file_stem.endswith('modified'):
+                continue
+            if file_stem.endswith('recent'):
+                continue
+            absorb_dataset(nvd_database, file_path, from_scratch, quietly)
+        return
+    if dataset_name.isdigit():
+        dataset_name = int(dataset_name)
+    elif dataset_name not in ('recent', 'modified'):
+        print(
+            'Please specify a valid dataset name (recent, modified or a '
+            'specific year e.g. 2019) or omit it to update all years.')
+    for file_path in sorted(glob(join(
+            source_folder, '*-%s.json' % dataset_name))):
+        absorb_dataset(nvd_database, file_path, from_scratch, quietly)
+
+
+def absorb_dataset(nvd_database, file_path, from_scratch=False, quietly=False):
+    with open(file_path) as f:
+        j = json.load(f)
+        parsed_items = [extract_cve(_) for _ in j['CVE_Items']]
+    if not quietly:
+        print(file_path, len(parsed_items))
+    if from_scratch:
+        nvd_database.insert_many(parsed_items)
+        return
+    for parsed_item in parsed_items:
+        nvd_database.update_one({'id': parsed_item['id']}, {
+            '$set': parsed_item}, upsert=True)
 
 
 def extract_cve(d):
@@ -109,25 +141,13 @@ def extract_version_pack(cpe_match, product_version):
 
 if __name__ == '__main__':
     p = ArgumentParser()
+    p.add_argument('dataset_name', nargs='?')
     p.add_argument('--source_folder', default=DATASET_FOLDER)
+    p.add_argument('--from-scratch', action='store_true')
+    p.add_argument('--quietly', action='store_true')
     a = p.parse_args()
-    print(a)
-
     nvd_database = get_nvd_database()
-    nvd_database.drop()
-    nvd_database.create_index([
-        ('id', ASCENDING),
-    ], unique=True)
-
-    for path in sorted(glob(join(a.source_folder, '*.json'))):
-        stem = get_file_stem(path)
-        if stem.endswith('modified'):
-            continue
-        if stem.endswith('recent'):
-            continue
-        with open(path) as f:
-            j = json.load(f)
-            parsed_items = [extract_cve(_) for _ in j['CVE_Items']]
-            nvd_database.insert_many(parsed_items)
-            print(path, len(parsed_items))
+    run(
+        nvd_database, a.source_folder, a.dataset_name, a.from_scratch,
+        a.quietly)
     print('document_count =', nvd_database.count_documents({}))
