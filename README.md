@@ -10,13 +10,24 @@
     pipenv install --three -e .
     pipenv shell
 
-    # Prepare database
-    python scripts/download_datasets.py --refresh  # Run monthly
-    python scripts/prepare_database.py             # Run monthly
-    python scripts/update_database.py modified     # Run weekly
-    python scripts/update_database.py recent       # Run daily
+    # Prepare database from scratch
+    python scripts/download_datasets.py --from-scratch
+    python scripts/update_database.py --from-scratch
+    python scripts/prepare_lookup.py
 
-    # Prepare lookup tree after updating database
+    # Update database monthly
+    python scripts/download_datasets.py
+    python scripts/update_database.py
+    python scripts/prepare_lookup.py
+
+    # Update database weekly
+    python scripts/download_datasets.py modified
+    python scripts/update_database.py modified
+    python scripts/prepare_lookup.py
+
+    # Update database daily
+    python scripts/download_datasets.py recent
+    python scripts/update_database.py recent
     python scripts/prepare_lookup.py
 
     # Test autocomplete
