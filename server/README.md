@@ -1,4 +1,4 @@
-# Asset Vulnerability Report
+# Asset Vulnerability Report Server
 
 ## Configure Update Scripts
 
@@ -42,10 +42,3 @@
 
     pyramid.includes =
         asset_vulnerability_report
-
-## Configure Asset Tracker Client
-
-    vim .env
-        ASSET_TRACKER_EXTENSIONS=asset-vulnerability-report
-
-## Restart Asset Tracker

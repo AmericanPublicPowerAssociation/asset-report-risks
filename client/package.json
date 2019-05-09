@@ -1,0 +1,53 @@
+{
+  "name": "appa-account-client",
+  "version": "0.0.1",
+  "description": "Client-side APPA authentication and authorization components",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/babel src --out-file index.js",
+    "test": "mocha --require reify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmericanPublicPowerAssociation/appa-account-client.git"
+  },
+  "author": "CrossCompute Inc. <support@crosscompute.com> (https://crosscompute.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AmericanPublicPowerAssociation/appa-account-client/issues"
+  },
+  "homepage": "https://github.com/AmericanPublicPowerAssociation/appa-account-client#readme",
+  "eslintConfig": {
+    "extends": "react-app",
+    "env": {
+      "mocha": true
+    }
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-react-app": "^4.0.0",
+    "eslint-plugin-flowtype": "^3.8.1",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-node": "^9.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-react": "^7.13.0",
+    "eslint-plugin-react-hooks": "^1.6.0",
+    "mocha": "^6.1.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "reify": "^0.18.1"
+  }
+}
