@@ -1,7 +1,7 @@
 {
-  "name": "appa-account-client",
+  "name": "asset-vulnerability-report",
   "version": "0.0.1",
-  "description": "Client-side APPA authentication and authorization components",
+  "description": "Identify potential vulnerabilities by vendor and product",
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src --out-file index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AmericanPublicPowerAssociation/appa-account-client.git"
+    "url": "git+https://github.com/AmericanPublicPowerAssociation/asset-vulnerability-report.git"
   },
   "author": "CrossCompute Inc. <support@crosscompute.com> (https://crosscompute.com)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AmericanPublicPowerAssociation/appa-account-client/issues"
+    "url": "https://github.com/AmericanPublicPowerAssociation/asset-vulnerability-report/issues"
   },
-  "homepage": "https://github.com/AmericanPublicPowerAssociation/appa-account-client#readme",
+  "homepage": "https://github.com/AmericanPublicPowerAssociation/asset-vulnerability-report#readme",
   "eslintConfig": {
     "extends": "react-app",
     "env": {
@@ -24,30 +24,36 @@
     }
   },
   "peerDependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
+    "downshift": "^3.2.10",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "redux-saga": "^1.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^9.0.0",
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
-    "eslint-config-react-app": "^4.0.0",
-    "eslint-plugin-flowtype": "^3.8.1",
-    "eslint-plugin-import": "^2.17.2",
+    "eslint-config-react-app": "^4.0.1",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-node": "^9.0.1",
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-react": "^7.13.0",
-    "eslint-plugin-react-hooks": "^1.6.0",
+    "eslint-plugin-react-hooks": "^1.5.0",
     "mocha": "^6.1.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "reify": "^0.18.1"
+    "reify": "^0.18.1",
+    "typescript": "^3.4.5"
   }
 }
