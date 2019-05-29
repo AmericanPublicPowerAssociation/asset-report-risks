@@ -1,9 +1,6 @@
 import React, { PureComponent } from 'react'
-import {
-  call,
-  put,
-  takeLatest,
-} from 'redux-saga/effects'
+import { connect } from 'react-redux'
+import { call, put, takeLatest } from 'redux-saga/effects'
 import { List, fromJS } from 'immutable'
 import Downshift from 'downshift'
 import TextField from '@material-ui/core/TextField'
@@ -14,28 +11,49 @@ import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 
 
-export class VendorName extends PureComponent {
+export const getVendorNameSuggestions = state => state.get(
+  'vendorNameSuggestions')
+export const getProductNameSuggestions = state => state.get(
+  'productNameSuggestions')
+export const getProductVersionSuggestions = state => state.get(
+  'productVersionSuggestions')
+
+
+class _VendorName extends PureComponent {
   render() {
-    const {
+    let {
       className,
-      value,
-      setValue,
-      saveValue,
+      typeId,
+      vendorName,
+      trackChanges,
+      saveChanges,
+      // Get redux variables
+      vendorNameSuggestions,
+      suggestVendorNames,
     } = this.props
     return (
       <Downshift
-        inputValue={value}
-        onInputValueChange={value => {
-          setValue(value)
+        selectedItem={vendorName}
+        onStateChange={changes => {
+          if (changes.hasOwnProperty('selectedItem')) {
+            const value = changes.selectedItem
+            saveChanges({vendorName: value})
+          } else if (changes.hasOwnProperty('inputValue')) {
+            const value = changes.inputValue
+            trackChanges({vendorName: value})
+            suggestVendorNames({typeId, vendorName: value})
+          } else if (changes.hasOwnProperty('isOpen')) {
+            saveChanges()
+          }
         }}
-        onChange={saveValue}
       >
       {({
+        isOpen,
+        highlightedIndex,
         getInputProps,
         getMenuProps,
         getItemProps,
         clearSelection,
-        isOpen,
       }) => (
         <div className={className}>
           <TextField
@@ -55,10 +73,12 @@ export class VendorName extends PureComponent {
           />
         {isOpen &&
           <Paper square {...getMenuProps()}>
-          {['one', 'two'].map(suggestion => {
+          {vendorNameSuggestions.map((suggestion, index) => {
+            const isHighlighted = highlightedIndex === index
             return (
               <MenuItem
                 key={suggestion}
+                selected={isHighlighted}
                 {...getItemProps({item: suggestion})}
               >{suggestion}</MenuItem>
             )
@@ -73,7 +93,7 @@ export class VendorName extends PureComponent {
 }
 
 
-export class ProductName extends PureComponent {
+class _ProductName extends PureComponent {
   render() {
     const {
       className,
@@ -85,7 +105,7 @@ export class ProductName extends PureComponent {
 }
 
 
-export class ProductVersion extends PureComponent {
+class _ProductVersion extends PureComponent {
   render() {
     const {
       className,
@@ -95,6 +115,39 @@ export class ProductVersion extends PureComponent {
     )
   }
 }
+
+
+export const VendorName = connect(
+  state => ({
+    vendorNameSuggestions: getVendorNameSuggestions(state),
+  }),
+  dispatch => ({
+    suggestVendorNames: payload => {dispatch(
+      suggestVendorNames(payload))},
+  }),
+)(_VendorName)
+
+
+export const ProductName = connect(
+  state => ({
+    productNameSuggestions: getProductNameSuggestions(state),
+  }),
+  dispatch => ({
+    suggestProductNames: payload => {dispatch(
+      suggestProductNames(payload))},
+  }),
+)(_ProductName)
+
+
+export const ProductVersion = connect(
+  state => ({
+    productVersionSuggestions: getProductVersionSuggestions(state),
+  }),
+  dispatch => ({
+    suggestProductVersions: payload => {dispatch(
+      suggestProductVersions(payload))},
+  }),
+)(_ProductVersion)
 
 
 export const LOG_ERROR = 'LOG_ERROR'
@@ -123,7 +176,11 @@ export const replaceSuggestions = payload => ({
 export function *watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
     const { typeId, vendorName } = action.payload
-    const baseUrl = '/reports/vulnerabilities/vendorNames.json'
+    if (!vendorName.trim()) {
+      yield put(replaceSuggestions({vendorNames: List()}))
+      return
+    }
+    const baseUrl = '/extensions/vulnerabilities/vendorNames.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
@@ -169,6 +226,11 @@ export function *watchSuggestProductVersions() {
 export const vendorNameSuggestions = (state=List(), action) => {
   switch (action.type) {
     case REPLACE_SUGGESTIONS: {
+      const { vendorNames } = action.payload
+      return state.withMutations(state => {
+        state.clear()
+        state.concat(vendorNames)
+      })
     }
     default: {
       return state
@@ -180,6 +242,11 @@ export const vendorNameSuggestions = (state=List(), action) => {
 export const productNameSuggestions = (state=List(), action) => {
   switch (action.type) {
     case REPLACE_SUGGESTIONS: {
+      const { productNames } = action.payload
+      return state.withMutations(state => {
+        state.clear()
+        state.concat(productNames)
+      })
     }
     default: {
       return state
@@ -191,6 +258,11 @@ export const productNameSuggestions = (state=List(), action) => {
 export const productVersionSuggestions = (state=List(), action) => {
   switch (action.type) {
     case REPLACE_SUGGESTIONS: {
+      const { productVersions } = action.payload
+      return state.withMutations(state => {
+        state.clear()
+        state.concat(productVersions)
+      })
     }
     default: {
       return state
