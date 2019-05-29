@@ -19,34 +19,36 @@ export const getProductVersionSuggestions = state => state.get(
   'productVersionSuggestions')
 
 
-class _VendorName extends PureComponent {
-  render() {
-    let {
-      className,
-      typeId,
-      vendorName,
+class EnhancedInput extends PureComponent {
+
+  handleStateChange = changes => {
+    const {
+      attribute,
+      onSuggest,
       trackChanges,
       saveChanges,
-      // Get redux variables
-      vendorNameSuggestions,
-      suggestVendorNames,
+    } = this.props
+    if (changes.hasOwnProperty('selectedItem')) {
+      const value = changes.selectedItem
+      saveChanges({[attribute]: value})
+    } else if (changes.hasOwnProperty('inputValue')) {
+      const value = changes.inputValue
+      trackChanges({[attribute]: value})
+      onSuggest(value)
+    } else if (changes.hasOwnProperty('isOpen')) {
+      saveChanges()
+    }
+  }
+
+  render() {
+    const {
+      className,
+      label,
+      value,
+      suggestions,
     } = this.props
     return (
-      <Downshift
-        selectedItem={vendorName}
-        onStateChange={changes => {
-          if (changes.hasOwnProperty('selectedItem')) {
-            const value = changes.selectedItem
-            saveChanges({vendorName: value})
-          } else if (changes.hasOwnProperty('inputValue')) {
-            const value = changes.inputValue
-            trackChanges({vendorName: value})
-            suggestVendorNames({typeId, vendorName: value})
-          } else if (changes.hasOwnProperty('isOpen')) {
-            saveChanges()
-          }
-        }}
-      >
+      <Downshift selectedItem={value} onStateChange={this.handleStateChange}>
       {({
         isOpen,
         highlightedIndex,
@@ -56,24 +58,20 @@ class _VendorName extends PureComponent {
         clearSelection,
       }) => (
         <div className={className}>
-          <TextField
-            label='Vendor Name'
-            fullWidth
+          <TextField label={label} fullWidth
             InputProps={getInputProps({
-              endAdornment: 
+                endAdornment: 
                 <InputAdornment position='end'>
-                  <IconButton onClick={() => clearSelection()}>
+                  <IconButton onClick={clearSelection}>
                     <ClearIcon />
                   </IconButton>
                 </InputAdornment>
             })}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{shrink: true}}
           />
         {isOpen &&
           <Paper square {...getMenuProps()}>
-          {vendorNameSuggestions.map((suggestion, index) => {
+          {suggestions.map((suggestion, index) => {
             const isHighlighted = highlightedIndex === index
             return (
               <MenuItem
@@ -90,6 +88,36 @@ class _VendorName extends PureComponent {
       </Downshift>
     )
   }
+
+}
+
+
+class _VendorName extends PureComponent {
+  render() {
+    let {
+      className,
+      typeId,
+      vendorName,
+      trackChanges,
+      saveChanges,
+      // Get redux variables
+      vendorNameSuggestions,
+      suggestVendorNames,
+    } = this.props
+    return (
+      <EnhancedInput 
+        className={className}
+        label='Vendor Name'
+        attribute='vendorName'
+        value={vendorName}
+        suggestions={vendorNameSuggestions}
+        onSuggest={value => suggestVendorNames({
+          typeId, vendorName: value})}
+        saveChanges={saveChanges}
+        trackChanges={trackChanges}
+      />
+    )
+  }
 }
 
 
@@ -97,9 +125,27 @@ class _ProductName extends PureComponent {
   render() {
     const {
       className,
+      typeId,
+      vendorName,
+      productName,
+      trackChanges,
+      saveChanges,
+      // Get redux variables
+      productNameSuggestions,
+      suggestProductNames,
     } = this.props
     return (
-      <div className={className}>Product Name</div>
+      <EnhancedInput 
+        className={className}
+        label='Product Name'
+        attribute='productName'
+        value={productName}
+        suggestions={productNameSuggestions}
+        onSuggest={value => suggestProductNames({
+          typeId, vendorName, productName: value})}
+        saveChanges={saveChanges}
+        trackChanges={trackChanges}
+      />
     )
   }
 }
@@ -109,9 +155,28 @@ class _ProductVersion extends PureComponent {
   render() {
     const {
       className,
+      typeId,
+      vendorName,
+      productName,
+      productVersion,
+      trackChanges,
+      saveChanges,
+      // Get redux variables
+      productVersionSuggestions,
+      suggestProductVersions,
     } = this.props
     return (
-      <div className={className}>Product Version</div>
+      <EnhancedInput 
+        className={className}
+        label='Product Version'
+        attribute='productVersion'
+        value={productVersion}
+        suggestions={productVersionSuggestions}
+        onSuggest={value => suggestProductVersions({
+          typeId, vendorName, productName, productVersion: value})}
+        saveChanges={saveChanges}
+        trackChanges={trackChanges}
+      />
     )
   }
 }
@@ -203,24 +268,59 @@ export function *watchSuggestVendorNames() {
 }
 
 
-/*
 export function *watchSuggestProductNames() {
-  yield takeLatest(SUGGEST_PRODUCT_NAMES, function* () {
+  yield takeLatest(SUGGEST_PRODUCT_NAMES, function* (action) {
+    const { typeId, vendorName, productName } = action.payload
+    const baseUrl = '/extensions/vulnerabilities/productNames.json'
+    const params = [
+      `typeId=${typeId}`,
+      `vendorName=${vendorName}`,
+      `productName=${productName}`,
+    ]
     try {
+      const response = yield call(fetch, baseUrl + '?' + params.join('&'))
+      switch (response.status) {
+        case 200: {
+          const productNames = fromJS(yield response.json())
+          yield put(replaceSuggestions({productNames}))
+          break
+        }
+        default:
+          yield put(logError({status: response.status}))
+      }
     } catch (error) {
+      yield put(logError({text: error}))
     }
   })
 }
 
 
 export function *watchSuggestProductVersions() {
-  yield takeLatest(SUGGEST_PRODUCT_VERSIONS, function* () {
+  yield takeLatest(SUGGEST_PRODUCT_VERSIONS, function* (action) {
+    const { typeId, vendorName, productName, productVersion } = action.payload
+    const baseUrl = '/extensions/vulnerabilities/productVersions.json'
+    const params = [
+      `typeId=${typeId}`,
+      `vendorName=${vendorName}`,
+      `productName=${productName}`,
+      `productVersion=${productVersion}`,
+    ]
     try {
+      const response = yield call(fetch, baseUrl + '?' + params.join('&'))
+      switch (response.status) {
+        case 200: {
+          const productVersions = fromJS(yield response.json())
+          yield put(replaceSuggestions({productVersions}))
+          break
+        }
+        default:
+          yield put(logError({status: response.status}))
+      }
     } catch (error) {
+      yield put(logError({text: error}))
     }
   })
 }
-*/
 
 
 export const vendorNameSuggestions = (state=List(), action) => {
