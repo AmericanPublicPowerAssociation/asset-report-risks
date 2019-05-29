@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.watchSuggestVendorNames = watchSuggestVendorNames;
 exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
-exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.replaceSuggestions = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.REPLACE_SUGGESTIONS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.watchRefreshVulnerableAssets = watchRefreshVulnerableAssets;
+exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.replaceVulnerableAssets = exports.replaceSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.REPLACE_VULNERABLE_ASSETS = exports.REPLACE_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -30,6 +31,16 @@ var _Paper = _interopRequireDefault(require("@material-ui/core/Paper"));
 
 var _MenuItem = _interopRequireDefault(require("@material-ui/core/MenuItem"));
 
+var _Table = _interopRequireDefault(require("@material-ui/core/Table"));
+
+var _TableHead = _interopRequireDefault(require("@material-ui/core/TableHead"));
+
+var _TableBody = _interopRequireDefault(require("@material-ui/core/TableBody"));
+
+var _TableRow = _interopRequireDefault(require("@material-ui/core/TableRow"));
+
+var _TableCell = _interopRequireDefault(require("@material-ui/core/TableCell"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -42,7 +53,10 @@ regeneratorRuntime.mark(watchSuggestVendorNames),
 regeneratorRuntime.mark(watchSuggestProductNames),
     _marked3 =
 /*#__PURE__*/
-regeneratorRuntime.mark(watchSuggestProductVersions);
+regeneratorRuntime.mark(watchSuggestProductVersions),
+    _marked4 =
+/*#__PURE__*/
+regeneratorRuntime.mark(watchRefreshVulnerableAssets);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -83,6 +97,16 @@ var getProductVersionSuggestions = function getProductVersionSuggestions(state) 
 };
 
 exports.getProductVersionSuggestions = getProductVersionSuggestions;
+
+var getVulnerableAssets = function getVulnerableAssets(state) {
+  return state.get('vulnerableAssets');
+};
+
+exports.getVulnerableAssets = getVulnerableAssets;
+
+var _ref2 =
+/*#__PURE__*/
+_react["default"].createElement(_Clear["default"], null);
 
 var EnhancedInput =
 /*#__PURE__*/
@@ -152,7 +176,7 @@ function (_PureComponent) {
               position: "end"
             }, _react["default"].createElement(_IconButton["default"], {
               onClick: clearSelection
-            }, _react["default"].createElement(_Clear["default"], null)))
+            }, _ref2))
           }),
           InputLabelProps: {
             shrink: true
@@ -310,6 +334,59 @@ function (_PureComponent4) {
   return _ProductVersion;
 }(_react.PureComponent);
 
+var _ref3 =
+/*#__PURE__*/
+_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], {
+  align: "right"
+}, "Published")));
+
+var _VulnerabilitiesWindow =
+/*#__PURE__*/
+function (_PureComponent5) {
+  _inherits(_VulnerabilitiesWindow, _PureComponent5);
+
+  function _VulnerabilitiesWindow() {
+    _classCallCheck(this, _VulnerabilitiesWindow);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesWindow).apply(this, arguments));
+  }
+
+  _createClass(_VulnerabilitiesWindow, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var refreshVulnerableAssets = this.props.refreshVulnerableAssets;
+      refreshVulnerableAssets();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var vulnerableAssets = this.props.vulnerableAssets;
+      return _react["default"].createElement(_Table["default"], null, _ref3, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
+        var assetName = asset.get('name');
+        var meterCount = asset.get('meterCount');
+        var threat = asset.get('threat');
+        var description = asset.get('description');
+        var url = asset.get('url');
+        var date = asset.get('date');
+        return _react["default"].createElement(_TableRow["default"], {
+          key: index
+        }, _react["default"].createElement(_TableCell["default"], {
+          component: "th",
+          scope: "row"
+        }, assetName), _react["default"].createElement(_TableCell["default"], null, meterCount), _react["default"].createElement(_TableCell["default"], null, threat), _react["default"].createElement(_TableCell["default"], null, description), _react["default"].createElement(_TableCell["default"], {
+          align: "right"
+        }, _react["default"].createElement("a", {
+          target: "_blank",
+          rel: "noopener noreferrer",
+          href: url
+        }, date)));
+      })));
+    }
+  }]);
+
+  return _VulnerabilitiesWindow;
+}(_react.PureComponent);
+
 var VendorName = (0, _reactRedux.connect)(function (state) {
   return {
     vendorNameSuggestions: getVendorNameSuggestions(state)
@@ -346,6 +423,18 @@ var ProductVersion = (0, _reactRedux.connect)(function (state) {
   };
 })(_ProductVersion);
 exports.ProductVersion = ProductVersion;
+var VulnerabilitiesWindow = (0, _reactRedux.connect)(function (state) {
+  return {
+    vulnerableAssets: getVulnerableAssets(state)
+  };
+}, function (dispatch) {
+  return {
+    refreshVulnerableAssets: function refreshVulnerableAssets(payload) {
+      dispatch(_refreshVulnerableAssets(payload));
+    }
+  };
+})(_VulnerabilitiesWindow);
+exports.VulnerabilitiesWindow = VulnerabilitiesWindow;
 var LOG_ERROR = 'LOG_ERROR';
 exports.LOG_ERROR = LOG_ERROR;
 var SUGGEST_VENDOR_NAMES = 'SUGGEST_VENDOR_NAMES';
@@ -354,8 +443,12 @@ var SUGGEST_PRODUCT_NAMES = 'SUGGEST_PRODUCT_NAMES';
 exports.SUGGEST_PRODUCT_NAMES = SUGGEST_PRODUCT_NAMES;
 var SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS';
 exports.SUGGEST_PRODUCT_VERSIONS = SUGGEST_PRODUCT_VERSIONS;
+var REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS';
+exports.REFRESH_VULNERABLE_ASSETS = REFRESH_VULNERABLE_ASSETS;
 var REPLACE_SUGGESTIONS = 'REPLACE_SUGGESTIONS';
 exports.REPLACE_SUGGESTIONS = REPLACE_SUGGESTIONS;
+var REPLACE_VULNERABLE_ASSETS = 'REPLACE_VULNERABLE_ASSETS';
+exports.REPLACE_VULNERABLE_ASSETS = REPLACE_VULNERABLE_ASSETS;
 
 var logError = function logError(payload) {
   return {
@@ -393,6 +486,15 @@ var _suggestProductVersions = function _suggestProductVersions(payload) {
 
 exports.suggestProductVersions = _suggestProductVersions;
 
+var _refreshVulnerableAssets = function _refreshVulnerableAssets(payload) {
+  return {
+    payload: payload,
+    type: REFRESH_VULNERABLE_ASSETS
+  };
+};
+
+exports.refreshVulnerableAssets = _refreshVulnerableAssets;
+
 var replaceSuggestions = function replaceSuggestions(payload) {
   return {
     payload: payload,
@@ -401,6 +503,15 @@ var replaceSuggestions = function replaceSuggestions(payload) {
 };
 
 exports.replaceSuggestions = replaceSuggestions;
+
+var replaceVulnerableAssets = function replaceVulnerableAssets(payload) {
+  return {
+    payload: payload,
+    type: REPLACE_VULNERABLE_ASSETS
+  };
+};
+
+exports.replaceVulnerableAssets = replaceVulnerableAssets;
 
 function watchSuggestVendorNames() {
   return regeneratorRuntime.wrap(function watchSuggestVendorNames$(_context2) {
@@ -651,6 +762,79 @@ function watchSuggestProductVersions() {
   }, _marked3);
 }
 
+function watchRefreshVulnerableAssets() {
+  return regeneratorRuntime.wrap(function watchRefreshVulnerableAssets$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          _context8.next = 2;
+          return (0, _effects.takeLatest)(REFRESH_VULNERABLE_ASSETS,
+          /*#__PURE__*/
+          regeneratorRuntime.mark(function _callee4(action) {
+            var response, _vulnerableAssets;
+
+            return regeneratorRuntime.wrap(function _callee4$(_context7) {
+              while (1) {
+                switch (_context7.prev = _context7.next) {
+                  case 0:
+                    _context7.prev = 0;
+                    _context7.next = 3;
+                    return (0, _effects.call)(fetch, '/extensions/vulnerabilities.json');
+
+                  case 3:
+                    response = _context7.sent;
+                    _context7.t0 = response.status;
+                    _context7.next = _context7.t0 === 200 ? 7 : 15;
+                    break;
+
+                  case 7:
+                    _context7.t1 = _immutable.fromJS;
+                    _context7.next = 10;
+                    return response.json();
+
+                  case 10:
+                    _context7.t2 = _context7.sent;
+                    _vulnerableAssets = (0, _context7.t1)(_context7.t2);
+                    _context7.next = 14;
+                    return (0, _effects.put)(replaceVulnerableAssets(_vulnerableAssets));
+
+                  case 14:
+                    return _context7.abrupt("break", 17);
+
+                  case 15:
+                    _context7.next = 17;
+                    return (0, _effects.put)(logError({
+                      status: response.status
+                    }));
+
+                  case 17:
+                    _context7.next = 23;
+                    break;
+
+                  case 19:
+                    _context7.prev = 19;
+                    _context7.t3 = _context7["catch"](0);
+                    _context7.next = 23;
+                    return (0, _effects.put)(logError({
+                      text: _context7.t3
+                    }));
+
+                  case 23:
+                  case "end":
+                    return _context7.stop();
+                }
+              }
+            }, _callee4, null, [[0, 19]]);
+          }));
+
+        case 2:
+        case "end":
+          return _context8.stop();
+      }
+    }
+  }, _marked4);
+}
+
 var vendorNameSuggestions = function vendorNameSuggestions() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.List)();
   var action = arguments.length > 1 ? arguments[1] : undefined;
@@ -719,3 +903,26 @@ var productVersionSuggestions = function productVersionSuggestions() {
 };
 
 exports.productVersionSuggestions = productVersionSuggestions;
+
+var vulnerableAssets = function vulnerableAssets() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.List)();
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case REPLACE_VULNERABLE_ASSETS:
+      {
+        var _vulnerableAssets2 = action.payload;
+        return state.withMutations(function (state) {
+          state.clear();
+          state.concat(_vulnerableAssets2);
+        });
+      }
+
+    default:
+      {
+        return state;
+      }
+  }
+};
+
+exports.vulnerableAssets = vulnerableAssets;

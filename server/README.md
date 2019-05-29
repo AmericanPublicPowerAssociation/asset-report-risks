@@ -10,25 +10,28 @@
     pipenv install --three -e .
     pipenv shell
 
-    # Prepare database from scratch
-    python scripts/download_datasets.py --from-scratch
-    python scripts/update_database.py --from-scratch
-    python scripts/prepare_lookup.py
+    # Prepare nvd from scratch
+    python scripts/download_nvd.py --from-scratch
+    python scripts/update_nvd.py --from-scratch
+    python scripts/prepare_cve.py
 
-    # Update database monthly
-    python scripts/download_datasets.py
-    python scripts/update_database.py
-    python scripts/prepare_lookup.py
+    # Update nvd monthly
+    python scripts/download_nvd.py
+    python scripts/update_nvd.py
+    python scripts/prepare_cve.py
 
-    # Update database weekly
-    python scripts/download_datasets.py modified
-    python scripts/update_database.py modified
-    python scripts/prepare_lookup.py
+    # Update nvd weekly
+    python scripts/download_nvd.py modified
+    python scripts/update_nvd.py modified
+    python scripts/prepare_cve.py
 
-    # Update database daily
-    python scripts/download_datasets.py recent
-    python scripts/update_database.py recent
-    python scripts/prepare_lookup.py
+    # Update nvd daily
+    python scripts/download_nvd.py recent
+    python scripts/update_nvd.py recent
+    python scripts/prepare_cve.py
+
+    # Update vulnerable assets hourly
+    python scripts/update_vulnerable_assets.py
 
     # Test autocomplete
     python scripts/get_vendor_names.py -h

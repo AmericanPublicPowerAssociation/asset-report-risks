@@ -1,9 +1,9 @@
 '''
-python download_datasets.py --from-scratch  # Download all years from scratch
-python download_datasets.py                 # Download all years
-python download_datasets.py 2019            # Download 2019 only
-python download_datasets.py modified        # Download modified
-python download_datasets.py recent          # Download recent
+python download_nvd.py --from-scratch  # Download all years from scratch
+python download_nvd.py                 # Download all years
+python download_nvd.py 2019            # Download 2019 only
+python download_nvd.py modified        # Download modified
+python download_nvd.py recent          # Download recent
 '''
 import os
 import requests
