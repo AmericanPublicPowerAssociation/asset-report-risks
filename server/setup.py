@@ -9,9 +9,11 @@ APP_CLASSIFIERS = [
 ]
 APP_REQUIREMENTS = [
     'fuzzywuzzy',
+    'invisibleroads-macros',
     'packaging',
     'pymongo',
     'python-Levenshtein',
+    'requests',
 ]
 TEST_REQUIREMENTS = [
 ]
