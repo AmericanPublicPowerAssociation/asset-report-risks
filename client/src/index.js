@@ -33,18 +33,27 @@ class EnhancedInput extends PureComponent {
       attribute,
       onSuggest,
       trackChanges,
-      saveChanges,
     } = this.props
     if (changes.hasOwnProperty('selectedItem')) {
       const value = changes.selectedItem
-      saveChanges({[attribute]: value})
+      this.saveChanges({[attribute]: value})
     } else if (changes.hasOwnProperty('inputValue')) {
       const value = changes.inputValue
       trackChanges({[attribute]: value})
       onSuggest(value)
     } else if (changes.hasOwnProperty('isOpen')) {
-      saveChanges()
+      const value = this.props.value
+      this.saveChanges({[attribute]: value})
     }
+  }
+
+  saveChanges = attributes => {
+    const {
+      clearSuggestions,
+      saveChanges,
+    } = this.props
+    clearSuggestions()
+    saveChanges(attributes)
   }
 
   render() {
@@ -76,13 +85,13 @@ class EnhancedInput extends PureComponent {
             })}
             InputLabelProps={{shrink: true}}
           />
-        {isOpen &&
+        {isOpen && !suggestions.isEmpty() &&
           <Paper square {...getMenuProps()}>
           {suggestions.map((suggestion, index) => {
             const isHighlighted = highlightedIndex === index
             return (
               <MenuItem
-                key={suggestion}
+                key={index}
                 selected={isHighlighted}
                 {...getItemProps({item: suggestion})}
               >{suggestion}</MenuItem>
@@ -111,6 +120,7 @@ class _VendorName extends PureComponent {
       // Get redux variables
       vendorNameSuggestions,
       suggestVendorNames,
+      clearSuggestions,
     } = this.props
     return (
       <EnhancedInput 
@@ -121,6 +131,7 @@ class _VendorName extends PureComponent {
         suggestions={vendorNameSuggestions}
         onSuggest={value => suggestVendorNames({
           typeId, vendorName: value})}
+        clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
       />
@@ -142,6 +153,7 @@ class _ProductName extends PureComponent {
       // Get redux variables
       productNameSuggestions,
       suggestProductNames,
+      clearSuggestions,
     } = this.props
     return (
       <EnhancedInput 
@@ -152,6 +164,7 @@ class _ProductName extends PureComponent {
         suggestions={productNameSuggestions}
         onSuggest={value => suggestProductNames({
           typeId, vendorName, productName: value})}
+        clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
       />
@@ -174,6 +187,7 @@ class _ProductVersion extends PureComponent {
       // Get redux variables
       productVersionSuggestions,
       suggestProductVersions,
+      clearSuggestions,
     } = this.props
     return (
       <EnhancedInput 
@@ -184,6 +198,7 @@ class _ProductVersion extends PureComponent {
         suggestions={productVersionSuggestions}
         onSuggest={value => suggestProductVersions({
           typeId, vendorName, productName, productVersion: value})}
+        clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
       />
@@ -248,6 +263,8 @@ export const VendorName = connect(
   dispatch => ({
     suggestVendorNames: payload => {dispatch(
       suggestVendorNames(payload))},
+    clearSuggestions: payload => {dispatch(
+      clearSuggestions(payload))},
   }),
 )(_VendorName)
 
@@ -259,6 +276,8 @@ export const ProductName = connect(
   dispatch => ({
     suggestProductNames: payload => {dispatch(
       suggestProductNames(payload))},
+    clearSuggestions: payload => {dispatch(
+      clearSuggestions(payload))},
   }),
 )(_ProductName)
 
@@ -270,6 +289,8 @@ export const ProductVersion = connect(
   dispatch => ({
     suggestProductVersions: payload => {dispatch(
       suggestProductVersions(payload))},
+    clearSuggestions: payload => {dispatch(
+      clearSuggestions(payload))},
   }),
 )(_ProductVersion)
 
@@ -297,6 +318,9 @@ export const REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS'
 
 
 export const REPLACE_SUGGESTIONS = 'REPLACE_SUGGESTIONS'
+export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
+
+
 export const REPLACE_VULNERABLE_ASSETS = 'REPLACE_VULNERABLE_ASSETS'
 
 
@@ -318,6 +342,8 @@ export const refreshVulnerableAssets = payload => ({
 
 export const replaceSuggestions = payload => ({
   payload, type: REPLACE_SUGGESTIONS})
+export const clearSuggestions = payload => ({
+  payload, type: CLEAR_SUGGESTIONS})
 
 
 export const replaceVulnerableAssets = payload => ({
@@ -438,6 +464,9 @@ export const vendorNameSuggestions = (state=List(), action) => {
         state.concat(vendorNames)
       })
     }
+    case CLEAR_SUGGESTIONS: {
+      return state.clear()
+    }
     default: {
       return state
     }
@@ -454,6 +483,9 @@ export const productNameSuggestions = (state=List(), action) => {
         state.concat(productNames)
       })
     }
+    case CLEAR_SUGGESTIONS: {
+      return state.clear()
+    }
     default: {
       return state
     }
@@ -469,6 +501,9 @@ export const productVersionSuggestions = (state=List(), action) => {
         state.clear()
         state.concat(productVersions)
       })
+    }
+    case CLEAR_SUGGESTIONS: {
+      return state.clear()
     }
     default: {
       return state

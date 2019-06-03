@@ -7,7 +7,7 @@ exports.watchSuggestVendorNames = watchSuggestVendorNames;
 exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshVulnerableAssets = watchRefreshVulnerableAssets;
-exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.replaceVulnerableAssets = exports.replaceSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.REPLACE_VULNERABLE_ASSETS = exports.REPLACE_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.replaceVulnerableAssets = exports.clearSuggestions = exports.replaceSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.REPLACE_VULNERABLE_ASSETS = exports.CLEAR_SUGGESTIONS = exports.REPLACE_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -130,19 +130,29 @@ function (_PureComponent) {
       var _this$props = _this.props,
           attribute = _this$props.attribute,
           onSuggest = _this$props.onSuggest,
-          trackChanges = _this$props.trackChanges,
-          saveChanges = _this$props.saveChanges;
+          trackChanges = _this$props.trackChanges;
 
       if (changes.hasOwnProperty('selectedItem')) {
         var value = changes.selectedItem;
-        saveChanges(_defineProperty({}, attribute, value));
+
+        _this.saveChanges(_defineProperty({}, attribute, value));
       } else if (changes.hasOwnProperty('inputValue')) {
         var _value = changes.inputValue;
         trackChanges(_defineProperty({}, attribute, _value));
         onSuggest(_value);
       } else if (changes.hasOwnProperty('isOpen')) {
-        saveChanges();
+        var _value2 = _this.props.value;
+
+        _this.saveChanges(_defineProperty({}, attribute, _value2));
       }
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "saveChanges", function (attributes) {
+      var _this$props2 = _this.props,
+          clearSuggestions = _this$props2.clearSuggestions,
+          saveChanges = _this$props2.saveChanges;
+      clearSuggestions();
+      saveChanges(attributes);
     });
 
     return _this;
@@ -151,11 +161,11 @@ function (_PureComponent) {
   _createClass(EnhancedInput, [{
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          className = _this$props2.className,
-          label = _this$props2.label,
-          value = _this$props2.value,
-          suggestions = _this$props2.suggestions;
+      var _this$props3 = this.props,
+          className = _this$props3.className,
+          label = _this$props3.label,
+          value = _this$props3.value,
+          suggestions = _this$props3.suggestions;
       return _react["default"].createElement(_downshift["default"], {
         selectedItem: value,
         onStateChange: this.handleStateChange
@@ -181,12 +191,12 @@ function (_PureComponent) {
           InputLabelProps: {
             shrink: true
           }
-        }), isOpen && _react["default"].createElement(_Paper["default"], _extends({
+        }), isOpen && !suggestions.isEmpty() && _react["default"].createElement(_Paper["default"], _extends({
           square: true
         }, getMenuProps()), suggestions.map(function (suggestion, index) {
           var isHighlighted = highlightedIndex === index;
           return _react["default"].createElement(_MenuItem["default"], _extends({
-            key: suggestion,
+            key: index,
             selected: isHighlighted
           }, getItemProps({
             item: suggestion
@@ -213,14 +223,15 @@ function (_PureComponent2) {
   _createClass(_VendorName, [{
     key: "render",
     value: function render() {
-      var _this$props3 = this.props,
-          className = _this$props3.className,
-          typeId = _this$props3.typeId,
-          vendorName = _this$props3.vendorName,
-          trackChanges = _this$props3.trackChanges,
-          saveChanges = _this$props3.saveChanges,
-          vendorNameSuggestions = _this$props3.vendorNameSuggestions,
-          suggestVendorNames = _this$props3.suggestVendorNames;
+      var _this$props4 = this.props,
+          className = _this$props4.className,
+          typeId = _this$props4.typeId,
+          vendorName = _this$props4.vendorName,
+          trackChanges = _this$props4.trackChanges,
+          saveChanges = _this$props4.saveChanges,
+          vendorNameSuggestions = _this$props4.vendorNameSuggestions,
+          suggestVendorNames = _this$props4.suggestVendorNames,
+          clearSuggestions = _this$props4.clearSuggestions;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
         label: "Vendor Name",
@@ -233,6 +244,7 @@ function (_PureComponent2) {
             vendorName: value
           });
         },
+        clearSuggestions: clearSuggestions,
         saveChanges: saveChanges,
         trackChanges: trackChanges
       });
@@ -256,15 +268,16 @@ function (_PureComponent3) {
   _createClass(_ProductName, [{
     key: "render",
     value: function render() {
-      var _this$props4 = this.props,
-          className = _this$props4.className,
-          typeId = _this$props4.typeId,
-          vendorName = _this$props4.vendorName,
-          productName = _this$props4.productName,
-          trackChanges = _this$props4.trackChanges,
-          saveChanges = _this$props4.saveChanges,
-          productNameSuggestions = _this$props4.productNameSuggestions,
-          suggestProductNames = _this$props4.suggestProductNames;
+      var _this$props5 = this.props,
+          className = _this$props5.className,
+          typeId = _this$props5.typeId,
+          vendorName = _this$props5.vendorName,
+          productName = _this$props5.productName,
+          trackChanges = _this$props5.trackChanges,
+          saveChanges = _this$props5.saveChanges,
+          productNameSuggestions = _this$props5.productNameSuggestions,
+          suggestProductNames = _this$props5.suggestProductNames,
+          clearSuggestions = _this$props5.clearSuggestions;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
         label: "Product Name",
@@ -278,6 +291,7 @@ function (_PureComponent3) {
             productName: value
           });
         },
+        clearSuggestions: clearSuggestions,
         saveChanges: saveChanges,
         trackChanges: trackChanges
       });
@@ -301,16 +315,17 @@ function (_PureComponent4) {
   _createClass(_ProductVersion, [{
     key: "render",
     value: function render() {
-      var _this$props5 = this.props,
-          className = _this$props5.className,
-          typeId = _this$props5.typeId,
-          vendorName = _this$props5.vendorName,
-          productName = _this$props5.productName,
-          productVersion = _this$props5.productVersion,
-          trackChanges = _this$props5.trackChanges,
-          saveChanges = _this$props5.saveChanges,
-          productVersionSuggestions = _this$props5.productVersionSuggestions,
-          suggestProductVersions = _this$props5.suggestProductVersions;
+      var _this$props6 = this.props,
+          className = _this$props6.className,
+          typeId = _this$props6.typeId,
+          vendorName = _this$props6.vendorName,
+          productName = _this$props6.productName,
+          productVersion = _this$props6.productVersion,
+          trackChanges = _this$props6.trackChanges,
+          saveChanges = _this$props6.saveChanges,
+          productVersionSuggestions = _this$props6.productVersionSuggestions,
+          suggestProductVersions = _this$props6.suggestProductVersions,
+          clearSuggestions = _this$props6.clearSuggestions;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
         label: "Product Version",
@@ -325,6 +340,7 @@ function (_PureComponent4) {
             productVersion: value
           });
         },
+        clearSuggestions: clearSuggestions,
         saveChanges: saveChanges,
         trackChanges: trackChanges
       });
@@ -395,6 +411,9 @@ var VendorName = (0, _reactRedux.connect)(function (state) {
   return {
     suggestVendorNames: function suggestVendorNames(payload) {
       dispatch(_suggestVendorNames(payload));
+    },
+    clearSuggestions: function clearSuggestions(payload) {
+      dispatch(_clearSuggestions(payload));
     }
   };
 })(_VendorName);
@@ -407,6 +426,9 @@ var ProductName = (0, _reactRedux.connect)(function (state) {
   return {
     suggestProductNames: function suggestProductNames(payload) {
       dispatch(_suggestProductNames(payload));
+    },
+    clearSuggestions: function clearSuggestions(payload) {
+      dispatch(_clearSuggestions(payload));
     }
   };
 })(_ProductName);
@@ -419,6 +441,9 @@ var ProductVersion = (0, _reactRedux.connect)(function (state) {
   return {
     suggestProductVersions: function suggestProductVersions(payload) {
       dispatch(_suggestProductVersions(payload));
+    },
+    clearSuggestions: function clearSuggestions(payload) {
+      dispatch(_clearSuggestions(payload));
     }
   };
 })(_ProductVersion);
@@ -447,6 +472,8 @@ var REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS';
 exports.REFRESH_VULNERABLE_ASSETS = REFRESH_VULNERABLE_ASSETS;
 var REPLACE_SUGGESTIONS = 'REPLACE_SUGGESTIONS';
 exports.REPLACE_SUGGESTIONS = REPLACE_SUGGESTIONS;
+var CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS';
+exports.CLEAR_SUGGESTIONS = CLEAR_SUGGESTIONS;
 var REPLACE_VULNERABLE_ASSETS = 'REPLACE_VULNERABLE_ASSETS';
 exports.REPLACE_VULNERABLE_ASSETS = REPLACE_VULNERABLE_ASSETS;
 
@@ -503,6 +530,15 @@ var replaceSuggestions = function replaceSuggestions(payload) {
 };
 
 exports.replaceSuggestions = replaceSuggestions;
+
+var _clearSuggestions = function _clearSuggestions(payload) {
+  return {
+    payload: payload,
+    type: CLEAR_SUGGESTIONS
+  };
+};
+
+exports.clearSuggestions = _clearSuggestions;
 
 var replaceVulnerableAssets = function replaceVulnerableAssets(payload) {
   return {
@@ -849,6 +885,11 @@ var vendorNameSuggestions = function vendorNameSuggestions() {
         });
       }
 
+    case CLEAR_SUGGESTIONS:
+      {
+        return state.clear();
+      }
+
     default:
       {
         return state;
@@ -872,6 +913,11 @@ var productNameSuggestions = function productNameSuggestions() {
         });
       }
 
+    case CLEAR_SUGGESTIONS:
+      {
+        return state.clear();
+      }
+
     default:
       {
         return state;
@@ -893,6 +939,11 @@ var productVersionSuggestions = function productVersionSuggestions() {
           state.clear();
           state.concat(productVersions);
         });
+      }
+
+    case CLEAR_SUGGESTIONS:
+      {
+        return state.clear();
       }
 
     default:
