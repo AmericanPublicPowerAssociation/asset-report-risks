@@ -1,5 +1,7 @@
 # Asset Vulnerability Report Server
 
+## Configure
+
     cd ~/Downloads
     wget https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/RPMS/mongodb-org-server-4.0.10-1.el7.x86_64.rpm
     sudo dnf -y install mongodb*.rpm
@@ -14,6 +16,14 @@
     python scripts/download_nvd.py --from-scratch
     python scripts/update_nvd.py --from-scratch
     python scripts/prepare_cve.py
+
+    # Test autocomplete
+    python scripts/get_vendor_names.py -h
+    python scripts/get_product_names.py -h
+    python scripts/get_product_versions.py -h
+
+    # Test report
+    python scripts/get_vulnerabilities.py -h
 
     # Update nvd monthly
     python scripts/download_nvd.py
@@ -33,10 +43,8 @@
     # Update vulnerable assets hourly
     python scripts/update_vulnerable_assets.py
 
-    # Test autocomplete
-    python scripts/get_vendor_names.py -h
-    python scripts/get_product_names.py -h
-    python scripts/get_product_versions.py -h
+## Install
 
-    # Test report
-    python scripts/get_vulnerabilities.py -h
+    sudo systemctl enable mongod
+    sudo cp services/asset-vulnerability-report.* /etc/systemd/system/
+    sudo systemctl enable asset-vulnerability-report
