@@ -58,6 +58,9 @@
     git clone git@github.com:AmericanPublicPowerAssociation/asset-tracker-client
     cd ~/Projects/asset-tracker-client
     npm install
+    # npm run build
+    # sudo npm install -g serve
+    # PORT=3000 serve -s build
 
     cd ~/Projects
     git clone git@github.com:AmericanPublicPowerAssociation/appa-auth-client
@@ -93,3 +96,6 @@
     sudo systemctl enable mongod
     sudo cp services/asset-vulnerability-report.* /etc/systemd/system/
     sudo systemctl enable asset-vulnerability-report
+
+    sudo setenforce 0
+    sudo firewall-cmd --add-service=http
