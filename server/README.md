@@ -3,8 +3,8 @@
 ## Configure
 
     cd ~/Downloads
-    wget https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/RPMS/mongodb-org-server-4.0.10-1.el7.x86_64.rpm
-    sudo dnf -y install mongodb*.rpm
+    curl -o /tmp/mongodb-org-server.rpm https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/RPMS/mongodb-org-server-4.0.10-1.el7.x86_64.rpm
+    sudo dnf -y install /tmp/mongodb-org-server.rpm
     sudo systemctl start mongod
 
     cd ~/Projects/asset-vulnerability-report/server
