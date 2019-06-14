@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { List, fromJS } from 'immutable'
+import { List } from 'immutable'
 import Downshift from 'downshift'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -317,11 +317,11 @@ export const SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS'
 export const REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS'
 
 
-export const REPLACE_SUGGESTIONS = 'REPLACE_SUGGESTIONS'
+export const RESET_SUGGESTIONS = 'RESET_SUGGESTIONS'
 export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
 
 
-export const REPLACE_VULNERABLE_ASSETS = 'REPLACE_VULNERABLE_ASSETS'
+export const RESET_VULNERABLE_ASSETS = 'RESET_VULNERABLE_ASSETS'
 
 
 export const logError = payload => ({
@@ -340,129 +340,109 @@ export const refreshVulnerableAssets = payload => ({
   payload, type: REFRESH_VULNERABLE_ASSETS})
 
 
-export const replaceSuggestions = payload => ({
-  payload, type: REPLACE_SUGGESTIONS})
+export const resetSuggestions = payload => ({
+  payload, type: RESET_SUGGESTIONS})
 export const clearSuggestions = payload => ({
   payload, type: CLEAR_SUGGESTIONS})
 
 
-export const replaceVulnerableAssets = payload => ({
-  payload, type: REPLACE_VULNERABLE_ASSETS})
+export const resetVulnerableAssets = payload => ({
+  payload, type: RESET_VULNERABLE_ASSETS})
 
 
-export function *watchSuggestVendorNames() {
+export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
     const { typeId, vendorName } = action.payload
     if (!vendorName.trim()) {
-      yield put(replaceSuggestions({vendorNames: List()}))
+      yield put(resetSuggestions({vendorNames: List()}))
       return
     }
-    const baseUrl = '/extensions/vulnerabilities/vendorNames.json'
+    const url = '/extensions/vulnerability/vendorNames.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
     ]
-    try {
-      const response = yield call(fetch, baseUrl + '?' + params.join('&'))
-      switch (response.status) {
-        case 200: {
-          const vendorNames = fromJS(yield response.json())
-          yield put(replaceSuggestions({vendorNames}))
-          break
-        }
-        default:
-          yield put(logError({status: response.status}))
-      }
-    } catch (error) {
-      yield put(logError({text: error}))
-    }
+    yield fetchSafely(url + '?' + params.join('&'), {}, {
+      on200: function* (vendorNames) {
+        yield put(resetSuggestions({vendorNames}))
+      },
+    })
   })
 }
 
 
-export function *watchSuggestProductNames() {
+export function* watchSuggestProductNames() {
   yield takeLatest(SUGGEST_PRODUCT_NAMES, function* (action) {
     const { typeId, vendorName, productName } = action.payload
-    const baseUrl = '/extensions/vulnerabilities/productNames.json'
+    const url = '/extensions/vulnerability/productNames.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
       `productName=${productName}`,
     ]
-    try {
-      const response = yield call(fetch, baseUrl + '?' + params.join('&'))
-      switch (response.status) {
-        case 200: {
-          const productNames = fromJS(yield response.json())
-          yield put(replaceSuggestions({productNames}))
-          break
-        }
-        default:
-          yield put(logError({status: response.status}))
-      }
-    } catch (error) {
-      yield put(logError({text: error}))
-    }
+    yield fetchSafely(url + '?' + params.join('&'), {}, {
+      on200: function* (productNames) {
+        yield put(resetSuggestions({productNames}))
+      },
+    })
   })
 }
 
 
-export function *watchSuggestProductVersions() {
+export function* watchSuggestProductVersions() {
   yield takeLatest(SUGGEST_PRODUCT_VERSIONS, function* (action) {
     const { typeId, vendorName, productName, productVersion } = action.payload
-    const baseUrl = '/extensions/vulnerabilities/productVersions.json'
+    const url = '/extensions/vulnerability/productVersions.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
       `productName=${productName}`,
       `productVersion=${productVersion}`,
     ]
-    try {
-      const response = yield call(fetch, baseUrl + '?' + params.join('&'))
-      switch (response.status) {
-        case 200: {
-          const productVersions = fromJS(yield response.json())
-          yield put(replaceSuggestions({productVersions}))
-          break
-        }
-        default:
-          yield put(logError({status: response.status}))
-      }
-    } catch (error) {
-      yield put(logError({text: error}))
-    }
+    yield fetchSafely(url + '?' + params.join('&'), {}, {
+      on200: function* (productVersions) {
+        yield put(resetSuggestions({productVersions}))
+      },
+    })
   })
 }
 
 
-export function *watchRefreshVulnerableAssets() {
+export function* watchRefreshVulnerableAssets() {
   yield takeLatest(REFRESH_VULNERABLE_ASSETS, function* (action) {
-    try {
-      const response = yield call(fetch, '/extensions/vulnerabilities.json')
-      switch (response.status) {
-        case 200: {
-          const vulnerableAssets = fromJS(yield response.json())
-          yield put(replaceVulnerableAssets(vulnerableAssets))
-          break
-        }
-        default:
-          yield put(logError({status: response.status}))
-      }
-    } catch (error) {
-      yield put(logError({text: error}))
-    }
+    const url = '/extensions/vulnerability/assets.json'
+    yield fetchSafely(url, {}, {
+      on200: function* (vulnerableAssets) {
+        yield put(resetVulnerableAssets(vulnerableAssets))
+      },
+    })
   })
 }
 
 
-export const vendorNameSuggestions = (state=List(), action) => {
+export function* fetchSafely(url, options, callbacks) {
+  try {
+    const response = yield call(fetch, url, options)
+    const status = response.status
+    const { on200, on400 } = callbacks
+    if (on200 && status === 200) {
+      yield on200(fromJS(yield response.json()))
+    } else if (on400 && status === 400) {
+      yield on400(fromJS(yield response.json()))
+    } else {
+      yield put(logError({status}))
+    }
+  } catch (error) {
+    yield put(logError({text: error}))
+  }
+}
+
+
+export const vendorNameSuggestions = (state = List(), action) => {
   switch (action.type) {
-    case REPLACE_SUGGESTIONS: {
+    case RESET_SUGGESTIONS: {
       const { vendorNames } = action.payload
-      return state.withMutations(state => {
-        state.clear()
-        state.concat(vendorNames)
-      })
+      return vendorNames
     }
     case CLEAR_SUGGESTIONS: {
       return state.clear()
@@ -474,14 +454,11 @@ export const vendorNameSuggestions = (state=List(), action) => {
 }
 
 
-export const productNameSuggestions = (state=List(), action) => {
+export const productNameSuggestions = (state = List(), action) => {
   switch (action.type) {
-    case REPLACE_SUGGESTIONS: {
+    case RESET_SUGGESTIONS: {
       const { productNames } = action.payload
-      return state.withMutations(state => {
-        state.clear()
-        state.concat(productNames)
-      })
+      return productNames
     }
     case CLEAR_SUGGESTIONS: {
       return state.clear()
@@ -493,14 +470,11 @@ export const productNameSuggestions = (state=List(), action) => {
 }
 
 
-export const productVersionSuggestions = (state=List(), action) => {
+export const productVersionSuggestions = (state = List(), action) => {
   switch (action.type) {
-    case REPLACE_SUGGESTIONS: {
+    case RESET_SUGGESTIONS: {
       const { productVersions } = action.payload
-      return state.withMutations(state => {
-        state.clear()
-        state.concat(productVersions)
-      })
+      return productVersions
     }
     case CLEAR_SUGGESTIONS: {
       return state.clear()
@@ -512,14 +486,11 @@ export const productVersionSuggestions = (state=List(), action) => {
 }
 
 
-export const vulnerableAssets = (state=List(), action) => {
+export const vulnerableAssets = (state = List(), action) => {
   switch (action.type) {
-    case REPLACE_VULNERABLE_ASSETS: {
+    case RESET_VULNERABLE_ASSETS: {
       const vulnerableAssets = action.payload
-      return state.withMutations(state => {
-        state.clear()
-        state.concat(vulnerableAssets)
-      })
+      return vulnerableAssets
     }
     default: {
       return state

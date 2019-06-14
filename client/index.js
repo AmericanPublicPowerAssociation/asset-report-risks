@@ -7,7 +7,8 @@ exports.watchSuggestVendorNames = watchSuggestVendorNames;
 exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshVulnerableAssets = watchRefreshVulnerableAssets;
-exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.replaceVulnerableAssets = exports.clearSuggestions = exports.replaceSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.REPLACE_VULNERABLE_ASSETS = exports.CLEAR_SUGGESTIONS = exports.REPLACE_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.fetchSafely = fetchSafely;
+exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetVulnerableAssets = exports.clearSuggestions = exports.resetSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_VULNERABLE_ASSETS = exports.CLEAR_SUGGESTIONS = exports.RESET_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -56,7 +57,10 @@ regeneratorRuntime.mark(watchSuggestProductNames),
 regeneratorRuntime.mark(watchSuggestProductVersions),
     _marked4 =
 /*#__PURE__*/
-regeneratorRuntime.mark(watchRefreshVulnerableAssets);
+regeneratorRuntime.mark(watchRefreshVulnerableAssets),
+    _marked5 =
+/*#__PURE__*/
+regeneratorRuntime.mark(fetchSafely);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -470,12 +474,12 @@ var SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS';
 exports.SUGGEST_PRODUCT_VERSIONS = SUGGEST_PRODUCT_VERSIONS;
 var REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS';
 exports.REFRESH_VULNERABLE_ASSETS = REFRESH_VULNERABLE_ASSETS;
-var REPLACE_SUGGESTIONS = 'REPLACE_SUGGESTIONS';
-exports.REPLACE_SUGGESTIONS = REPLACE_SUGGESTIONS;
+var RESET_SUGGESTIONS = 'RESET_SUGGESTIONS';
+exports.RESET_SUGGESTIONS = RESET_SUGGESTIONS;
 var CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS';
 exports.CLEAR_SUGGESTIONS = CLEAR_SUGGESTIONS;
-var REPLACE_VULNERABLE_ASSETS = 'REPLACE_VULNERABLE_ASSETS';
-exports.REPLACE_VULNERABLE_ASSETS = REPLACE_VULNERABLE_ASSETS;
+var RESET_VULNERABLE_ASSETS = 'RESET_VULNERABLE_ASSETS';
+exports.RESET_VULNERABLE_ASSETS = RESET_VULNERABLE_ASSETS;
 
 var logError = function logError(payload) {
   return {
@@ -522,14 +526,14 @@ var _refreshVulnerableAssets = function _refreshVulnerableAssets(payload) {
 
 exports.refreshVulnerableAssets = _refreshVulnerableAssets;
 
-var replaceSuggestions = function replaceSuggestions(payload) {
+var resetSuggestions = function resetSuggestions(payload) {
   return {
     payload: payload,
-    type: REPLACE_SUGGESTIONS
+    type: RESET_SUGGESTIONS
   };
 };
 
-exports.replaceSuggestions = replaceSuggestions;
+exports.resetSuggestions = resetSuggestions;
 
 var _clearSuggestions = function _clearSuggestions(payload) {
   return {
@@ -540,254 +544,134 @@ var _clearSuggestions = function _clearSuggestions(payload) {
 
 exports.clearSuggestions = _clearSuggestions;
 
-var replaceVulnerableAssets = function replaceVulnerableAssets(payload) {
+var resetVulnerableAssets = function resetVulnerableAssets(payload) {
   return {
     payload: payload,
-    type: REPLACE_VULNERABLE_ASSETS
+    type: RESET_VULNERABLE_ASSETS
   };
 };
 
-exports.replaceVulnerableAssets = replaceVulnerableAssets;
+exports.resetVulnerableAssets = resetVulnerableAssets;
 
 function watchSuggestVendorNames() {
-  return regeneratorRuntime.wrap(function watchSuggestVendorNames$(_context2) {
+  return regeneratorRuntime.wrap(function watchSuggestVendorNames$(_context3) {
     while (1) {
-      switch (_context2.prev = _context2.next) {
+      switch (_context3.prev = _context3.next) {
         case 0:
-          _context2.next = 2;
+          _context3.next = 2;
           return (0, _effects.takeLatest)(SUGGEST_VENDOR_NAMES,
           /*#__PURE__*/
           regeneratorRuntime.mark(function _callee(action) {
-            var _action$payload, typeId, vendorName, baseUrl, params, response, vendorNames;
+            var _action$payload, typeId, vendorName, url, params;
 
-            return regeneratorRuntime.wrap(function _callee$(_context) {
+            return regeneratorRuntime.wrap(function _callee$(_context2) {
               while (1) {
-                switch (_context.prev = _context.next) {
+                switch (_context2.prev = _context2.next) {
                   case 0:
                     _action$payload = action.payload, typeId = _action$payload.typeId, vendorName = _action$payload.vendorName;
 
                     if (vendorName.trim()) {
-                      _context.next = 5;
+                      _context2.next = 5;
                       break;
                     }
 
-                    _context.next = 4;
-                    return (0, _effects.put)(replaceSuggestions({
+                    _context2.next = 4;
+                    return (0, _effects.put)(resetSuggestions({
                       vendorNames: (0, _immutable.List)()
                     }));
 
                   case 4:
-                    return _context.abrupt("return");
+                    return _context2.abrupt("return");
 
                   case 5:
-                    baseUrl = '/extensions/vulnerabilities/vendorNames.json';
+                    url = '/extensions/vulnerability/vendorNames.json';
                     params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName)];
-                    _context.prev = 7;
-                    _context.next = 10;
-                    return (0, _effects.call)(fetch, baseUrl + '?' + params.join('&'));
+                    _context2.next = 9;
+                    return fetchSafely(url + '?' + params.join('&'), {}, {
+                      on200:
+                      /*#__PURE__*/
+                      regeneratorRuntime.mark(function on200(vendorNames) {
+                        return regeneratorRuntime.wrap(function on200$(_context) {
+                          while (1) {
+                            switch (_context.prev = _context.next) {
+                              case 0:
+                                _context.next = 2;
+                                return (0, _effects.put)(resetSuggestions({
+                                  vendorNames: vendorNames
+                                }));
 
-                  case 10:
-                    response = _context.sent;
-                    _context.t0 = response.status;
-                    _context.next = _context.t0 === 200 ? 14 : 22;
-                    break;
+                              case 2:
+                              case "end":
+                                return _context.stop();
+                            }
+                          }
+                        }, on200);
+                      })
+                    });
 
-                  case 14:
-                    _context.t1 = _immutable.fromJS;
-                    _context.next = 17;
-                    return response.json();
-
-                  case 17:
-                    _context.t2 = _context.sent;
-                    vendorNames = (0, _context.t1)(_context.t2);
-                    _context.next = 21;
-                    return (0, _effects.put)(replaceSuggestions({
-                      vendorNames: vendorNames
-                    }));
-
-                  case 21:
-                    return _context.abrupt("break", 24);
-
-                  case 22:
-                    _context.next = 24;
-                    return (0, _effects.put)(logError({
-                      status: response.status
-                    }));
-
-                  case 24:
-                    _context.next = 30;
-                    break;
-
-                  case 26:
-                    _context.prev = 26;
-                    _context.t3 = _context["catch"](7);
-                    _context.next = 30;
-                    return (0, _effects.put)(logError({
-                      text: _context.t3
-                    }));
-
-                  case 30:
+                  case 9:
                   case "end":
-                    return _context.stop();
+                    return _context2.stop();
                 }
               }
-            }, _callee, null, [[7, 26]]);
+            }, _callee);
           }));
 
         case 2:
         case "end":
-          return _context2.stop();
+          return _context3.stop();
       }
     }
   }, _marked);
 }
 
 function watchSuggestProductNames() {
-  return regeneratorRuntime.wrap(function watchSuggestProductNames$(_context4) {
-    while (1) {
-      switch (_context4.prev = _context4.next) {
-        case 0:
-          _context4.next = 2;
-          return (0, _effects.takeLatest)(SUGGEST_PRODUCT_NAMES,
-          /*#__PURE__*/
-          regeneratorRuntime.mark(function _callee2(action) {
-            var _action$payload2, typeId, vendorName, productName, baseUrl, params, response, productNames;
-
-            return regeneratorRuntime.wrap(function _callee2$(_context3) {
-              while (1) {
-                switch (_context3.prev = _context3.next) {
-                  case 0:
-                    _action$payload2 = action.payload, typeId = _action$payload2.typeId, vendorName = _action$payload2.vendorName, productName = _action$payload2.productName;
-                    baseUrl = '/extensions/vulnerabilities/productNames.json';
-                    params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName)];
-                    _context3.prev = 3;
-                    _context3.next = 6;
-                    return (0, _effects.call)(fetch, baseUrl + '?' + params.join('&'));
-
-                  case 6:
-                    response = _context3.sent;
-                    _context3.t0 = response.status;
-                    _context3.next = _context3.t0 === 200 ? 10 : 18;
-                    break;
-
-                  case 10:
-                    _context3.t1 = _immutable.fromJS;
-                    _context3.next = 13;
-                    return response.json();
-
-                  case 13:
-                    _context3.t2 = _context3.sent;
-                    productNames = (0, _context3.t1)(_context3.t2);
-                    _context3.next = 17;
-                    return (0, _effects.put)(replaceSuggestions({
-                      productNames: productNames
-                    }));
-
-                  case 17:
-                    return _context3.abrupt("break", 20);
-
-                  case 18:
-                    _context3.next = 20;
-                    return (0, _effects.put)(logError({
-                      status: response.status
-                    }));
-
-                  case 20:
-                    _context3.next = 26;
-                    break;
-
-                  case 22:
-                    _context3.prev = 22;
-                    _context3.t3 = _context3["catch"](3);
-                    _context3.next = 26;
-                    return (0, _effects.put)(logError({
-                      text: _context3.t3
-                    }));
-
-                  case 26:
-                  case "end":
-                    return _context3.stop();
-                }
-              }
-            }, _callee2, null, [[3, 22]]);
-          }));
-
-        case 2:
-        case "end":
-          return _context4.stop();
-      }
-    }
-  }, _marked2);
-}
-
-function watchSuggestProductVersions() {
-  return regeneratorRuntime.wrap(function watchSuggestProductVersions$(_context6) {
+  return regeneratorRuntime.wrap(function watchSuggestProductNames$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
           _context6.next = 2;
-          return (0, _effects.takeLatest)(SUGGEST_PRODUCT_VERSIONS,
+          return (0, _effects.takeLatest)(SUGGEST_PRODUCT_NAMES,
           /*#__PURE__*/
-          regeneratorRuntime.mark(function _callee3(action) {
-            var _action$payload3, typeId, vendorName, productName, productVersion, baseUrl, params, response, productVersions;
+          regeneratorRuntime.mark(function _callee2(action) {
+            var _action$payload2, typeId, vendorName, productName, url, params;
 
-            return regeneratorRuntime.wrap(function _callee3$(_context5) {
+            return regeneratorRuntime.wrap(function _callee2$(_context5) {
               while (1) {
                 switch (_context5.prev = _context5.next) {
                   case 0:
-                    _action$payload3 = action.payload, typeId = _action$payload3.typeId, vendorName = _action$payload3.vendorName, productName = _action$payload3.productName, productVersion = _action$payload3.productVersion;
-                    baseUrl = '/extensions/vulnerabilities/productVersions.json';
-                    params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName), "productVersion=".concat(productVersion)];
-                    _context5.prev = 3;
-                    _context5.next = 6;
-                    return (0, _effects.call)(fetch, baseUrl + '?' + params.join('&'));
+                    _action$payload2 = action.payload, typeId = _action$payload2.typeId, vendorName = _action$payload2.vendorName, productName = _action$payload2.productName;
+                    url = '/extensions/vulnerability/productNames.json';
+                    params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName)];
+                    _context5.next = 5;
+                    return fetchSafely(url + '?' + params.join('&'), {}, {
+                      on200:
+                      /*#__PURE__*/
+                      regeneratorRuntime.mark(function on200(productNames) {
+                        return regeneratorRuntime.wrap(function on200$(_context4) {
+                          while (1) {
+                            switch (_context4.prev = _context4.next) {
+                              case 0:
+                                _context4.next = 2;
+                                return (0, _effects.put)(resetSuggestions({
+                                  productNames: productNames
+                                }));
 
-                  case 6:
-                    response = _context5.sent;
-                    _context5.t0 = response.status;
-                    _context5.next = _context5.t0 === 200 ? 10 : 18;
-                    break;
+                              case 2:
+                              case "end":
+                                return _context4.stop();
+                            }
+                          }
+                        }, on200);
+                      })
+                    });
 
-                  case 10:
-                    _context5.t1 = _immutable.fromJS;
-                    _context5.next = 13;
-                    return response.json();
-
-                  case 13:
-                    _context5.t2 = _context5.sent;
-                    productVersions = (0, _context5.t1)(_context5.t2);
-                    _context5.next = 17;
-                    return (0, _effects.put)(replaceSuggestions({
-                      productVersions: productVersions
-                    }));
-
-                  case 17:
-                    return _context5.abrupt("break", 20);
-
-                  case 18:
-                    _context5.next = 20;
-                    return (0, _effects.put)(logError({
-                      status: response.status
-                    }));
-
-                  case 20:
-                    _context5.next = 26;
-                    break;
-
-                  case 22:
-                    _context5.prev = 22;
-                    _context5.t3 = _context5["catch"](3);
-                    _context5.next = 26;
-                    return (0, _effects.put)(logError({
-                      text: _context5.t3
-                    }));
-
-                  case 26:
+                  case 5:
                   case "end":
                     return _context5.stop();
                 }
               }
-            }, _callee3, null, [[3, 22]]);
+            }, _callee2);
           }));
 
         case 2:
@@ -795,80 +679,199 @@ function watchSuggestProductVersions() {
           return _context6.stop();
       }
     }
-  }, _marked3);
+  }, _marked2);
 }
 
-function watchRefreshVulnerableAssets() {
-  return regeneratorRuntime.wrap(function watchRefreshVulnerableAssets$(_context8) {
+function watchSuggestProductVersions() {
+  return regeneratorRuntime.wrap(function watchSuggestProductVersions$(_context9) {
     while (1) {
-      switch (_context8.prev = _context8.next) {
+      switch (_context9.prev = _context9.next) {
         case 0:
-          _context8.next = 2;
-          return (0, _effects.takeLatest)(REFRESH_VULNERABLE_ASSETS,
+          _context9.next = 2;
+          return (0, _effects.takeLatest)(SUGGEST_PRODUCT_VERSIONS,
           /*#__PURE__*/
-          regeneratorRuntime.mark(function _callee4(action) {
-            var response, _vulnerableAssets;
+          regeneratorRuntime.mark(function _callee3(action) {
+            var _action$payload3, typeId, vendorName, productName, productVersion, url, params;
 
-            return regeneratorRuntime.wrap(function _callee4$(_context7) {
+            return regeneratorRuntime.wrap(function _callee3$(_context8) {
               while (1) {
-                switch (_context7.prev = _context7.next) {
+                switch (_context8.prev = _context8.next) {
                   case 0:
-                    _context7.prev = 0;
-                    _context7.next = 3;
-                    return (0, _effects.call)(fetch, '/extensions/vulnerabilities.json');
+                    _action$payload3 = action.payload, typeId = _action$payload3.typeId, vendorName = _action$payload3.vendorName, productName = _action$payload3.productName, productVersion = _action$payload3.productVersion;
+                    url = '/extensions/vulnerability/productVersions.json';
+                    params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName), "productVersion=".concat(productVersion)];
+                    _context8.next = 5;
+                    return fetchSafely(url + '?' + params.join('&'), {}, {
+                      on200:
+                      /*#__PURE__*/
+                      regeneratorRuntime.mark(function on200(productVersions) {
+                        return regeneratorRuntime.wrap(function on200$(_context7) {
+                          while (1) {
+                            switch (_context7.prev = _context7.next) {
+                              case 0:
+                                _context7.next = 2;
+                                return (0, _effects.put)(resetSuggestions({
+                                  productVersions: productVersions
+                                }));
 
-                  case 3:
-                    response = _context7.sent;
-                    _context7.t0 = response.status;
-                    _context7.next = _context7.t0 === 200 ? 7 : 15;
-                    break;
+                              case 2:
+                              case "end":
+                                return _context7.stop();
+                            }
+                          }
+                        }, on200);
+                      })
+                    });
 
-                  case 7:
-                    _context7.t1 = _immutable.fromJS;
-                    _context7.next = 10;
-                    return response.json();
-
-                  case 10:
-                    _context7.t2 = _context7.sent;
-                    _vulnerableAssets = (0, _context7.t1)(_context7.t2);
-                    _context7.next = 14;
-                    return (0, _effects.put)(replaceVulnerableAssets(_vulnerableAssets));
-
-                  case 14:
-                    return _context7.abrupt("break", 17);
-
-                  case 15:
-                    _context7.next = 17;
-                    return (0, _effects.put)(logError({
-                      status: response.status
-                    }));
-
-                  case 17:
-                    _context7.next = 23;
-                    break;
-
-                  case 19:
-                    _context7.prev = 19;
-                    _context7.t3 = _context7["catch"](0);
-                    _context7.next = 23;
-                    return (0, _effects.put)(logError({
-                      text: _context7.t3
-                    }));
-
-                  case 23:
+                  case 5:
                   case "end":
-                    return _context7.stop();
+                    return _context8.stop();
                 }
               }
-            }, _callee4, null, [[0, 19]]);
+            }, _callee3);
           }));
 
         case 2:
         case "end":
-          return _context8.stop();
+          return _context9.stop();
+      }
+    }
+  }, _marked3);
+}
+
+function watchRefreshVulnerableAssets() {
+  return regeneratorRuntime.wrap(function watchRefreshVulnerableAssets$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.next = 2;
+          return (0, _effects.takeLatest)(REFRESH_VULNERABLE_ASSETS,
+          /*#__PURE__*/
+          regeneratorRuntime.mark(function _callee4(action) {
+            var url;
+            return regeneratorRuntime.wrap(function _callee4$(_context11) {
+              while (1) {
+                switch (_context11.prev = _context11.next) {
+                  case 0:
+                    url = '/extensions/vulnerability/assets.json';
+                    _context11.next = 3;
+                    return fetchSafely(url, {}, {
+                      on200:
+                      /*#__PURE__*/
+                      regeneratorRuntime.mark(function on200(vulnerableAssets) {
+                        return regeneratorRuntime.wrap(function on200$(_context10) {
+                          while (1) {
+                            switch (_context10.prev = _context10.next) {
+                              case 0:
+                                _context10.next = 2;
+                                return (0, _effects.put)(resetVulnerableAssets(vulnerableAssets));
+
+                              case 2:
+                              case "end":
+                                return _context10.stop();
+                            }
+                          }
+                        }, on200);
+                      })
+                    });
+
+                  case 3:
+                  case "end":
+                    return _context11.stop();
+                }
+              }
+            }, _callee4);
+          }));
+
+        case 2:
+        case "end":
+          return _context12.stop();
       }
     }
   }, _marked4);
+}
+
+function fetchSafely(url, options, callbacks) {
+  var response, status, _on, on400;
+
+  return regeneratorRuntime.wrap(function fetchSafely$(_context13) {
+    while (1) {
+      switch (_context13.prev = _context13.next) {
+        case 0:
+          _context13.prev = 0;
+          _context13.next = 3;
+          return (0, _effects.call)(fetch, url, options);
+
+        case 3:
+          response = _context13.sent;
+          status = response.status;
+          _on = callbacks.on200, on400 = callbacks.on400;
+
+          if (!(_on && status === 200)) {
+            _context13.next = 17;
+            break;
+          }
+
+          _context13.t0 = _on;
+          _context13.t1 = fromJS;
+          _context13.next = 11;
+          return response.json();
+
+        case 11:
+          _context13.t2 = _context13.sent;
+          _context13.t3 = (0, _context13.t1)(_context13.t2);
+          _context13.next = 15;
+          return (0, _context13.t0)(_context13.t3);
+
+        case 15:
+          _context13.next = 30;
+          break;
+
+        case 17:
+          if (!(on400 && status === 400)) {
+            _context13.next = 28;
+            break;
+          }
+
+          _context13.t4 = on400;
+          _context13.t5 = fromJS;
+          _context13.next = 22;
+          return response.json();
+
+        case 22:
+          _context13.t6 = _context13.sent;
+          _context13.t7 = (0, _context13.t5)(_context13.t6);
+          _context13.next = 26;
+          return (0, _context13.t4)(_context13.t7);
+
+        case 26:
+          _context13.next = 30;
+          break;
+
+        case 28:
+          _context13.next = 30;
+          return (0, _effects.put)(logError({
+            status: status
+          }));
+
+        case 30:
+          _context13.next = 36;
+          break;
+
+        case 32:
+          _context13.prev = 32;
+          _context13.t8 = _context13["catch"](0);
+          _context13.next = 36;
+          return (0, _effects.put)(logError({
+            text: _context13.t8
+          }));
+
+        case 36:
+        case "end":
+          return _context13.stop();
+      }
+    }
+  }, _marked5, null, [[0, 32]]);
 }
 
 var vendorNameSuggestions = function vendorNameSuggestions() {
@@ -876,13 +879,10 @@ var vendorNameSuggestions = function vendorNameSuggestions() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case REPLACE_SUGGESTIONS:
+    case RESET_SUGGESTIONS:
       {
         var vendorNames = action.payload.vendorNames;
-        return state.withMutations(function (state) {
-          state.clear();
-          state.concat(vendorNames);
-        });
+        return vendorNames;
       }
 
     case CLEAR_SUGGESTIONS:
@@ -904,13 +904,10 @@ var productNameSuggestions = function productNameSuggestions() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case REPLACE_SUGGESTIONS:
+    case RESET_SUGGESTIONS:
       {
         var productNames = action.payload.productNames;
-        return state.withMutations(function (state) {
-          state.clear();
-          state.concat(productNames);
-        });
+        return productNames;
       }
 
     case CLEAR_SUGGESTIONS:
@@ -932,13 +929,10 @@ var productVersionSuggestions = function productVersionSuggestions() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case REPLACE_SUGGESTIONS:
+    case RESET_SUGGESTIONS:
       {
         var productVersions = action.payload.productVersions;
-        return state.withMutations(function (state) {
-          state.clear();
-          state.concat(productVersions);
-        });
+        return productVersions;
       }
 
     case CLEAR_SUGGESTIONS:
@@ -960,13 +954,10 @@ var vulnerableAssets = function vulnerableAssets() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case REPLACE_VULNERABLE_ASSETS:
+    case RESET_VULNERABLE_ASSETS:
       {
-        var _vulnerableAssets2 = action.payload;
-        return state.withMutations(function (state) {
-          state.clear();
-          state.concat(_vulnerableAssets2);
-        });
+        var _vulnerableAssets = action.payload;
+        return _vulnerableAssets;
       }
 
     default:
