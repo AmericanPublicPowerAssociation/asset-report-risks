@@ -8,7 +8,7 @@ exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshVulnerableAssets = watchRefreshVulnerableAssets;
 exports.fetchSafely = fetchSafely;
-exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetVulnerableAssets = exports.clearSuggestions = exports.resetSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_VULNERABLE_ASSETS = exports.CLEAR_SUGGESTIONS = exports.RESET_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetVulnerableAssets = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_VULNERABLE_ASSETS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -474,8 +474,12 @@ var SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS';
 exports.SUGGEST_PRODUCT_VERSIONS = SUGGEST_PRODUCT_VERSIONS;
 var REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS';
 exports.REFRESH_VULNERABLE_ASSETS = REFRESH_VULNERABLE_ASSETS;
-var RESET_SUGGESTIONS = 'RESET_SUGGESTIONS';
-exports.RESET_SUGGESTIONS = RESET_SUGGESTIONS;
+var RESET_VENDOR_NAME_SUGGESTIONS = 'RESET_VENDOR_NAME_SUGGESTIONS';
+exports.RESET_VENDOR_NAME_SUGGESTIONS = RESET_VENDOR_NAME_SUGGESTIONS;
+var RESET_PRODUCT_NAME_SUGGESTIONS = 'RESET_PRODUCT_NAME_SUGGESTIONS';
+exports.RESET_PRODUCT_NAME_SUGGESTIONS = RESET_PRODUCT_NAME_SUGGESTIONS;
+var RESET_PRODUCT_VERSION_SUGGESTIONS = 'RESET_PRODUCT_VERSION_SUGGESTIONS';
+exports.RESET_PRODUCT_VERSION_SUGGESTIONS = RESET_PRODUCT_VERSION_SUGGESTIONS;
 var CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS';
 exports.CLEAR_SUGGESTIONS = CLEAR_SUGGESTIONS;
 var RESET_VULNERABLE_ASSETS = 'RESET_VULNERABLE_ASSETS';
@@ -526,14 +530,32 @@ var _refreshVulnerableAssets = function _refreshVulnerableAssets(payload) {
 
 exports.refreshVulnerableAssets = _refreshVulnerableAssets;
 
-var resetSuggestions = function resetSuggestions(payload) {
+var resetVendorNameSuggestions = function resetVendorNameSuggestions(payload) {
   return {
     payload: payload,
-    type: RESET_SUGGESTIONS
+    type: RESET_VENDOR_NAME_SUGGESTIONS
   };
 };
 
-exports.resetSuggestions = resetSuggestions;
+exports.resetVendorNameSuggestions = resetVendorNameSuggestions;
+
+var resetProductNameSuggestions = function resetProductNameSuggestions(payload) {
+  return {
+    payload: payload,
+    type: RESET_PRODUCT_NAME_SUGGESTIONS
+  };
+};
+
+exports.resetProductNameSuggestions = resetProductNameSuggestions;
+
+var resetProductVersionSuggestions = function resetProductVersionSuggestions(payload) {
+  return {
+    payload: payload,
+    type: RESET_PRODUCT_VERSION_SUGGESTIONS
+  };
+};
+
+exports.resetProductVersionSuggestions = resetProductVersionSuggestions;
 
 var _clearSuggestions = function _clearSuggestions(payload) {
   return {
@@ -576,9 +598,7 @@ function watchSuggestVendorNames() {
                     }
 
                     _context2.next = 4;
-                    return (0, _effects.put)(resetSuggestions({
-                      vendorNames: (0, _immutable.List)()
-                    }));
+                    return (0, _effects.put)(_clearSuggestions());
 
                   case 4:
                     return _context2.abrupt("return");
@@ -596,9 +616,7 @@ function watchSuggestVendorNames() {
                             switch (_context.prev = _context.next) {
                               case 0:
                                 _context.next = 2;
-                                return (0, _effects.put)(resetSuggestions({
-                                  vendorNames: vendorNames
-                                }));
+                                return (0, _effects.put)(resetVendorNameSuggestions(vendorNames));
 
                               case 2:
                               case "end":
@@ -653,9 +671,7 @@ function watchSuggestProductNames() {
                             switch (_context4.prev = _context4.next) {
                               case 0:
                                 _context4.next = 2;
-                                return (0, _effects.put)(resetSuggestions({
-                                  productNames: productNames
-                                }));
+                                return (0, _effects.put)(resetProductNameSuggestions(productNames));
 
                               case 2:
                               case "end":
@@ -710,9 +726,7 @@ function watchSuggestProductVersions() {
                             switch (_context7.prev = _context7.next) {
                               case 0:
                                 _context7.next = 2;
-                                return (0, _effects.put)(resetSuggestions({
-                                  productVersions: productVersions
-                                }));
+                                return (0, _effects.put)(resetProductVersionSuggestions(productVersions));
 
                               case 2:
                               case "end":
@@ -813,7 +827,7 @@ function fetchSafely(url, options, callbacks) {
           }
 
           _context13.t0 = _on;
-          _context13.t1 = fromJS;
+          _context13.t1 = _immutable.fromJS;
           _context13.next = 11;
           return response.json();
 
@@ -834,7 +848,7 @@ function fetchSafely(url, options, callbacks) {
           }
 
           _context13.t4 = on400;
-          _context13.t5 = fromJS;
+          _context13.t5 = _immutable.fromJS;
           _context13.next = 22;
           return response.json();
 
@@ -879,9 +893,9 @@ var vendorNameSuggestions = function vendorNameSuggestions() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case RESET_SUGGESTIONS:
+    case RESET_VENDOR_NAME_SUGGESTIONS:
       {
-        var vendorNames = action.payload.vendorNames;
+        var vendorNames = action.payload;
         return vendorNames;
       }
 
@@ -904,9 +918,9 @@ var productNameSuggestions = function productNameSuggestions() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case RESET_SUGGESTIONS:
+    case RESET_PRODUCT_NAME_SUGGESTIONS:
       {
-        var productNames = action.payload.productNames;
+        var productNames = action.payload;
         return productNames;
       }
 
@@ -929,9 +943,9 @@ var productVersionSuggestions = function productVersionSuggestions() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case RESET_SUGGESTIONS:
+    case RESET_PRODUCT_VERSION_SUGGESTIONS:
       {
-        var productVersions = action.payload.productVersions;
+        var productVersions = action.payload;
         return productVersions;
       }
 

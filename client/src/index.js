@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { List } from 'immutable'
+import { List, fromJS } from 'immutable'
 import Downshift from 'downshift'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -317,7 +317,9 @@ export const SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS'
 export const REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS'
 
 
-export const RESET_SUGGESTIONS = 'RESET_SUGGESTIONS'
+export const RESET_VENDOR_NAME_SUGGESTIONS = 'RESET_VENDOR_NAME_SUGGESTIONS'
+export const RESET_PRODUCT_NAME_SUGGESTIONS = 'RESET_PRODUCT_NAME_SUGGESTIONS'
+export const RESET_PRODUCT_VERSION_SUGGESTIONS = 'RESET_PRODUCT_VERSION_SUGGESTIONS'
 export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
 
 
@@ -340,8 +342,12 @@ export const refreshVulnerableAssets = payload => ({
   payload, type: REFRESH_VULNERABLE_ASSETS})
 
 
-export const resetSuggestions = payload => ({
-  payload, type: RESET_SUGGESTIONS})
+export const resetVendorNameSuggestions = payload => ({
+  payload, type: RESET_VENDOR_NAME_SUGGESTIONS})
+export const resetProductNameSuggestions = payload => ({
+  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS})
+export const resetProductVersionSuggestions = payload => ({
+  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS})
 export const clearSuggestions = payload => ({
   payload, type: CLEAR_SUGGESTIONS})
 
@@ -354,7 +360,7 @@ export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
     const { typeId, vendorName } = action.payload
     if (!vendorName.trim()) {
-      yield put(resetSuggestions({vendorNames: List()}))
+      yield put(clearSuggestions())
       return
     }
     const url = '/extensions/vulnerability/vendorNames.json'
@@ -364,7 +370,7 @@ export function* watchSuggestVendorNames() {
     ]
     yield fetchSafely(url + '?' + params.join('&'), {}, {
       on200: function* (vendorNames) {
-        yield put(resetSuggestions({vendorNames}))
+        yield put(resetVendorNameSuggestions(vendorNames))
       },
     })
   })
@@ -382,7 +388,7 @@ export function* watchSuggestProductNames() {
     ]
     yield fetchSafely(url + '?' + params.join('&'), {}, {
       on200: function* (productNames) {
-        yield put(resetSuggestions({productNames}))
+        yield put(resetProductNameSuggestions(productNames))
       },
     })
   })
@@ -401,7 +407,7 @@ export function* watchSuggestProductVersions() {
     ]
     yield fetchSafely(url + '?' + params.join('&'), {}, {
       on200: function* (productVersions) {
-        yield put(resetSuggestions({productVersions}))
+        yield put(resetProductVersionSuggestions(productVersions))
       },
     })
   })
@@ -440,8 +446,8 @@ export function* fetchSafely(url, options, callbacks) {
 
 export const vendorNameSuggestions = (state = List(), action) => {
   switch (action.type) {
-    case RESET_SUGGESTIONS: {
-      const { vendorNames } = action.payload
+    case RESET_VENDOR_NAME_SUGGESTIONS: {
+      const vendorNames = action.payload
       return vendorNames
     }
     case CLEAR_SUGGESTIONS: {
@@ -456,8 +462,8 @@ export const vendorNameSuggestions = (state = List(), action) => {
 
 export const productNameSuggestions = (state = List(), action) => {
   switch (action.type) {
-    case RESET_SUGGESTIONS: {
-      const { productNames } = action.payload
+    case RESET_PRODUCT_NAME_SUGGESTIONS: {
+      const productNames = action.payload
       return productNames
     }
     case CLEAR_SUGGESTIONS: {
@@ -472,8 +478,8 @@ export const productNameSuggestions = (state = List(), action) => {
 
 export const productVersionSuggestions = (state = List(), action) => {
   switch (action.type) {
-    case RESET_SUGGESTIONS: {
-      const { productVersions } = action.payload
+    case RESET_PRODUCT_VERSION_SUGGESTIONS: {
+      const productVersions = action.payload
       return productVersions
     }
     case CLEAR_SUGGESTIONS: {
