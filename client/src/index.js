@@ -1,19 +1,41 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { call, put, takeLatest } from 'redux-saga/effects'
+import { createSelector } from 'reselect'
 import { List, fromJS } from 'immutable'
 import Downshift from 'downshift'
+import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
+
+
+const styles = theme => ({
+  card: {
+    width: theme.spacing.unit * 32,
+  },
+  title: {
+    fontSize: 24,
+  },
+})
+
+
+const AdapterLink = React.forwardRef((props, ref) =>
+  <Link innerRef={ref} {...props} />)
 
 
 export const getVendorNameSuggestions = state => state.get(
@@ -24,6 +46,13 @@ export const getProductVersionSuggestions = state => state.get(
   'productVersionSuggestions')
 export const getVulnerableAssets = state => state.get(
   'vulnerableAssets')
+
+
+export const getVulnerableAssetCount = createSelector([
+  getVulnerableAssets,
+], (
+  vulnerableAssets,
+) => vulnerableAssets.count())
 
 
 class EnhancedInput extends PureComponent {
@@ -211,6 +240,31 @@ class _ProductVersion extends PureComponent {
 }
 
 
+class _VulnerabilitiesCard extends PureComponent {
+  render() {
+    const {
+      classes,
+      vulnerableAssetCount,
+    } = this.props
+    return (
+      <Card className={classes.card}>
+        <CardContent>
+          <Typography className={classes.title}>
+            {vulnerableAssetCount} Vulnerabilit{vulnerableAssetCount === 1 ? 'y' : 'ies'}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button
+            component={AdapterLink}
+            to='/reports/vulnerabilities'
+          >View</Button>
+        </CardActions>
+      </Card>
+    )
+  }
+}
+
+
 class _VulnerabilitiesWindow extends PureComponent {
 
   componentDidMount() {
@@ -308,6 +362,15 @@ export const VulnerabilitiesWindow = connect(
       refreshVulnerableAssets(payload))},
   }),
 )(_VulnerabilitiesWindow)
+
+
+export const VulnerabilitiesCard = connect(
+  state => ({
+    vulnerableAssetCount: getVulnerableAssetCount(state),
+  }),
+  dispatch => ({
+  }),
+)(withStyles(styles)(_VulnerabilitiesCard))
 
 
 export const LOG_ERROR = 'LOG_ERROR'

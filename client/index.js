@@ -8,17 +8,23 @@ exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshVulnerableAssets = watchRefreshVulnerableAssets;
 exports.fetchSafely = fetchSafely;
-exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetVulnerableAssets = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_VULNERABLE_ASSETS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.vulnerableAssets = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetVulnerableAssets = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshVulnerableAssets = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_VULNERABLE_ASSETS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_VULNERABLE_ASSETS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.VulnerabilitiesCard = exports.VulnerabilitiesWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getVulnerableAssetCount = exports.getVulnerableAssets = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _reactRedux = require("react-redux");
 
+var _reactRouterDom = require("react-router-dom");
+
 var _effects = require("redux-saga/effects");
+
+var _reselect = require("reselect");
 
 var _immutable = require("immutable");
 
 var _downshift = _interopRequireDefault(require("downshift"));
+
+var _styles = require("@material-ui/core/styles");
 
 var _TextField = _interopRequireDefault(require("@material-ui/core/TextField"));
 
@@ -31,6 +37,16 @@ var _Clear = _interopRequireDefault(require("@material-ui/icons/Clear"));
 var _Paper = _interopRequireDefault(require("@material-ui/core/Paper"));
 
 var _MenuItem = _interopRequireDefault(require("@material-ui/core/MenuItem"));
+
+var _Card = _interopRequireDefault(require("@material-ui/core/Card"));
+
+var _CardContent = _interopRequireDefault(require("@material-ui/core/CardContent"));
+
+var _CardActions = _interopRequireDefault(require("@material-ui/core/CardActions"));
+
+var _Typography = _interopRequireDefault(require("@material-ui/core/Typography"));
+
+var _Button = _interopRequireDefault(require("@material-ui/core/Button"));
 
 var _Table = _interopRequireDefault(require("@material-ui/core/Table"));
 
@@ -64,8 +80,6 @@ regeneratorRuntime.mark(fetchSafely);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -83,6 +97,25 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+var styles = function styles(theme) {
+  return {
+    card: {
+      width: theme.spacing.unit * 32
+    },
+    title: {
+      fontSize: 24
+    }
+  };
+};
+
+var AdapterLink = _react["default"].forwardRef(function (props, ref) {
+  return _react["default"].createElement(_reactRouterDom.Link, _extends({
+    innerRef: ref
+  }, props));
+});
 
 var getVendorNameSuggestions = function getVendorNameSuggestions(state) {
   return state.get('vendorNameSuggestions');
@@ -107,6 +140,10 @@ var getVulnerableAssets = function getVulnerableAssets(state) {
 };
 
 exports.getVulnerableAssets = getVulnerableAssets;
+var getVulnerableAssetCount = (0, _reselect.createSelector)([getVulnerableAssets], function (vulnerableAssets) {
+  return vulnerableAssets.count();
+});
+exports.getVulnerableAssetCount = getVulnerableAssetCount;
 
 var _ref2 =
 /*#__PURE__*/
@@ -359,14 +396,49 @@ function (_PureComponent4) {
 
 var _ref3 =
 /*#__PURE__*/
+_react["default"].createElement(_CardActions["default"], null, _react["default"].createElement(_Button["default"], {
+  component: AdapterLink,
+  to: "/reports/vulnerabilities"
+}, "View"));
+
+var _VulnerabilitiesCard =
+/*#__PURE__*/
+function (_PureComponent5) {
+  _inherits(_VulnerabilitiesCard, _PureComponent5);
+
+  function _VulnerabilitiesCard() {
+    _classCallCheck(this, _VulnerabilitiesCard);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesCard).apply(this, arguments));
+  }
+
+  _createClass(_VulnerabilitiesCard, [{
+    key: "render",
+    value: function render() {
+      var _this$props7 = this.props,
+          classes = _this$props7.classes,
+          vulnerableAssetCount = _this$props7.vulnerableAssetCount;
+      return _react["default"].createElement(_Card["default"], {
+        className: classes.card
+      }, _react["default"].createElement(_CardContent["default"], null, _react["default"].createElement(_Typography["default"], {
+        className: classes.title
+      }, vulnerableAssetCount, " Vulnerabilit", vulnerableAssetCount === 1 ? 'y' : 'ies')), _ref3);
+    }
+  }]);
+
+  return _VulnerabilitiesCard;
+}(_react.PureComponent);
+
+var _ref4 =
+/*#__PURE__*/
 _react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], {
   align: "right"
 }, "Published")));
 
 var _VulnerabilitiesWindow =
 /*#__PURE__*/
-function (_PureComponent5) {
-  _inherits(_VulnerabilitiesWindow, _PureComponent5);
+function (_PureComponent6) {
+  _inherits(_VulnerabilitiesWindow, _PureComponent6);
 
   function _VulnerabilitiesWindow() {
     _classCallCheck(this, _VulnerabilitiesWindow);
@@ -384,7 +456,7 @@ function (_PureComponent5) {
     key: "render",
     value: function render() {
       var vulnerableAssets = this.props.vulnerableAssets;
-      return _react["default"].createElement(_Table["default"], null, _ref3, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
+      return _react["default"].createElement(_Table["default"], null, _ref4, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
         var assetName = asset.get('name');
         var meterCount = asset.get('meterCount');
         var threat = asset.get('threat');
@@ -467,6 +539,14 @@ var VulnerabilitiesWindow = (0, _reactRedux.connect)(function (state) {
   };
 })(_VulnerabilitiesWindow);
 exports.VulnerabilitiesWindow = VulnerabilitiesWindow;
+var VulnerabilitiesCard = (0, _reactRedux.connect)(function (state) {
+  return {
+    vulnerableAssetCount: getVulnerableAssetCount(state)
+  };
+}, function (dispatch) {
+  return {};
+})((0, _styles.withStyles)(styles)(_VulnerabilitiesCard));
+exports.VulnerabilitiesCard = VulnerabilitiesCard;
 var LOG_ERROR = 'LOG_ERROR';
 exports.LOG_ERROR = LOG_ERROR;
 var SUGGEST_VENDOR_NAMES = 'SUGGEST_VENDOR_NAMES';
