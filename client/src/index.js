@@ -244,13 +244,16 @@ class _VulnerabilitiesCard extends PureComponent {
   render() {
     const {
       classes,
-      vulnerableAssetCount,
+      // vulnerableAssetCount,
     } = this.props
     return (
       <Card className={classes.card}>
         <CardContent>
           <Typography className={classes.title}>
+            {/*
             {vulnerableAssetCount} Vulnerabilit{vulnerableAssetCount === 1 ? 'y' : 'ies'}
+            */}
+            Vulnerabilities
           </Typography>
         </CardContent>
         <CardActions>
@@ -366,7 +369,7 @@ export const VulnerabilitiesWindow = connect(
 
 export const VulnerabilitiesCard = connect(
   state => ({
-    vulnerableAssetCount: getVulnerableAssetCount(state),
+    // vulnerableAssetCount: getVulnerableAssetCount(state),
   }),
   dispatch => ({
   }),

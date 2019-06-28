@@ -415,14 +415,12 @@ function (_PureComponent5) {
   _createClass(_VulnerabilitiesCard, [{
     key: "render",
     value: function render() {
-      var _this$props7 = this.props,
-          classes = _this$props7.classes,
-          vulnerableAssetCount = _this$props7.vulnerableAssetCount;
+      var classes = this.props.classes;
       return _react["default"].createElement(_Card["default"], {
         className: classes.card
       }, _react["default"].createElement(_CardContent["default"], null, _react["default"].createElement(_Typography["default"], {
         className: classes.title
-      }, vulnerableAssetCount, " Vulnerabilit", vulnerableAssetCount === 1 ? 'y' : 'ies')), _ref3);
+      }, "Vulnerabilities")), _ref3);
     }
   }]);
 
@@ -540,8 +538,7 @@ var VulnerabilitiesWindow = (0, _reactRedux.connect)(function (state) {
 })(_VulnerabilitiesWindow);
 exports.VulnerabilitiesWindow = VulnerabilitiesWindow;
 var VulnerabilitiesCard = (0, _reactRedux.connect)(function (state) {
-  return {
-    vulnerableAssetCount: getVulnerableAssetCount(state)
+  return {// vulnerableAssetCount: getVulnerableAssetCount(state),
   };
 }, function (dispatch) {
   return {};
