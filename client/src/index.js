@@ -58,23 +58,21 @@ export const getVulnerableAssetCount = createSelector([
 class EnhancedInput extends PureComponent {
 
   handleStateChange = changes => {
-    const changedSelectedItem = changes.hasOwnProperty('selectedItem')
-    const changedInputValue = changes.hasOwnProperty('inputValue')
-    const changedIsOpen = changes.hasOwnProperty('isOpen')
+    const changesType = changes.type
     const {
       attribute,
       onSuggest,
       trackChanges,
     } = this.props
 
-    if (changedSelectedItem) {
+    if (changes.hasOwnProperty('selectedItem')) {
       const value = changes.selectedItem
       this.saveChanges({[attribute]: value})
-    } else if (changedIsOpen && changedInputValue) {
+    } else if (changesType === '__autocomplete_change_input__') {
       const value = changes.inputValue
       trackChanges({[attribute]: value})
       onSuggest(value)
-    } else if (changedIsOpen) {
+    } else if (changes.isOpen === false) {
       const value = this.props.value
       this.saveChanges({[attribute]: value})
     }

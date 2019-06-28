@@ -168,23 +168,21 @@ function (_PureComponent) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(EnhancedInput)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_this), "handleStateChange", function (changes) {
-      var changedSelectedItem = changes.hasOwnProperty('selectedItem');
-      var changedInputValue = changes.hasOwnProperty('inputValue');
-      var changedIsOpen = changes.hasOwnProperty('isOpen');
+      var changesType = changes.type;
       var _this$props = _this.props,
           attribute = _this$props.attribute,
           onSuggest = _this$props.onSuggest,
           trackChanges = _this$props.trackChanges;
 
-      if (changedSelectedItem) {
+      if (changes.hasOwnProperty('selectedItem')) {
         var value = changes.selectedItem;
 
         _this.saveChanges(_defineProperty({}, attribute, value));
-      } else if (changedIsOpen && changedInputValue) {
+      } else if (changesType === '__autocomplete_change_input__') {
         var _value = changes.inputValue;
         trackChanges(_defineProperty({}, attribute, _value));
         onSuggest(_value);
-      } else if (changedIsOpen) {
+      } else if (changes.isOpen === false) {
         var _value2 = _this.props.value;
 
         _this.saveChanges(_defineProperty({}, attribute, _value2));
