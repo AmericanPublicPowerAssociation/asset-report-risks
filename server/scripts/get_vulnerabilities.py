@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 from asset_vulnerability_report.routines import (
     get_nvd_database,
-    get_nvd_ids,
+    get_matching_nvd_ids,
     load_cve,
     yield_nvd_pack)
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     print(a)
     cve = load_cve()
     nvd_database = get_nvd_database()
-    nvd_ids = get_nvd_ids(
+    nvd_ids = get_matching_nvd_ids(
         cve,
         a.component_type,
         a.vendor_name,

@@ -29,19 +29,23 @@ export const getVulnerableAssets = state => state.get(
 class EnhancedInput extends PureComponent {
 
   handleStateChange = changes => {
+    const changedSelectedItem = changes.hasOwnProperty('selectedItem')
+    const changedInputValue = changes.hasOwnProperty('inputValue')
+    const changedIsOpen = changes.hasOwnProperty('isOpen')
     const {
       attribute,
       onSuggest,
       trackChanges,
     } = this.props
-    if (changes.hasOwnProperty('selectedItem')) {
+
+    if (changedSelectedItem) {
       const value = changes.selectedItem
       this.saveChanges({[attribute]: value})
-    } else if (changes.hasOwnProperty('inputValue')) {
+    } else if (changedIsOpen && changedInputValue) {
       const value = changes.inputValue
       trackChanges({[attribute]: value})
       onSuggest(value)
-    } else if (changes.hasOwnProperty('isOpen')) {
+    } else if (changedIsOpen) {
       const value = this.props.value
       this.saveChanges({[attribute]: value})
     }
@@ -123,7 +127,7 @@ class _VendorName extends PureComponent {
       clearSuggestions,
     } = this.props
     return (
-      <EnhancedInput 
+      <EnhancedInput
         className={className}
         label='Vendor Name'
         attribute='vendorName'
@@ -156,7 +160,7 @@ class _ProductName extends PureComponent {
       clearSuggestions,
     } = this.props
     return (
-      <EnhancedInput 
+      <EnhancedInput
         className={className}
         label='Product Name'
         attribute='productName'
@@ -190,7 +194,7 @@ class _ProductVersion extends PureComponent {
       clearSuggestions,
     } = this.props
     return (
-      <EnhancedInput 
+      <EnhancedInput
         className={className}
         label='Product Version'
         attribute='productVersion'

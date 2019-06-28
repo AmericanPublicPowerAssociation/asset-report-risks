@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from asset_tracker.models import Asset
 from asset_vulnerability_report.routines import (
     get_nvd_database,
-    get_nvd_ids,
+    get_matching_nvd_ids,
     get_vulnerable_assets_database,
     load_cve,
     yield_nvd_pack)
@@ -33,7 +33,7 @@ if __name__ == '__main__':
             vendor_name = asset_attributes.get('vendorName', '')
             product_name = asset_attributes.get('productName', '')
             product_version = asset_attributes.get('productVersion', '')
-            nvd_ids = get_nvd_ids(
+            nvd_ids = get_matching_nvd_ids(
                 cve,
                 component_type,
                 vendor_name,
