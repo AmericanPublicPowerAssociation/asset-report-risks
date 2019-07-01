@@ -100,17 +100,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-var styles = function styles(theme) {
-  return {
-    card: {
-      width: theme.spacing.unit * 32
-    },
-    title: {
-      fontSize: 24
-    }
-  };
-};
-
 var AdapterLink = _react["default"].forwardRef(function (props, ref) {
   return _react["default"].createElement(_reactRouterDom.Link, _extends({
     innerRef: ref
@@ -149,26 +138,25 @@ var _ref2 =
 /*#__PURE__*/
 _react["default"].createElement(_Clear["default"], null);
 
-var EnhancedInput =
+var EnhancedInputWithoutStyles =
 /*#__PURE__*/
 function (_PureComponent) {
-  _inherits(EnhancedInput, _PureComponent);
+  _inherits(EnhancedInputWithoutStyles, _PureComponent);
 
-  function EnhancedInput() {
+  function EnhancedInputWithoutStyles() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _classCallCheck(this, EnhancedInput);
+    _classCallCheck(this, EnhancedInputWithoutStyles);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(EnhancedInput)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(EnhancedInputWithoutStyles)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_this), "handleStateChange", function (changes) {
-      var changesType = changes.type;
       var _this$props = _this.props,
           attribute = _this$props.attribute,
           onSuggest = _this$props.onSuggest,
@@ -178,7 +166,7 @@ function (_PureComponent) {
         var value = changes.selectedItem;
 
         _this.saveChanges(_defineProperty({}, attribute, value));
-      } else if (changesType === '__autocomplete_change_input__') {
+      } else if (changes.type === _downshift["default"].stateChangeTypes.changeInput) {
         var _value = changes.inputValue;
         trackChanges(_defineProperty({}, attribute, _value));
         onSuggest(_value);
@@ -200,10 +188,11 @@ function (_PureComponent) {
     return _this;
   }
 
-  _createClass(EnhancedInput, [{
+  _createClass(EnhancedInputWithoutStyles, [{
     key: "render",
     value: function render() {
       var _this$props3 = this.props,
+          classes = _this$props3.classes,
           className = _this$props3.className,
           label = _this$props3.label,
           value = _this$props3.value,
@@ -234,6 +223,7 @@ function (_PureComponent) {
             shrink: true
           }
         }), isOpen && !suggestions.isEmpty() && _react["default"].createElement(_Paper["default"], _extends({
+          className: classes.paper,
           square: true
         }, getMenuProps()), suggestions.map(function (suggestion, index) {
           var isHighlighted = highlightedIndex === index;
@@ -248,8 +238,20 @@ function (_PureComponent) {
     }
   }]);
 
-  return EnhancedInput;
+  return EnhancedInputWithoutStyles;
 }(_react.PureComponent);
+
+var EnhancedInput = (0, _styles.withStyles)(function (theme) {
+  return {
+    paper: {
+      position: 'absolute',
+      zIndex: 1,
+      marginTop: theme.spacing.unit * 1,
+      left: theme.spacing.unit * 1,
+      right: theme.spacing.unit * 1
+    }
+  };
+})(EnhancedInputWithoutStyles);
 
 var _VendorName =
 /*#__PURE__*/
@@ -399,18 +401,18 @@ _react["default"].createElement(_CardActions["default"], null, _react["default"]
   to: "/reports/vulnerabilities"
 }, "View"));
 
-var _VulnerabilitiesCard =
+var _VulnerabilitiesCardWithoutStyles =
 /*#__PURE__*/
 function (_PureComponent5) {
-  _inherits(_VulnerabilitiesCard, _PureComponent5);
+  _inherits(_VulnerabilitiesCardWithoutStyles, _PureComponent5);
 
-  function _VulnerabilitiesCard() {
-    _classCallCheck(this, _VulnerabilitiesCard);
+  function _VulnerabilitiesCardWithoutStyles() {
+    _classCallCheck(this, _VulnerabilitiesCardWithoutStyles);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesCard).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesCardWithoutStyles).apply(this, arguments));
   }
 
-  _createClass(_VulnerabilitiesCard, [{
+  _createClass(_VulnerabilitiesCardWithoutStyles, [{
     key: "render",
     value: function render() {
       var classes = this.props.classes;
@@ -422,8 +424,19 @@ function (_PureComponent5) {
     }
   }]);
 
-  return _VulnerabilitiesCard;
+  return _VulnerabilitiesCardWithoutStyles;
 }(_react.PureComponent);
+
+var _VulnerabilitiesCard = (0, _styles.withStyles)(function (theme) {
+  return {
+    card: {
+      width: theme.spacing.unit * 32
+    },
+    title: {
+      fontSize: 24
+    }
+  };
+})(_VulnerabilitiesCardWithoutStyles);
 
 var _ref4 =
 /*#__PURE__*/
@@ -540,7 +553,7 @@ var VulnerabilitiesCard = (0, _reactRedux.connect)(function (state) {
   };
 }, function (dispatch) {
   return {};
-})((0, _styles.withStyles)(styles)(_VulnerabilitiesCard));
+})(_VulnerabilitiesCard);
 exports.VulnerabilitiesCard = VulnerabilitiesCard;
 var LOG_ERROR = 'LOG_ERROR';
 exports.LOG_ERROR = LOG_ERROR;

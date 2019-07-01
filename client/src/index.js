@@ -24,16 +24,6 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 
 
-const styles = theme => ({
-  card: {
-    width: theme.spacing.unit * 32,
-  },
-  title: {
-    fontSize: 24,
-  },
-})
-
-
 const AdapterLink = React.forwardRef((props, ref) =>
   <Link innerRef={ref} {...props} />)
 
@@ -55,10 +45,9 @@ export const getVulnerableAssetCount = createSelector([
 ) => vulnerableAssets.count())
 
 
-class EnhancedInput extends PureComponent {
+class EnhancedInputWithoutStyles extends PureComponent {
 
   handleStateChange = changes => {
-    const changesType = changes.type
     const {
       attribute,
       onSuggest,
@@ -68,7 +57,7 @@ class EnhancedInput extends PureComponent {
     if (changes.hasOwnProperty('selectedItem')) {
       const value = changes.selectedItem
       this.saveChanges({[attribute]: value})
-    } else if (changesType === '__autocomplete_change_input__') {
+    } else if (changes.type === Downshift.stateChangeTypes.changeInput) {
       const value = changes.inputValue
       trackChanges({[attribute]: value})
       onSuggest(value)
@@ -89,6 +78,7 @@ class EnhancedInput extends PureComponent {
 
   render() {
     const {
+      classes,
       className,
       label,
       value,
@@ -117,7 +107,7 @@ class EnhancedInput extends PureComponent {
             InputLabelProps={{shrink: true}}
           />
         {isOpen && !suggestions.isEmpty() &&
-          <Paper square {...getMenuProps()}>
+          <Paper className={classes.paper} square {...getMenuProps()}>
           {suggestions.map((suggestion, index) => {
             const isHighlighted = highlightedIndex === index
             return (
@@ -137,6 +127,15 @@ class EnhancedInput extends PureComponent {
   }
 
 }
+const EnhancedInput = withStyles(theme => ({
+  paper: {
+    position: 'absolute',
+    zIndex: 1,
+    marginTop: theme.spacing.unit * 1,
+    left: theme.spacing.unit * 1,
+    right: theme.spacing.unit * 1,
+  },
+}))(EnhancedInputWithoutStyles)
 
 
 class _VendorName extends PureComponent {
@@ -238,7 +237,7 @@ class _ProductVersion extends PureComponent {
 }
 
 
-class _VulnerabilitiesCard extends PureComponent {
+class _VulnerabilitiesCardWithoutStyles extends PureComponent {
   render() {
     const {
       classes,
@@ -264,6 +263,14 @@ class _VulnerabilitiesCard extends PureComponent {
     )
   }
 }
+const _VulnerabilitiesCard = withStyles(theme => ({
+  card: {
+    width: theme.spacing.unit * 32,
+  },
+  title: {
+    fontSize: 24,
+  },
+}))(_VulnerabilitiesCardWithoutStyles)
 
 
 class _VulnerabilitiesWindow extends PureComponent {
@@ -371,7 +378,7 @@ export const VulnerabilitiesCard = connect(
   }),
   dispatch => ({
   }),
-)(withStyles(styles)(_VulnerabilitiesCard))
+)(_VulnerabilitiesCard)
 
 
 export const LOG_ERROR = 'LOG_ERROR'
