@@ -30,9 +30,9 @@ if __name__ == '__main__':
             asset_type_id = asset.type_id
             component_type = '*' if asset_type_id[0] == 'X' else 'h'
             asset_attributes = asset.attributes or {}
-            vendor_name = asset_attributes.get('vendorName', '')
-            product_name = asset_attributes.get('productName', '')
-            product_version = asset_attributes.get('productVersion', '')
+            vendor_name = asset_attributes.get('vendorName') or ''
+            product_name = asset_attributes.get('productName') or ''
+            product_version = asset_attributes.get('productVersion') or ''
             nvd_ids = get_matching_nvd_ids(
                 cve,
                 component_type,
