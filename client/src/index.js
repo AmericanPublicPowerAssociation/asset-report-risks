@@ -95,9 +95,11 @@ class EnhancedInputWithoutStyles extends PureComponent {
         clearSelection,
       }) => (
         <div className={className}>
-          <TextField label={label} fullWidth
+          <TextField
+            fullWidth
+            label={label}
             InputProps={getInputProps({
-                endAdornment: 
+              endAdornment:
                 <InputAdornment position='end'>
                   <IconButton onClick={clearSelection}>
                     <ClearIcon />
@@ -131,9 +133,9 @@ const EnhancedInput = withStyles(theme => ({
   paper: {
     position: 'absolute',
     zIndex: 1,
-    marginTop: theme.spacing.unit * 1,
-    left: theme.spacing.unit * 1,
-    right: theme.spacing.unit * 1,
+    marginTop: theme.spacing(1),
+    left: theme.spacing(1),
+    right: theme.spacing(1),
   },
 }))(EnhancedInputWithoutStyles)
 
@@ -241,15 +243,11 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
   render() {
     const {
       classes,
-      // vulnerableAssetCount,
     } = this.props
     return (
       <Card className={classes.card}>
         <CardContent>
           <Typography className={classes.title}>
-            {/*
-            {vulnerableAssetCount} Vulnerabilit{vulnerableAssetCount === 1 ? 'y' : 'ies'}
-            */}
             Vulnerabilities
           </Typography>
         </CardContent>
@@ -265,7 +263,7 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
 }
 const _VulnerabilitiesCard = withStyles(theme => ({
   card: {
-    width: theme.spacing.unit * 32,
+    width: theme.spacing(32),
   },
   title: {
     fontSize: 24,

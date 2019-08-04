@@ -210,8 +210,8 @@ function (_PureComponent) {
         return _react["default"].createElement("div", {
           className: className
         }, _react["default"].createElement(_TextField["default"], {
-          label: label,
           fullWidth: true,
+          label: label,
           InputProps: getInputProps({
             endAdornment: _react["default"].createElement(_InputAdornment["default"], {
               position: "end"
@@ -246,9 +246,9 @@ var EnhancedInput = (0, _styles.withStyles)(function (theme) {
     paper: {
       position: 'absolute',
       zIndex: 1,
-      marginTop: theme.spacing.unit * 1,
-      left: theme.spacing.unit * 1,
-      right: theme.spacing.unit * 1
+      marginTop: theme.spacing(1),
+      left: theme.spacing(1),
+      right: theme.spacing(1)
     }
   };
 })(EnhancedInputWithoutStyles);
@@ -430,7 +430,7 @@ function (_PureComponent5) {
 var _VulnerabilitiesCard = (0, _styles.withStyles)(function (theme) {
   return {
     card: {
-      width: theme.spacing.unit * 32
+      width: theme.spacing(32)
     },
     title: {
       fontSize: 24
