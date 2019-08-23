@@ -40,6 +40,8 @@ var _MenuItem = _interopRequireDefault(require("@material-ui/core/MenuItem"));
 
 var _Card = _interopRequireDefault(require("@material-ui/core/Card"));
 
+var _CardActionArea = _interopRequireDefault(require("@material-ui/core/CardActionArea"));
+
 var _CardContent = _interopRequireDefault(require("@material-ui/core/CardContent"));
 
 var _CardActions = _interopRequireDefault(require("@material-ui/core/CardActions"));
@@ -57,6 +59,10 @@ var _TableBody = _interopRequireDefault(require("@material-ui/core/TableBody"));
 var _TableRow = _interopRequireDefault(require("@material-ui/core/TableRow"));
 
 var _TableCell = _interopRequireDefault(require("@material-ui/core/TableCell"));
+
+var _Grid = _interopRequireDefault(require("@material-ui/core/Grid"));
+
+var _Link = _interopRequireDefault(require("@material-ui/core/Link"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -101,7 +107,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 var AdapterLink = _react["default"].forwardRef(function (props, ref) {
-  return _react["default"].createElement(_reactRouterDom.Link, _extends({
+  return _react["default"].createElement(_Link["default"], _extends({
     innerRef: ref
   }, props));
 });
@@ -394,13 +400,6 @@ function (_PureComponent4) {
   return _ProductVersion;
 }(_react.PureComponent);
 
-var _ref3 =
-/*#__PURE__*/
-_react["default"].createElement(_CardActions["default"], null, _react["default"].createElement(_Button["default"], {
-  component: AdapterLink,
-  to: "/reports/vulnerabilities"
-}, "View"));
-
 var _VulnerabilitiesCardWithoutStyles =
 /*#__PURE__*/
 function (_PureComponent5) {
@@ -416,11 +415,24 @@ function (_PureComponent5) {
     key: "render",
     value: function render() {
       var classes = this.props.classes;
-      return _react["default"].createElement(_Card["default"], {
+      return _react["default"].createElement(_Grid["default"], {
+        container: true,
+        spacing: 3
+      }, _react["default"].createElement(_Grid["default"], {
+        item: true,
+        xs: true
+      }, _react["default"].createElement(_Link["default"], {
+        underline: "none",
+        component: _reactRouterDom.Link,
+        to: "/reports/vulnerabilities"
+      }, _react["default"].createElement(_Card["default"], {
         className: classes.card
-      }, _react["default"].createElement(_CardContent["default"], null, _react["default"].createElement(_Typography["default"], {
-        className: classes.title
-      }, "Vulnerabilities")), _ref3);
+      }, _react["default"].createElement(_CardActionArea["default"], {
+        className: classes.cardActionArea
+      }, _react["default"].createElement(_Typography["default"], {
+        className: classes.title,
+        align: "center"
+      }, "Vulnerabilities"))))));
     }
   }]);
 
@@ -434,11 +446,15 @@ var _VulnerabilitiesCard = (0, _styles.withStyles)(function (theme) {
     },
     title: {
       fontSize: 24
+    },
+    cardActionArea: {
+      // width: theme.spacing(48),
+      padding: theme.spacing(3)
     }
   };
 })(_VulnerabilitiesCardWithoutStyles);
 
-var _ref4 =
+var _ref3 =
 /*#__PURE__*/
 _react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], {
   align: "right"
@@ -465,7 +481,7 @@ function (_PureComponent6) {
     key: "render",
     value: function render() {
       var vulnerableAssets = this.props.vulnerableAssets;
-      return _react["default"].createElement(_Table["default"], null, _ref4, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
+      return _react["default"].createElement(_Table["default"], null, _ref3, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
         var assetName = asset.get('name');
         var meterCount = asset.get('meterCount');
         var threat = asset.get('threat');

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink} from 'react-router-dom'
 import { call, put, takeLatest } from 'redux-saga/effects'
 import { createSelector } from 'reselect'
 import { List, fromJS } from 'immutable'
@@ -13,6 +13,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import Card from '@material-ui/core/Card'
+import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
@@ -22,7 +23,8 @@ import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
-
+import Grid from '@material-ui/core/Grid'
+import Link from '@material-ui/core/Link'
 
 const AdapterLink = React.forwardRef((props, ref) =>
   <Link innerRef={ref} {...props} />)
@@ -42,7 +44,7 @@ export const getVulnerableAssetCount = createSelector([
   getVulnerableAssets,
 ], (
   vulnerableAssets,
-) => vulnerableAssets.count())
+  ) => vulnerableAssets.count())
 
 
 class EnhancedInputWithoutStyles extends PureComponent {
@@ -56,14 +58,14 @@ class EnhancedInputWithoutStyles extends PureComponent {
 
     if (changes.hasOwnProperty('selectedItem')) {
       const value = changes.selectedItem
-      this.saveChanges({[attribute]: value})
+      this.saveChanges({ [attribute]: value })
     } else if (changes.type === Downshift.stateChangeTypes.changeInput) {
       const value = changes.inputValue
-      trackChanges({[attribute]: value})
+      trackChanges({ [attribute]: value })
       onSuggest(value)
     } else if (changes.isOpen === false) {
       const value = this.props.value
-      this.saveChanges({[attribute]: value})
+      this.saveChanges({ [attribute]: value })
     }
   }
 
@@ -86,44 +88,44 @@ class EnhancedInputWithoutStyles extends PureComponent {
     } = this.props
     return (
       <Downshift selectedItem={value} onStateChange={this.handleStateChange}>
-      {({
-        isOpen,
-        highlightedIndex,
-        getInputProps,
-        getMenuProps,
-        getItemProps,
-        clearSelection,
-      }) => (
-        <div className={className}>
-          <TextField
-            fullWidth
-            label={label}
-            InputProps={getInputProps({
-              endAdornment:
-                <InputAdornment position='end'>
-                  <IconButton onClick={clearSelection}>
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-            })}
-            InputLabelProps={{shrink: true}}
-          />
-        {isOpen && !suggestions.isEmpty() &&
-          <Paper className={classes.paper} square {...getMenuProps()}>
-          {suggestions.map((suggestion, index) => {
-            const isHighlighted = highlightedIndex === index
-            return (
-              <MenuItem
-                key={index}
-                selected={isHighlighted}
-                {...getItemProps({item: suggestion})}
-              >{suggestion}</MenuItem>
-            )
-          })}
-          </Paper>
-        }
-        </div>
-      )}
+        {({
+          isOpen,
+          highlightedIndex,
+          getInputProps,
+          getMenuProps,
+          getItemProps,
+          clearSelection,
+        }) => (
+            <div className={className}>
+              <TextField
+                fullWidth
+                label={label}
+                InputProps={getInputProps({
+                  endAdornment:
+                    <InputAdornment position='end'>
+                      <IconButton onClick={clearSelection}>
+                        <ClearIcon />
+                      </IconButton>
+                    </InputAdornment>
+                })}
+                InputLabelProps={{ shrink: true }}
+              />
+              {isOpen && !suggestions.isEmpty() &&
+                <Paper className={classes.paper} square {...getMenuProps()}>
+                  {suggestions.map((suggestion, index) => {
+                    const isHighlighted = highlightedIndex === index
+                    return (
+                      <MenuItem
+                        key={index}
+                        selected={isHighlighted}
+                        {...getItemProps({ item: suggestion })}
+                      >{suggestion}</MenuItem>
+                    )
+                  })}
+                </Paper>
+              }
+            </div>
+          )}
       </Downshift>
     )
   }
@@ -162,7 +164,8 @@ class _VendorName extends PureComponent {
         value={vendorName}
         suggestions={vendorNameSuggestions}
         onSuggest={value => suggestVendorNames({
-          typeId, vendorName: value})}
+          typeId, vendorName: value
+        })}
         clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
@@ -195,7 +198,8 @@ class _ProductName extends PureComponent {
         value={productName}
         suggestions={productNameSuggestions}
         onSuggest={value => suggestProductNames({
-          typeId, vendorName, productName: value})}
+          typeId, vendorName, productName: value
+        })}
         clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
@@ -229,7 +233,8 @@ class _ProductVersion extends PureComponent {
         value={productVersion}
         suggestions={productVersionSuggestions}
         onSuggest={value => suggestProductVersions({
-          typeId, vendorName, productName, productVersion: value})}
+          typeId, vendorName, productName, productVersion: value
+        })}
         clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
@@ -245,19 +250,26 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
       classes,
     } = this.props
     return (
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography className={classes.title}>
-            Vulnerabilities
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button
-            component={AdapterLink}
+    
+      <Grid container spacing={3}>
+        <Grid item xs>
+          <Link
+            underline='none'
+            component={RouterLink}
             to='/reports/vulnerabilities'
-          >View</Button>
-        </CardActions>
-      </Card>
+          >
+            <Card className={classes.card}>
+              <CardActionArea className={classes.cardActionArea}>
+                <Typography className={classes.title} align='center'>
+                  Vulnerabilities
+                </Typography>
+              </CardActionArea>
+            </Card>
+          </Link>
+        </Grid>
+      </Grid>
+
+
     )
   }
 }
@@ -268,6 +280,11 @@ const _VulnerabilitiesCard = withStyles(theme => ({
   title: {
     fontSize: 24,
   },
+  cardActionArea: {
+    // width: theme.spacing(48),
+    padding: theme.spacing(3),
+  }
+
 }))(_VulnerabilitiesCardWithoutStyles)
 
 
@@ -292,26 +309,26 @@ class _VulnerabilitiesWindow extends PureComponent {
           </TableRow>
         </TableHead>
         <TableBody>
-        {vulnerableAssets.map((asset, index) => {
-          const assetName = asset.get('name')
-          const meterCount = asset.get('meterCount')
-          const threat = asset.get('threat')
-          const description = asset.get('description')
-          const url = asset.get('url')
-          const date = asset.get('date')
-          return (
-            <TableRow key={index}>
-              <TableCell component='th' scope='row'>{assetName}</TableCell>
-              <TableCell>{meterCount}</TableCell>
-              <TableCell>{threat}</TableCell>
-              <TableCell>{description}</TableCell>
-              <TableCell align='right'>
-                <a target='_blank' rel='noopener noreferrer'
-                  href={url}>{date}</a>
-              </TableCell>
-            </TableRow>
-          )
-        })}
+          {vulnerableAssets.map((asset, index) => {
+            const assetName = asset.get('name')
+            const meterCount = asset.get('meterCount')
+            const threat = asset.get('threat')
+            const description = asset.get('description')
+            const url = asset.get('url')
+            const date = asset.get('date')
+            return (
+              <TableRow key={index}>
+                <TableCell component='th' scope='row'>{assetName}</TableCell>
+                <TableCell>{meterCount}</TableCell>
+                <TableCell>{threat}</TableCell>
+                <TableCell>{description}</TableCell>
+                <TableCell align='right'>
+                  <a target='_blank' rel='noopener noreferrer'
+                    href={url}>{date}</a>
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     )
@@ -325,10 +342,14 @@ export const VendorName = connect(
     vendorNameSuggestions: getVendorNameSuggestions(state),
   }),
   dispatch => ({
-    suggestVendorNames: payload => {dispatch(
-      suggestVendorNames(payload))},
-    clearSuggestions: payload => {dispatch(
-      clearSuggestions(payload))},
+    suggestVendorNames: payload => {
+      dispatch(
+        suggestVendorNames(payload))
+    },
+    clearSuggestions: payload => {
+      dispatch(
+        clearSuggestions(payload))
+    },
   }),
 )(_VendorName)
 
@@ -338,10 +359,14 @@ export const ProductName = connect(
     productNameSuggestions: getProductNameSuggestions(state),
   }),
   dispatch => ({
-    suggestProductNames: payload => {dispatch(
-      suggestProductNames(payload))},
-    clearSuggestions: payload => {dispatch(
-      clearSuggestions(payload))},
+    suggestProductNames: payload => {
+      dispatch(
+        suggestProductNames(payload))
+    },
+    clearSuggestions: payload => {
+      dispatch(
+        clearSuggestions(payload))
+    },
   }),
 )(_ProductName)
 
@@ -351,10 +376,14 @@ export const ProductVersion = connect(
     productVersionSuggestions: getProductVersionSuggestions(state),
   }),
   dispatch => ({
-    suggestProductVersions: payload => {dispatch(
-      suggestProductVersions(payload))},
-    clearSuggestions: payload => {dispatch(
-      clearSuggestions(payload))},
+    suggestProductVersions: payload => {
+      dispatch(
+        suggestProductVersions(payload))
+    },
+    clearSuggestions: payload => {
+      dispatch(
+        clearSuggestions(payload))
+    },
   }),
 )(_ProductVersion)
 
@@ -364,8 +393,10 @@ export const VulnerabilitiesWindow = connect(
     vulnerableAssets: getVulnerableAssets(state),
   }),
   dispatch => ({
-    refreshVulnerableAssets: payload => {dispatch(
-      refreshVulnerableAssets(payload))},
+    refreshVulnerableAssets: payload => {
+      dispatch(
+        refreshVulnerableAssets(payload))
+    },
   }),
 )(_VulnerabilitiesWindow)
 
@@ -400,33 +431,43 @@ export const RESET_VULNERABLE_ASSETS = 'RESET_VULNERABLE_ASSETS'
 
 
 export const logError = payload => ({
-  payload, type: LOG_ERROR})
+  payload, type: LOG_ERROR
+})
 
 
 export const suggestVendorNames = payload => ({
-  payload, type: SUGGEST_VENDOR_NAMES})
+  payload, type: SUGGEST_VENDOR_NAMES
+})
 export const suggestProductNames = payload => ({
-  payload, type: SUGGEST_PRODUCT_NAMES})
+  payload, type: SUGGEST_PRODUCT_NAMES
+})
 export const suggestProductVersions = payload => ({
-  payload, type: SUGGEST_PRODUCT_VERSIONS})
+  payload, type: SUGGEST_PRODUCT_VERSIONS
+})
 
 
 export const refreshVulnerableAssets = payload => ({
-  payload, type: REFRESH_VULNERABLE_ASSETS})
+  payload, type: REFRESH_VULNERABLE_ASSETS
+})
 
 
 export const resetVendorNameSuggestions = payload => ({
-  payload, type: RESET_VENDOR_NAME_SUGGESTIONS})
+  payload, type: RESET_VENDOR_NAME_SUGGESTIONS
+})
 export const resetProductNameSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS})
+  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS
+})
 export const resetProductVersionSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS})
+  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS
+})
 export const clearSuggestions = payload => ({
-  payload, type: CLEAR_SUGGESTIONS})
+  payload, type: CLEAR_SUGGESTIONS
+})
 
 
 export const resetVulnerableAssets = payload => ({
-  payload, type: RESET_VULNERABLE_ASSETS})
+  payload, type: RESET_VULNERABLE_ASSETS
+})
 
 
 export function* watchSuggestVendorNames() {
@@ -509,10 +550,10 @@ export function* fetchSafely(url, options, callbacks) {
     } else if (on400 && status === 400) {
       yield on400(fromJS(yield response.json()))
     } else {
-      yield put(logError({status}))
+      yield put(logError({ status }))
     }
   } catch (error) {
-    yield put(logError({text: error}))
+    yield put(logError({ text: error }))
   }
 }
 
