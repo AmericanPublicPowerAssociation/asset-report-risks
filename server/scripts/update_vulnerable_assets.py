@@ -50,6 +50,7 @@ if __name__ == '__main__':
                 vulnerabilities.append({
                     'impact': nvd_score,
                     'texts': nvd_texts,
+                    # 'url': join('nvd.nist.gov/vuln/detail', nvd_id),
                     'url': join('https://nvd.nist.gov/vuln/detail', nvd_id),
                     'date': nvd_date,
                 })
