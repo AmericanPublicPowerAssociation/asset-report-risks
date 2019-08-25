@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Link as RouterLink} from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { call, put, takeLatest } from 'redux-saga/effects'
 import { createSelector } from 'reselect'
 import { List, fromJS } from 'immutable'
@@ -14,8 +14,6 @@ import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Table from '@material-ui/core/Table'
@@ -25,6 +23,12 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Popper from '@material-ui/core/Popper';
+import MenuList from '@material-ui/core/MenuList';
 
 const AdapterLink = React.forwardRef((props, ref) =>
   <Link innerRef={ref} {...props} />)
@@ -250,7 +254,7 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
       classes,
     } = this.props
     return (
-    
+
       <Grid container spacing={3}>
         <Grid item xs>
           <Link
@@ -273,6 +277,8 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
     )
   }
 }
+
+
 const _VulnerabilitiesCard = withStyles(theme => ({
   card: {
     width: theme.spacing(32),
@@ -287,6 +293,100 @@ const _VulnerabilitiesCard = withStyles(theme => ({
 
 }))(_VulnerabilitiesCardWithoutStyles)
 
+
+
+class _VulnerabilitiesSplitButton extends PureComponent {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     open: false,
+  //     anchorRef: null,
+  //     selectedIndex: 1,
+  //   };
+  // }
+
+
+  render() {
+    // const [open, setOpen] = React.useState(false);
+    // const anchorRef = React.useRef(null);
+    // const [selectedIndex, setSelectedIndex] = React.useState(1);
+
+    let {
+      open = false,
+      anchorRef = null,
+      selectedIndex = 0,
+    } = this.props
+
+    const vulnerabilitiesActionOptions = ['Action', 'Create a new asset record', 'Write a note'];
+
+    function handleClick() {
+      alert(`You clicked ${vulnerabilitiesActionOptions[selectedIndex]}`);
+    }
+
+    function handleMenuItemClick(event, index) {
+      selectedIndex = index
+      open = false
+    }
+
+    function handleToggle() {
+      open === !open
+    }
+
+    function handleClose(event) {
+      if (anchorRef && anchorRef.contains(event.target)) {
+        return;
+      }
+
+      open = false
+    }
+
+    return (
+      <Grid container>
+        <Grid item xs={12} align="center">
+          <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
+            <Button onClick={handleClick}>{vulnerabilitiesActionOptions[selectedIndex]}</Button>
+            <Button
+              color="primary"
+              size="small"
+              aria-owns={open ? 'menu-list-grow' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+            >
+              <ArrowDropDownIcon />
+            </Button>
+          </ButtonGroup>
+          <Popper open={open} anchorEl={anchorRef} transition disablePortal>
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                }}
+              >
+                <Paper id="menu-list-grow">
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList>
+                      {vulnerabilitiesActionOptions.map((option, index) => (
+                        <MenuItem
+                          key={option}
+                          //disabled={index === 2}
+                          selected={index === selectedIndex}
+                          onClick={event => handleMenuItemClick(event, index)}
+                        >
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+        </Grid>
+      </Grid>
+    );
+  }
+}
 
 class _VulnerabilitiesWindow extends PureComponent {
 
@@ -306,6 +406,7 @@ class _VulnerabilitiesWindow extends PureComponent {
             <TableCell>Aggregated Threat</TableCell>
             <TableCell>Vulnerability</TableCell>
             <TableCell align='right'>Published</TableCell>
+            <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -322,9 +423,14 @@ class _VulnerabilitiesWindow extends PureComponent {
                 <TableCell>{meterCount}</TableCell>
                 <TableCell>{threat}</TableCell>
                 <TableCell>{description}</TableCell>
-                <TableCell align='right'>
+                <TableCell>
                   <a target='_blank' rel='noopener noreferrer'
                     href={url}>{date}</a>
+                </TableCell>
+                <TableCell align='right'>Untreated</TableCell>
+                <TableCell align='right'>
+                  <_VulnerabilitiesSplitButton>
+                  </_VulnerabilitiesSplitButton>
                 </TableCell>
               </TableRow>
             )
