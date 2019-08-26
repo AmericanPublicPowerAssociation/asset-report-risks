@@ -23,12 +23,15 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const AdapterLink = React.forwardRef((props, ref) =>
   <Link innerRef={ref} {...props} />)
@@ -294,98 +297,62 @@ const _VulnerabilitiesCard = withStyles(theme => ({
 }))(_VulnerabilitiesCardWithoutStyles)
 
 
+class _VulnerabilitiesFormDialog extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      open: false,
+    }
+    this.handleClickOpen = this.handleClickOpen.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+  }
 
-class _VulnerabilitiesSplitButton extends PureComponent {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     open: false,
-  //     anchorRef: null,
-  //     selectedIndex: 1,
-  //   };
-  // }
+  
+  handleClickOpen() {
+    this.setState({ open: true });
+  }
 
+  handleClose() {
+    this.setState({ open: false });
+  }
 
   render() {
-    // const [open, setOpen] = React.useState(false);
-    // const anchorRef = React.useRef(null);
-    // const [selectedIndex, setSelectedIndex] = React.useState(1);
-
-    let {
-      open = false,
-      anchorRef = null,
-      selectedIndex = 0,
-    } = this.props
-
-    const vulnerabilitiesActionOptions = ['Action', 'Create a new asset record', 'Write a note'];
-
-    function handleClick() {
-      alert(`You clicked ${vulnerabilitiesActionOptions[selectedIndex]}`);
-    }
-
-    function handleMenuItemClick(event, index) {
-      selectedIndex = index
-      open = false
-    }
-
-    function handleToggle() {
-      open === !open
-    }
-
-    function handleClose(event) {
-      if (anchorRef && anchorRef.contains(event.target)) {
-        return;
-      }
-
-      open = false
-    }
-
     return (
-      <Grid container>
-        <Grid item xs={12} align="center">
-          <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
-            <Button onClick={handleClick}>{vulnerabilitiesActionOptions[selectedIndex]}</Button>
-            <Button
-              color="primary"
-              size="small"
-              aria-owns={open ? 'menu-list-grow' : undefined}
-              aria-haspopup="true"
-              onClick={handleToggle}
-            >
-              <ArrowDropDownIcon />
+      <div>
+        <Tooltip title="Add" aria-label="add" onClick={this.handleClickOpen}>
+          <Fab color="primary" >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Notes</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To solve this vulnerability issue, please enter your email address here. 
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Email Address"
+              type="email"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Create as a new record
             </Button>
-          </ButtonGroup>
-          <Popper open={open} anchorEl={anchorRef} transition disablePortal>
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-                }}
-              >
-                <Paper id="menu-list-grow">
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList>
-                      {vulnerabilitiesActionOptions.map((option, index) => (
-                        <MenuItem
-                          key={option}
-                          //disabled={index === 2}
-                          selected={index === selectedIndex}
-                          onClick={event => handleMenuItemClick(event, index)}
-                        >
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-        </Grid>
-      </Grid>
+            <Button onClick={this.handleClose} color="primary">
+              Save notes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     );
   }
+
+
 }
 
 class _VulnerabilitiesWindow extends PureComponent {
@@ -405,7 +372,7 @@ class _VulnerabilitiesWindow extends PureComponent {
             <TableCell>Meter Count</TableCell>
             <TableCell>Aggregated Threat</TableCell>
             <TableCell>Vulnerability</TableCell>
-            <TableCell align='right'>Published</TableCell>
+            <TableCell>Published</TableCell>
             <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
@@ -427,10 +394,9 @@ class _VulnerabilitiesWindow extends PureComponent {
                   <a target='_blank' rel='noopener noreferrer'
                     href={url}>{date}</a>
                 </TableCell>
-                <TableCell align='right'>Untreated</TableCell>
-                <TableCell align='right'>
-                  <_VulnerabilitiesSplitButton>
-                  </_VulnerabilitiesSplitButton>
+                <TableCell>Untreated</TableCell>
+                <TableCell>
+                  <_VulnerabilitiesFormDialog />
                 </TableCell>
               </TableRow>
             )

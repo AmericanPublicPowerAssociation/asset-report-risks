@@ -60,17 +60,21 @@ var _Grid = _interopRequireDefault(require("@material-ui/core/Grid"));
 
 var _Link = _interopRequireDefault(require("@material-ui/core/Link"));
 
-var _ButtonGroup = _interopRequireDefault(require("@material-ui/core/ButtonGroup"));
+var _Add = _interopRequireDefault(require("@material-ui/icons/Add"));
 
-var _ArrowDropDown = _interopRequireDefault(require("@material-ui/icons/ArrowDropDown"));
+var _Fab = _interopRequireDefault(require("@material-ui/core/Fab"));
 
-var _ClickAwayListener = _interopRequireDefault(require("@material-ui/core/ClickAwayListener"));
+var _Tooltip = _interopRequireDefault(require("@material-ui/core/Tooltip"));
 
-var _Grow = _interopRequireDefault(require("@material-ui/core/Grow"));
+var _Dialog = _interopRequireDefault(require("@material-ui/core/Dialog"));
 
-var _Popper = _interopRequireDefault(require("@material-ui/core/Popper"));
+var _DialogActions = _interopRequireDefault(require("@material-ui/core/DialogActions"));
 
-var _MenuList = _interopRequireDefault(require("@material-ui/core/MenuList"));
+var _DialogContent = _interopRequireDefault(require("@material-ui/core/DialogContent"));
+
+var _DialogContentText = _interopRequireDefault(require("@material-ui/core/DialogContentText"));
+
+var _DialogTitle = _interopRequireDefault(require("@material-ui/core/DialogTitle"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -464,132 +468,95 @@ var _VulnerabilitiesCard = (0, _styles.withStyles)(function (theme) {
 
 var _ref3 =
 /*#__PURE__*/
-_react["default"].createElement(_ArrowDropDown["default"], null);
+_react["default"].createElement(_Fab["default"], {
+  color: "primary"
+}, _react["default"].createElement(_Add["default"], null));
 
-var _VulnerabilitiesSplitButton =
+var _ref4 =
 /*#__PURE__*/
-function (_PureComponent6) {
-  _inherits(_VulnerabilitiesSplitButton, _PureComponent6);
-
-  function _VulnerabilitiesSplitButton() {
-    _classCallCheck(this, _VulnerabilitiesSplitButton);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesSplitButton).apply(this, arguments));
-  }
-
-  _createClass(_VulnerabilitiesSplitButton, [{
-    key: "render",
-    // constructor(props) {
-    //   super(props);
-    //   this.state = {
-    //     open: false,
-    //     anchorRef: null,
-    //     selectedIndex: 1,
-    //   };
-    // }
-    value: function render() {
-      // const [open, setOpen] = React.useState(false);
-      // const anchorRef = React.useRef(null);
-      // const [selectedIndex, setSelectedIndex] = React.useState(1);
-      var _this$props7 = this.props,
-          _this$props7$open = _this$props7.open,
-          open = _this$props7$open === void 0 ? false : _this$props7$open,
-          _this$props7$anchorRe = _this$props7.anchorRef,
-          anchorRef = _this$props7$anchorRe === void 0 ? null : _this$props7$anchorRe,
-          _this$props7$selected = _this$props7.selectedIndex,
-          selectedIndex = _this$props7$selected === void 0 ? 0 : _this$props7$selected;
-      var vulnerabilitiesActionOptions = ['Action', 'Create a merge commit', 'Squash and merge', 'Rebase and merge'];
-
-      function handleClick() {
-        alert("You clicked ".concat(vulnerabilitiesActionOptions[selectedIndex]));
-      }
-
-      function handleMenuItemClick(event, index) {
-        selectedIndex = index;
-        open = false;
-      }
-
-      function handleToggle() {
-        open === !open;
-      }
-
-      function handleClose(event) {
-        if (anchorRef && anchorRef.contains(event.target)) {
-          return;
-        }
-
-        open = false;
-      }
-
-      return _react["default"].createElement(_Grid["default"], {
-        container: true
-      }, _react["default"].createElement(_Grid["default"], {
-        item: true,
-        xs: 12,
-        align: "center"
-      }, _react["default"].createElement(_ButtonGroup["default"], {
-        variant: "contained",
-        color: "primary",
-        ref: anchorRef,
-        "aria-label": "split button"
-      }, _react["default"].createElement(_Button["default"], {
-        onClick: handleClick
-      }, vulnerabilitiesActionOptions[selectedIndex]), _react["default"].createElement(_Button["default"], {
-        color: "primary",
-        size: "small",
-        "aria-owns": open ? 'menu-list-grow' : undefined,
-        "aria-haspopup": "true",
-        onClick: handleToggle
-      }, _ref3)), _react["default"].createElement(_Popper["default"], {
-        open: open,
-        anchorEl: anchorRef,
-        transition: true,
-        disablePortal: true
-      }, function (_ref4) {
-        var TransitionProps = _ref4.TransitionProps,
-            placement = _ref4.placement;
-        return _react["default"].createElement(_Grow["default"], _extends({}, TransitionProps, {
-          style: {
-            transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'
-          }
-        }), _react["default"].createElement(_Paper["default"], {
-          id: "menu-list-grow"
-        }, _react["default"].createElement(_ClickAwayListener["default"], {
-          onClickAway: handleClose
-        }, _react["default"].createElement(_MenuList["default"], null, vulnerabilitiesActionOptions.map(function (option, index) {
-          return _react["default"].createElement(_MenuItem["default"], {
-            key: option //disabled={index === 2}
-            ,
-            selected: index === selectedIndex,
-            onClick: function onClick(event) {
-              return handleMenuItemClick(event, index);
-            }
-          }, option);
-        })))));
-      })));
-    }
-  }]);
-
-  return _VulnerabilitiesSplitButton;
-}(_react.PureComponent);
+_react["default"].createElement(_DialogTitle["default"], {
+  id: "form-dialog-title"
+}, "Notes");
 
 var _ref5 =
 /*#__PURE__*/
-_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], {
-  align: "right"
-}, "Published"), _react["default"].createElement(_TableCell["default"], null, "Status")));
+_react["default"].createElement(_DialogContent["default"], null, _react["default"].createElement(_DialogContentText["default"], null, "To solve this vulnerability issue, please enter your email address here."), _react["default"].createElement(_TextField["default"], {
+  autoFocus: true,
+  margin: "dense",
+  id: "name",
+  label: "Email Address",
+  type: "email",
+  fullWidth: true
+}));
+
+var _VulnerabilitiesFormDialog =
+/*#__PURE__*/
+function (_PureComponent6) {
+  _inherits(_VulnerabilitiesFormDialog, _PureComponent6);
+
+  function _VulnerabilitiesFormDialog(props) {
+    var _this2;
+
+    _classCallCheck(this, _VulnerabilitiesFormDialog);
+
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesFormDialog).call(this, props));
+    _this2.state = {
+      open: false
+    };
+    _this2.handleClickOpen = _this2.handleClickOpen.bind(_assertThisInitialized(_this2));
+    _this2.handleClose = _this2.handleClose.bind(_assertThisInitialized(_this2));
+    return _this2;
+  }
+
+  _createClass(_VulnerabilitiesFormDialog, [{
+    key: "handleClickOpen",
+    value: function handleClickOpen() {
+      this.setState({
+        open: true
+      });
+    }
+  }, {
+    key: "handleClose",
+    value: function handleClose() {
+      this.setState({
+        open: false
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react["default"].createElement("div", null, _react["default"].createElement(_Tooltip["default"], {
+        title: "Add",
+        "aria-label": "add",
+        onClick: this.handleClickOpen
+      }, _ref3), _react["default"].createElement(_Dialog["default"], {
+        open: this.state.open,
+        onClose: this.handleClose,
+        "aria-labelledby": "form-dialog-title"
+      }, _ref4, _ref5, _react["default"].createElement(_DialogActions["default"], null, _react["default"].createElement(_Button["default"], {
+        onClick: this.handleClose,
+        color: "primary"
+      }, "Create as a new record"), _react["default"].createElement(_Button["default"], {
+        onClick: this.handleClose,
+        color: "primary"
+      }, "Save notes"))));
+    }
+  }]);
+
+  return _VulnerabilitiesFormDialog;
+}(_react.PureComponent);
 
 var _ref6 =
 /*#__PURE__*/
-_react["default"].createElement(_TableCell["default"], {
-  align: "right"
-}, "Untreated");
+_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], null, "Published"), _react["default"].createElement(_TableCell["default"], null, "Status")));
 
 var _ref7 =
 /*#__PURE__*/
-_react["default"].createElement(_TableCell["default"], {
-  align: "right"
-}, _react["default"].createElement(_VulnerabilitiesSplitButton, null));
+_react["default"].createElement(_TableCell["default"], null, "Untreated");
+
+var _ref8 =
+/*#__PURE__*/
+_react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_VulnerabilitiesFormDialog, null));
 
 var _VulnerabilitiesWindow =
 /*#__PURE__*/
@@ -612,7 +579,7 @@ function (_PureComponent7) {
     key: "render",
     value: function render() {
       var vulnerableAssets = this.props.vulnerableAssets;
-      return _react["default"].createElement(_Table["default"], null, _ref5, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
+      return _react["default"].createElement(_Table["default"], null, _ref6, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
         var assetName = asset.get('name');
         var meterCount = asset.get('meterCount');
         var threat = asset.get('threat');
@@ -628,7 +595,7 @@ function (_PureComponent7) {
           target: "_blank",
           rel: "noopener noreferrer",
           href: url
-        }, date)), _ref6, _ref7);
+        }, date)), _ref7, _ref8);
       })));
     }
   }]);
