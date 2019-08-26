@@ -480,26 +480,30 @@ _react["default"].createElement(_DialogTitle["default"], {
 
 var _ref5 =
 /*#__PURE__*/
-_react["default"].createElement(_DialogContent["default"], null, _react["default"].createElement(_DialogContentText["default"], null, "To solve this vulnerability issue, please enter your email address here."), _react["default"].createElement(_TextField["default"], {
+_react["default"].createElement(_DialogContentText["default"], null, "To solve this vulnerability issue, please enter your email address here.");
+
+var _ref6 =
+/*#__PURE__*/
+_react["default"].createElement(_TextField["default"], {
   autoFocus: true,
   margin: "dense",
   id: "name",
   label: "Email Address",
   type: "email",
   fullWidth: true
-}));
+});
 
-var _VulnerabilitiesFormDialog =
+var _VulnerabilitiesFormDialogWithoutStyle =
 /*#__PURE__*/
 function (_PureComponent6) {
-  _inherits(_VulnerabilitiesFormDialog, _PureComponent6);
+  _inherits(_VulnerabilitiesFormDialogWithoutStyle, _PureComponent6);
 
-  function _VulnerabilitiesFormDialog(props) {
+  function _VulnerabilitiesFormDialogWithoutStyle(props) {
     var _this2;
 
-    _classCallCheck(this, _VulnerabilitiesFormDialog);
+    _classCallCheck(this, _VulnerabilitiesFormDialogWithoutStyle);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesFormDialog).call(this, props));
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(_VulnerabilitiesFormDialogWithoutStyle).call(this, props));
     _this2.state = {
       open: false
     };
@@ -508,7 +512,7 @@ function (_PureComponent6) {
     return _this2;
   }
 
-  _createClass(_VulnerabilitiesFormDialog, [{
+  _createClass(_VulnerabilitiesFormDialogWithoutStyle, [{
     key: "handleClickOpen",
     value: function handleClickOpen() {
       this.setState({
@@ -525,6 +529,7 @@ function (_PureComponent6) {
   }, {
     key: "render",
     value: function render() {
+      var classes = this.props.classes;
       return _react["default"].createElement("div", null, _react["default"].createElement(_Tooltip["default"], {
         title: "Add",
         "aria-label": "add",
@@ -532,8 +537,31 @@ function (_PureComponent6) {
       }, _ref3), _react["default"].createElement(_Dialog["default"], {
         open: this.state.open,
         onClose: this.handleClose,
-        "aria-labelledby": "form-dialog-title"
-      }, _ref4, _ref5, _react["default"].createElement(_DialogActions["default"], null, _react["default"].createElement(_Button["default"], {
+        "aria-labelledby": "form-dialog-title",
+        classes: {
+          paper: classes.dialogPaper
+        }
+      }, _ref4, _react["default"].createElement(_DialogContent["default"], null, _ref5, _ref6, _react["default"].createElement(_TextField["default"], {
+        id: "outlined-full-width",
+        label: "Notes",
+        type: "search",
+        style: {
+          margin: 2
+        },
+        placeholder: "Write here",
+        helperText: "",
+        fullWidth: true,
+        margin: "normal",
+        variant: "outlined",
+        InputLabelProps: {
+          shrink: true
+        },
+        InputProps: {
+          classes: {
+            input: classes.inputNote
+          }
+        }
+      })), _react["default"].createElement(_DialogActions["default"], null, _react["default"].createElement(_Button["default"], {
         onClick: this.handleClose,
         color: "primary"
       }, "Create as a new record"), _react["default"].createElement(_Button["default"], {
@@ -543,18 +571,31 @@ function (_PureComponent6) {
     }
   }]);
 
-  return _VulnerabilitiesFormDialog;
+  return _VulnerabilitiesFormDialogWithoutStyle;
 }(_react.PureComponent);
 
-var _ref6 =
-/*#__PURE__*/
-_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], null, "Published"), _react["default"].createElement(_TableCell["default"], null, "Status")));
+var _VulnerabilitiesFormDialog = (0, _styles.withStyles)(function (theme) {
+  return {
+    dialogPaper: {
+      minHeight: '80vh',
+      maxHeight: '80vh'
+    },
+    inputNote: {
+      minHeight: '40vh',
+      maxHeight: '40vh'
+    }
+  };
+})(_VulnerabilitiesFormDialogWithoutStyle);
 
 var _ref7 =
 /*#__PURE__*/
-_react["default"].createElement(_TableCell["default"], null, "Untreated");
+_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], null, "Published"), _react["default"].createElement(_TableCell["default"], null, "Status")));
 
 var _ref8 =
+/*#__PURE__*/
+_react["default"].createElement(_TableCell["default"], null, "Untreated");
+
+var _ref9 =
 /*#__PURE__*/
 _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_VulnerabilitiesFormDialog, null));
 
@@ -579,7 +620,7 @@ function (_PureComponent7) {
     key: "render",
     value: function render() {
       var vulnerableAssets = this.props.vulnerableAssets;
-      return _react["default"].createElement(_Table["default"], null, _ref6, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
+      return _react["default"].createElement(_Table["default"], null, _ref7, _react["default"].createElement(_TableBody["default"], null, vulnerableAssets.map(function (asset, index) {
         var assetName = asset.get('name');
         var meterCount = asset.get('meterCount');
         var threat = asset.get('threat');
@@ -595,7 +636,7 @@ function (_PureComponent7) {
           target: "_blank",
           rel: "noopener noreferrer",
           href: url
-        }, date)), _ref7, _ref8);
+        }, date)), _ref8, _ref9);
       })));
     }
   }]);

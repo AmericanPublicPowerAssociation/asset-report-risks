@@ -297,7 +297,7 @@ const _VulnerabilitiesCard = withStyles(theme => ({
 }))(_VulnerabilitiesCardWithoutStyles)
 
 
-class _VulnerabilitiesFormDialog extends PureComponent {
+class _VulnerabilitiesFormDialogWithoutStyle extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -307,7 +307,7 @@ class _VulnerabilitiesFormDialog extends PureComponent {
     this.handleClose = this.handleClose.bind(this)
   }
 
-  
+
   handleClickOpen() {
     this.setState({ open: true });
   }
@@ -316,7 +316,12 @@ class _VulnerabilitiesFormDialog extends PureComponent {
     this.setState({ open: false });
   }
 
+
+
   render() {
+    const {
+      classes
+    } = this.props
     return (
       <div>
         <Tooltip title="Add" aria-label="add" onClick={this.handleClickOpen}>
@@ -324,11 +329,11 @@ class _VulnerabilitiesFormDialog extends PureComponent {
             <AddIcon />
           </Fab>
         </Tooltip>
-        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title" classes={{ paper: classes.dialogPaper }}>
           <DialogTitle id="form-dialog-title">Notes</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To solve this vulnerability issue, please enter your email address here. 
+              To solve this vulnerability issue, please enter your email address here.
             </DialogContentText>
             <TextField
               autoFocus
@@ -337,6 +342,22 @@ class _VulnerabilitiesFormDialog extends PureComponent {
               label="Email Address"
               type="email"
               fullWidth
+            />
+
+            <TextField
+              id="outlined-full-width"
+              label="Notes"
+              type="search"
+              style={{ margin: 2 }}
+              placeholder="Write here"
+              helperText=""
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              InputProps={{ classes: { input: classes.inputNote } }}
             />
           </DialogContent>
           <DialogActions>
@@ -351,9 +372,18 @@ class _VulnerabilitiesFormDialog extends PureComponent {
       </div>
     );
   }
-
-
 }
+
+const _VulnerabilitiesFormDialog = withStyles(theme => ({
+  dialogPaper: {
+    minHeight: '80vh',
+    maxHeight: '80vh',
+},
+  inputNote:{
+    minHeight: '40vh',
+    maxHeight: '40vh',
+  }
+}))(_VulnerabilitiesFormDialogWithoutStyle)
 
 class _VulnerabilitiesWindow extends PureComponent {
 
