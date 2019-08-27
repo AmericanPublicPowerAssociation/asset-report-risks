@@ -33,10 +33,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 
-const AdapterLink = React.forwardRef((props, ref) =>
-  <Link innerRef={ref} {...props} />)
-
-
 export const getVendorNameSuggestions = state => state.get(
   'vendorNameSuggestions')
 export const getProductNameSuggestions = state => state.get(
@@ -268,7 +264,7 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
             <Card className={classes.card}>
               <CardActionArea className={classes.cardActionArea}>
                 <Typography className={classes.title} align='center'>
-                  Vulnerabilities
+                  Risks
                 </Typography>
               </CardActionArea>
             </Card>
