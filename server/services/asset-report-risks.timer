@@ -1,5 +1,5 @@
 [Unit]
-Description=Run Asset Vulnerability Report Every Hour
+Description=Run Asset Report Risks Every Hour
 
 [Timer]
 OnUnitInactiveSec=1h

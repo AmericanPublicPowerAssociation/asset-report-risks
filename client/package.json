@@ -1,7 +1,7 @@
 {
-  "name": "asset-vulnerability-report",
+  "name": "asset-report-risks",
   "version": "0.0.2",
-  "description": "Identify potential vulnerabilities by vendor and product",
+  "description": "Identify potential risks by vendor and product",
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src --out-file index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AmericanPublicPowerAssociation/asset-vulnerability-report.git"
+    "url": "git+https://github.com/AmericanPublicPowerAssociation/asset-report-risks.git"
   },
   "author": "CrossCompute Inc. <support@crosscompute.com> (https://crosscompute.com)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AmericanPublicPowerAssociation/asset-vulnerability-report/issues"
+    "url": "https://github.com/AmericanPublicPowerAssociation/asset-report-risks/issues"
   },
-  "homepage": "https://github.com/AmericanPublicPowerAssociation/asset-vulnerability-report#readme",
+  "homepage": "https://github.com/AmericanPublicPowerAssociation/asset-report-risks",
   "eslintConfig": {
     "extends": "react-app",
     "env": {
@@ -24,14 +24,14 @@
     }
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.3.0",
-    "@material-ui/icons": "^4.2.1",
-    "downshift": "^3.2.10",
+    "@material-ui/core": "^4.4.1",
+    "@material-ui/icons": "^4.4.1",
+    "downshift": "^3.2.14",
     "immutable": "^4.0.0-rc.12",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-redux": "^7.0.3",
-    "redux-saga": "^1.0.2",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-redux": "^7.1.1",
+    "redux-saga": "^1.0.5",
     "reselect": "^4.0.0"
   },
   "devDependencies": {
@@ -55,8 +55,6 @@
     "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-react-hooks": "^1.5.0",
     "mocha": "^6.1.4",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
     "reify": "^0.18.1",
     "typescript": "^3.4.5"
   }

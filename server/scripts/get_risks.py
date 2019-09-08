@@ -1,8 +1,8 @@
 from argparse import ArgumentParser
 
-from asset_vulnerability_report.routines import (
-    get_nvd_database,
+from asset_report_risks.routines import (
     get_matching_nvd_ids,
+    get_nvd_client,
     load_cve,
     yield_nvd_pack)
 
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     a = p.parse_args()
     print(a)
     cve = load_cve()
-    nvd_database = get_nvd_database()
+    nvd_client = get_nvd_client()
     nvd_ids = get_matching_nvd_ids(
         cve,
         a.component_type,
@@ -25,5 +25,5 @@ if __name__ == '__main__':
         a.product_name,
         a.product_version,
         a.minimum_similarity)
-    for nvd_pack in yield_nvd_pack(nvd_database, nvd_ids):
+    for nvd_pack in yield_nvd_pack(nvd_client, nvd_ids):
         print(nvd_pack)

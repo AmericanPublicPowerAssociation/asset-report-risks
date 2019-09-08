@@ -2,10 +2,10 @@ from asset_tracker.models import Asset
 from pyramid.view import view_config
 
 from .routines import (
+    get_risks_client,
     get_similar_product_names,
     get_similar_product_versions,
     get_similar_vendor_names,
-    get_vulnerable_assets_database,
     load_cve)
 from .settings import (
     MAXIMUM_COUNT,
@@ -63,17 +63,15 @@ def get_product_versions_json(request):
 
 
 @view_config(
-    # route_name='vulnerabilities.json'
-    route_name='vulnerable_assets.json',
+    route_name='risks.json',
     renderer='json',
     request_method='GET')
-# def get_vulnerabilities_json(request):
-def get_vulnerable_assets_json(request):
+def get_risks_json(request):
     db = request.db
     # !!! Limit to asset ids that the user has permission to view
     asset_ids = [_[0] for _ in db.query(Asset.id).all()]
-    vulnerable_assets_database = get_vulnerable_assets_database()
-    results = vulnerable_assets_database.find({
+    risks_client = get_risks_client()
+    results = risks_client.find({
         'id': {'$in': list(asset_ids)},
     }, {
         '_id': 0,
@@ -83,7 +81,7 @@ def get_vulnerable_assets_json(request):
         'vulnerabilities': 1,
     })
     # !!! Return nested json instead of array
-    vulnerabilities = []
+    risks = []
     for result in results:
         asset_id = result['id']
         asset_name = result['name']
@@ -91,7 +89,7 @@ def get_vulnerable_assets_json(request):
         for vulnerability in result['vulnerabilities']:
             impact = vulnerability['impact']
             texts = vulnerability['texts']
-            vulnerabilities.append({
+            risks.append({
                 'id': asset_id,
                 'name': asset_name,
                 'meterCount': meter_count,
@@ -100,4 +98,4 @@ def get_vulnerable_assets_json(request):
                 'url': vulnerability['url'],
                 'date': vulnerability['date'].strftime('%Y%m%d'),
             })
-    return vulnerabilities
+    return risks

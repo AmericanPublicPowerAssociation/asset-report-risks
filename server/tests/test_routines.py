@@ -1,6 +1,6 @@
 import operator
 
-from asset_vulnerability_report.routines import (
+from asset_report_risks.routines import (
     is_product_version_vulnerable,
     is_version_constraint_satisfied,
     normalize_version,

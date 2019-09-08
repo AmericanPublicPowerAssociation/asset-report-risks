@@ -6,9 +6,9 @@ from itertools import chain
 from os.path import join, splitext
 from pymongo import ASCENDING
 
-from asset_vulnerability_report.routines import (
+from asset_report_risks.routines import (
     get_nvd_database, normalize_version)
-from asset_vulnerability_report.settings import DATASET_FOLDER
+from asset_report_risks.settings import DATASET_FOLDER
 
 
 def run(nvd_database, source_folder, dataset_name, from_scratch, quietly):

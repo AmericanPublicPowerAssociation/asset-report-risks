@@ -1,12 +1,12 @@
 from argparse import ArgumentParser
 from asset_tracker.models import Asset
-from asset_vulnerability_report.routines import (
+from asset_report_risks.routines import (
     get_nvd_database,
     get_matching_nvd_ids,
-    get_vulnerable_assets_database,
+    get_risks_client,
     load_cve,
     yield_nvd_pack)
-from asset_vulnerability_report.settings import (
+from asset_report_risks.settings import (
     MINIMUM_SIMILARITY)
 from os.path import join
 from pymongo import ASCENDING
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     cve = load_cve()
     nvd_database = get_nvd_database()
 
-    vulnerable_assets = []
+    risks = []
     with bootstrap(a.configuration_path) as env, env['request'].tm:
         db = env['request'].db
         for asset in db.query(Asset).all():
@@ -50,24 +50,23 @@ if __name__ == '__main__':
                 vulnerabilities.append({
                     'impact': nvd_score,
                     'texts': nvd_texts,
-                    # 'url': join('nvd.nist.gov/vuln/detail', nvd_id),
-                    'url': join('https://nvd.nist.gov/vuln/detail', nvd_id),
+                    'url': join('nvd.nist.gov/vuln/detail', nvd_id),
                     'date': nvd_date,
                 })
             if not vulnerabilities:
                 continue
-            vulnerable_assets.append({
-                'id': asset.id,
-                'name': asset.name,
+            risks.append({
+                'assetId': asset.id,
+                'assetName': asset.name,
                 'meterCount': 0,
                 'vulnerabilities': vulnerabilities,
             })
 
-    if vulnerable_assets:
-        vulnerable_assets_database = get_vulnerable_assets_database()
-        vulnerable_assets_database.drop()
-        vulnerable_assets_database.create_index(
+    if risks:
+        risks_client = get_risks_client()
+        risks_client.drop()
+        risks_client.create_index(
             [('id', ASCENDING)], unique=True)
-        vulnerable_assets_database.insert_many(vulnerable_assets)
+        risks_client.insert_many(risks)
 
-    print(vulnerable_assets)
+    print(risks)

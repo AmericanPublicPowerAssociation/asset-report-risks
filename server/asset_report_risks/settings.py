@@ -2,7 +2,7 @@ from os import environ
 from os.path import expanduser, join
 
 
-BASE_FOLDER = expanduser('~/Experiments/asset-vulnerability-report')
+BASE_FOLDER = expanduser('~/Experiments/asset-report-risks')
 DATASET_FOLDER = join(BASE_FOLDER, 'datasets')
 CVE_PATH = join(BASE_FOLDER, 'cve.pkl')
 MINIMUM_SIMILARITY = 80

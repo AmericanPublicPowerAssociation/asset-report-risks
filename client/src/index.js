@@ -23,14 +23,14 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
-import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
-import Tooltip from '@material-ui/core/Tooltip';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import AddIcon from '@material-ui/icons/Add'
+import Fab from '@material-ui/core/Fab'
+import Tooltip from '@material-ui/core/Tooltip'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 
 export const getVendorNameSuggestions = state => state.get(
@@ -39,15 +39,15 @@ export const getProductNameSuggestions = state => state.get(
   'productNameSuggestions')
 export const getProductVersionSuggestions = state => state.get(
   'productVersionSuggestions')
-export const getVulnerableAssets = state => state.get(
-  'vulnerableAssets')
+export const getRisks = state => state.get(
+  'risks')
 
 
-export const getVulnerableAssetCount = createSelector([
-  getVulnerableAssets,
+export const getRiskCount = createSelector([
+  getRisks,
 ], (
-  vulnerableAssets,
-  ) => vulnerableAssets.count())
+  risks,
+) => risks.count())
 
 
 class EnhancedInputWithoutStyles extends PureComponent {
@@ -247,7 +247,7 @@ class _ProductVersion extends PureComponent {
 }
 
 
-class _VulnerabilitiesCardWithoutStyles extends PureComponent {
+class _RisksCardWithoutStyles extends PureComponent {
   render() {
     const {
       classes,
@@ -259,7 +259,7 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
           <Link
             underline='none'
             component={RouterLink}
-            to='/reports/vulnerabilities'
+            to='/reports/risks'
           >
             <Card className={classes.card}>
               <CardActionArea className={classes.cardActionArea}>
@@ -278,7 +278,7 @@ class _VulnerabilitiesCardWithoutStyles extends PureComponent {
 }
 
 
-const _VulnerabilitiesCard = withStyles(theme => ({
+const _RisksCard = withStyles(theme => ({
   card: {
     width: theme.spacing(32),
   },
@@ -290,10 +290,10 @@ const _VulnerabilitiesCard = withStyles(theme => ({
     padding: theme.spacing(3),
   }
 
-}))(_VulnerabilitiesCardWithoutStyles)
+}))(_RisksCardWithoutStyles)
 
 
-class _VulnerabilitiesFormDialogWithoutStyle extends PureComponent {
+class _RisksFormDialogWithoutStyle extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -303,7 +303,6 @@ class _VulnerabilitiesFormDialogWithoutStyle extends PureComponent {
     this.handleClose = this.handleClose.bind(this)
   }
 
-
   handleClickOpen() {
     this.setState({ open: true });
   }
@@ -311,8 +310,6 @@ class _VulnerabilitiesFormDialogWithoutStyle extends PureComponent {
   handleClose() {
     this.setState({ open: false });
   }
-
-
 
   render() {
     const {
@@ -329,7 +326,7 @@ class _VulnerabilitiesFormDialogWithoutStyle extends PureComponent {
           <DialogTitle id="form-dialog-title">Notes</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To solve this vulnerability issue, please enter your email address here.
+              To solve this risk, please enter your email address here.
             </DialogContentText>
             <TextField
               autoFocus
@@ -370,7 +367,8 @@ class _VulnerabilitiesFormDialogWithoutStyle extends PureComponent {
   }
 }
 
-const _VulnerabilitiesFormDialog = withStyles(theme => ({
+
+const _RisksFormDialog = withStyles(theme => ({
   dialogPaper: {
     minHeight: '80vh',
     maxHeight: '80vh',
@@ -379,17 +377,18 @@ const _VulnerabilitiesFormDialog = withStyles(theme => ({
     minHeight: '40vh',
     maxHeight: '40vh',
   }
-}))(_VulnerabilitiesFormDialogWithoutStyle)
+}))(_RisksFormDialogWithoutStyle)
 
-class _VulnerabilitiesWindow extends PureComponent {
+
+class _RisksWindow extends PureComponent {
 
   componentDidMount() {
-    const { refreshVulnerableAssets } = this.props
-    refreshVulnerableAssets()
+    const { refreshRisks } = this.props
+    refreshRisks()
   }
 
   render() {
-    const { vulnerableAssets } = this.props
+    const { risks } = this.props
     return (
       <Table>
         <TableHead>
@@ -403,13 +402,13 @@ class _VulnerabilitiesWindow extends PureComponent {
           </TableRow>
         </TableHead>
         <TableBody>
-          {vulnerableAssets.map((asset, index) => {
-            const assetName = asset.get('name')
-            const meterCount = asset.get('meterCount')
-            const threat = asset.get('threat')
-            const description = asset.get('description')
-            const url = asset.get('url')
-            const date = asset.get('date')
+          {risks.map((risks, index) => {
+            const assetName = risk.get('name')
+            const meterCount = risk.get('meterCount')
+            const threat = risk.get('threat')
+            const description = risk.get('description')
+            const url = risk.get('url')
+            const date = risk.get('date')
             return (
               <TableRow key={index}>
                 <TableCell component='th' scope='row'>{assetName}</TableCell>
@@ -422,7 +421,7 @@ class _VulnerabilitiesWindow extends PureComponent {
                 </TableCell>
                 <TableCell>Untreated</TableCell>
                 <TableCell>
-                  <_VulnerabilitiesFormDialog />
+                  <_RisksFormDialog />
                 </TableCell>
               </TableRow>
             )
@@ -486,26 +485,25 @@ export const ProductVersion = connect(
 )(_ProductVersion)
 
 
-export const VulnerabilitiesWindow = connect(
+export const RisksWindow = connect(
   state => ({
-    vulnerableAssets: getVulnerableAssets(state),
+    risks: getRisks(state),
   }),
   dispatch => ({
-    refreshVulnerableAssets: payload => {
+    refreshRisks: payload => {
       dispatch(
-        refreshVulnerableAssets(payload))
+        refreshRisks(payload))
     },
   }),
-)(_VulnerabilitiesWindow)
+)(_RisksWindow)
 
 
-export const VulnerabilitiesCard = connect(
+export const RisksCard = connect(
   state => ({
-    // vulnerableAssetCount: getVulnerableAssetCount(state),
   }),
   dispatch => ({
   }),
-)(_VulnerabilitiesCard)
+)(_RisksCard)
 
 
 export const LOG_ERROR = 'LOG_ERROR'
@@ -516,7 +514,7 @@ export const SUGGEST_PRODUCT_NAMES = 'SUGGEST_PRODUCT_NAMES'
 export const SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS'
 
 
-export const REFRESH_VULNERABLE_ASSETS = 'REFRESH_VULNERABLE_ASSETS'
+export const REFRESH_RISKS = 'REFRESH_RISKS'
 
 
 export const RESET_VENDOR_NAME_SUGGESTIONS = 'RESET_VENDOR_NAME_SUGGESTIONS'
@@ -525,46 +523,46 @@ export const RESET_PRODUCT_VERSION_SUGGESTIONS = 'RESET_PRODUCT_VERSION_SUGGESTI
 export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
 
 
-export const RESET_VULNERABLE_ASSETS = 'RESET_VULNERABLE_ASSETS'
+export const RESET_RISKS = 'RESET_RISKS'
 
 
 export const logError = payload => ({
-  payload, type: LOG_ERROR
+  payload, type: LOG_ERROR,
 })
 
 
 export const suggestVendorNames = payload => ({
-  payload, type: SUGGEST_VENDOR_NAMES
+  payload, type: SUGGEST_VENDOR_NAMES,
 })
 export const suggestProductNames = payload => ({
-  payload, type: SUGGEST_PRODUCT_NAMES
+  payload, type: SUGGEST_PRODUCT_NAMES,
 })
 export const suggestProductVersions = payload => ({
-  payload, type: SUGGEST_PRODUCT_VERSIONS
+  payload, type: SUGGEST_PRODUCT_VERSIONS,
 })
 
 
-export const refreshVulnerableAssets = payload => ({
-  payload, type: REFRESH_VULNERABLE_ASSETS
+export const refreshRisks = payload => ({
+  payload, type: REFRESH_RISKS,
 })
 
 
 export const resetVendorNameSuggestions = payload => ({
-  payload, type: RESET_VENDOR_NAME_SUGGESTIONS
+  payload, type: RESET_VENDOR_NAME_SUGGESTIONS,
 })
 export const resetProductNameSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS
+  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS,
 })
 export const resetProductVersionSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS
+  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS,
 })
 export const clearSuggestions = payload => ({
-  payload, type: CLEAR_SUGGESTIONS
+  payload, type: CLEAR_SUGGESTIONS,
 })
 
 
-export const resetVulnerableAssets = payload => ({
-  payload, type: RESET_VULNERABLE_ASSETS
+export const resetRisks = payload => ({
+  payload, type: RESET_RISKS,
 })
 
 
@@ -575,7 +573,7 @@ export function* watchSuggestVendorNames() {
       yield put(clearSuggestions())
       return
     }
-    const url = '/extensions/vulnerability/vendorNames.json'
+    const url = '/extensions/risks/vendorNames.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
@@ -592,7 +590,7 @@ export function* watchSuggestVendorNames() {
 export function* watchSuggestProductNames() {
   yield takeLatest(SUGGEST_PRODUCT_NAMES, function* (action) {
     const { typeId, vendorName, productName } = action.payload
-    const url = '/extensions/vulnerability/productNames.json'
+    const url = '/extensions/risks/productNames.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
@@ -610,7 +608,7 @@ export function* watchSuggestProductNames() {
 export function* watchSuggestProductVersions() {
   yield takeLatest(SUGGEST_PRODUCT_VERSIONS, function* (action) {
     const { typeId, vendorName, productName, productVersion } = action.payload
-    const url = '/extensions/vulnerability/productVersions.json'
+    const url = '/extensions/risks/productVersions.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
@@ -626,12 +624,12 @@ export function* watchSuggestProductVersions() {
 }
 
 
-export function* watchRefreshVulnerableAssets() {
-  yield takeLatest(REFRESH_VULNERABLE_ASSETS, function* (action) {
-    const url = '/extensions/vulnerability/assets.json'
+export function* watchRefreshRisks() {
+  yield takeLatest(REFRESH_RISKS, function* (action) {
+    const url = '/extensions/risks.json'
     yield fetchSafely(url, {}, {
-      on200: function* (vulnerableAssets) {
-        yield put(resetVulnerableAssets(vulnerableAssets))
+      on200: function* (risks) {
+        yield put(resetRisks(risks))
       },
     })
   })
@@ -704,11 +702,11 @@ export const productVersionSuggestions = (state = List(), action) => {
 }
 
 
-export const vulnerableAssets = (state = List(), action) => {
+export const risks = (state = List(), action) => {
   switch (action.type) {
-    case RESET_VULNERABLE_ASSETS: {
-      const vulnerableAssets = action.payload
-      return vulnerableAssets
+    case RESET_RISKS: {
+      const risks = action.payload
+      return risks
     }
     default: {
       return state

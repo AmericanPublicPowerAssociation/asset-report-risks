@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from asset_vulnerability_report.routines import (
+from asset_report_risks.routines import (
     get_similar_product_versions,
     load_cve)
 

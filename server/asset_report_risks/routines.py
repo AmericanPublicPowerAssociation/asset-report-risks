@@ -15,20 +15,28 @@ def get_mongo_client():
     return MongoClient(MONGO_HOST, MONGO_PORT)
 
 
-def get_nvd_database():
+def get_report_risks_client():
     mongo_client = get_mongo_client()
-    vulnerability_database = mongo_client['vulnerability']
-    return vulnerability_database['nvd']
+    return mongo_client['report-risks']
 
 
-def get_vulnerable_assets_database():
-    mongo_client = get_mongo_client()
-    vulnerability_database = mongo_client['vulnerability']
-    return vulnerability_database['vulnerableAssets']
+def get_vulnerabilities_client():
+    report_risks_client = get_report_risks_client()
+    return report_risks_client['vulnerabilities']
 
 
-def yield_nvd_pack(nvd_database, nvd_ids):
-    nvd_results = nvd_database.find({
+def get_risks_client():
+    report_risks_client = get_report_risks_client()
+    return report_risks_client['risks']
+
+
+def get_nvd_client():
+    vulnerabilities_client = get_vulnerabilities_client()
+    return vulnerabilities_client['nvd']
+
+
+def yield_nvd_pack(nvd_client, nvd_ids):
+    nvd_results = nvd_client.find({
         'id': {'$in': list(nvd_ids)},
     }, {
         '_id': 0,

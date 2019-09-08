@@ -1,14 +1,6 @@
-# Asset Vulnerability Report Client
-
-## Configure Client
+# Asset Report Risks Client
 
     cd ~/Projects/
-    git clone git@github.com:AmericanPublicPowerAssociation/asset-vulnerability-report
-    cd ~/Projects/asset-vulnerability-report/client
-    npm install -g
-
-    cd ~/Projects/asset-tracker-client
-    vim .env
-        ASSET_TRACKER_EXTENSIONS=asset-vulnerability-report
-
-## Configure Server
+    git clone git@github.com:AmericanPublicPowerAssociation/asset-report-risks
+    cd ~/Projects/asset-report-risks/client
+    npm install

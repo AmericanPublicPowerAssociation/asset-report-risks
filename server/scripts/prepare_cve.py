@@ -1,7 +1,7 @@
 from collections import defaultdict
 
-from asset_vulnerability_report.macros.iterable import get_dictionary
-from asset_vulnerability_report.routines import (
+from asset_report_risks.macros.iterable import get_dictionary
+from asset_report_risks.routines import (
     get_nvd_database,
     save_cve)
 

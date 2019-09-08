@@ -12,12 +12,12 @@ from collections import namedtuple
 from glob import glob
 from os.path import basename, exists, getsize, join, splitext
 
-from asset_vulnerability_report.macros.disk import (
+from asset_report_risks.macros.disk import (
     TemporaryStorage,
     make_folder,
     move_path,
     uncompress)
-from asset_vulnerability_report.settings import DATASET_FOLDER
+from asset_report_risks.settings import DATASET_FOLDER
 
 
 URL_TEMPLATE = 'https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-{}'
