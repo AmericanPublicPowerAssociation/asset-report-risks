@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from asset_report_risks.macros.iterable import get_dictionary
 from asset_report_risks.routines import (
-    get_nvd_database,
+    get_nvd_client,
     save_cve)
 
 
@@ -23,8 +23,8 @@ def prepare_cve(results):
 
 
 if __name__ == '__main__':
-    nvd_database = get_nvd_database()
-    nvd_results = nvd_database.find({}, {
+    nvd_client = get_nvd_client()
+    nvd_results = nvd_client.find({}, {
         '_id': 0,
         'id': 1,
         'packs': 1,

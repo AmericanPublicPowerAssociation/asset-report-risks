@@ -7,7 +7,7 @@ from os.path import join, splitext
 from pymongo import ASCENDING
 
 from asset_report_risks.routines import (
-    get_nvd_database, normalize_version)
+    get_nvd_client, normalize_version)
 from asset_report_risks.settings import DATASET_FOLDER
 
 
@@ -146,8 +146,11 @@ if __name__ == '__main__':
     p.add_argument('--from-scratch', action='store_true')
     p.add_argument('--quietly', action='store_true')
     a = p.parse_args()
-    nvd_database = get_nvd_database()
+    nvd_client = get_nvd_client()
     run(
-        nvd_database, a.source_folder, a.dataset_name, a.from_scratch,
+        nvd_client,
+        a.source_folder,
+        a.dataset_name,
+        a.from_scratch,
         a.quietly)
-    print('document_count =', nvd_database.count_documents({}))
+    print('document_count =', nvd_client.count_documents({}))
