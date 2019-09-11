@@ -422,7 +422,9 @@ function (_PureComponent5) {
   _createClass(_RisksCardWithoutStyles, [{
     key: "render",
     value: function render() {
-      var classes = this.props.classes;
+      var _this$props7 = this.props,
+          classes = _this$props7.classes,
+          to = _this$props7.to;
       return _react["default"].createElement(_Grid["default"], {
         container: true,
         spacing: 3
@@ -432,10 +434,8 @@ function (_PureComponent5) {
       }, _react["default"].createElement(_Link["default"], {
         underline: "none",
         component: _reactRouterDom.Link,
-        to: "/reports/risks"
-      }, _react["default"].createElement(_Card["default"], {
-        className: classes.card
-      }, _react["default"].createElement(_CardActionArea["default"], {
+        to: to
+      }, _react["default"].createElement(_Card["default"], null, _react["default"].createElement(_CardActionArea["default"], {
         className: classes.cardActionArea
       }, _react["default"].createElement(_Typography["default"], {
         className: classes.title,
@@ -449,14 +449,10 @@ function (_PureComponent5) {
 
 var _RisksCard = (0, _styles.withStyles)(function (theme) {
   return {
-    card: {
-      width: theme.spacing(32)
-    },
     title: {
       fontSize: 24
     },
     cardActionArea: {
-      // width: theme.spacing(48),
       padding: theme.spacing(3)
     }
   };
@@ -570,7 +566,7 @@ function (_PureComponent6) {
   return _RisksFormDialogWithoutStyle;
 }(_react.PureComponent);
 
-var _RisksFormDialog = (0, _styles.withStyles)(function (theme) {
+var RisksFormDialog = (0, _styles.withStyles)(function (theme) {
   return {
     dialogPaper: {
       minHeight: '80vh',
@@ -593,7 +589,7 @@ _react["default"].createElement(_TableCell["default"], null, "Untreated");
 
 var _ref9 =
 /*#__PURE__*/
-_react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_RisksFormDialog, null));
+_react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(RisksFormDialog, null));
 
 var _RisksWindow =
 /*#__PURE__*/
@@ -616,7 +612,7 @@ function (_PureComponent7) {
     key: "render",
     value: function render() {
       var risks = this.props.risks;
-      return _react["default"].createElement(_Table["default"], null, _ref7, _react["default"].createElement(_TableBody["default"], null, risks.map(function (risks, index) {
+      return _react["default"].createElement(_Table["default"], null, _ref7, _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
         var assetName = risk.get('name');
         var meterCount = risk.get('meterCount');
         var threat = risk.get('threat');

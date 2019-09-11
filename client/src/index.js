@@ -251,6 +251,7 @@ class _RisksCardWithoutStyles extends PureComponent {
   render() {
     const {
       classes,
+      to,
     } = this.props
     return (
 
@@ -259,9 +260,9 @@ class _RisksCardWithoutStyles extends PureComponent {
           <Link
             underline='none'
             component={RouterLink}
-            to='/reports/risks'
+            to={to}
           >
-            <Card className={classes.card}>
+            <Card>
               <CardActionArea className={classes.cardActionArea}>
                 <Typography className={classes.title} align='center'>
                   Risks
@@ -279,14 +280,10 @@ class _RisksCardWithoutStyles extends PureComponent {
 
 
 const _RisksCard = withStyles(theme => ({
-  card: {
-    width: theme.spacing(32),
-  },
   title: {
     fontSize: 24,
   },
   cardActionArea: {
-    // width: theme.spacing(48),
     padding: theme.spacing(3),
   }
 
@@ -368,7 +365,7 @@ class _RisksFormDialogWithoutStyle extends PureComponent {
 }
 
 
-const _RisksFormDialog = withStyles(theme => ({
+const RisksFormDialog = withStyles(theme => ({
   dialogPaper: {
     minHeight: '80vh',
     maxHeight: '80vh',
@@ -402,7 +399,7 @@ class _RisksWindow extends PureComponent {
           </TableRow>
         </TableHead>
         <TableBody>
-          {risks.map((risks, index) => {
+          {risks.map((risk, index) => {
             const assetName = risk.get('name')
             const meterCount = risk.get('meterCount')
             const threat = risk.get('threat')
@@ -421,7 +418,7 @@ class _RisksWindow extends PureComponent {
                 </TableCell>
                 <TableCell>Untreated</TableCell>
                 <TableCell>
-                  <_RisksFormDialog />
+                  <RisksFormDialog />
                 </TableCell>
               </TableRow>
             )
