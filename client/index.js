@@ -836,7 +836,7 @@ function watchSuggestVendorNames() {
                     return _context2.abrupt("return");
 
                   case 5:
-                    url = '/extensions/risks/vendorNames.json';
+                    url = '/risks/vendorNames.json';
                     params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName)];
                     _context2.next = 9;
                     return fetchSafely(url + '?' + params.join('&'), {}, {
@@ -891,7 +891,7 @@ function watchSuggestProductNames() {
                 switch (_context5.prev = _context5.next) {
                   case 0:
                     _action$payload2 = action.payload, typeId = _action$payload2.typeId, vendorName = _action$payload2.vendorName, productName = _action$payload2.productName;
-                    url = '/extensions/risks/productNames.json';
+                    url = '/risks/productNames.json';
                     params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName)];
                     _context5.next = 5;
                     return fetchSafely(url + '?' + params.join('&'), {}, {
@@ -946,7 +946,7 @@ function watchSuggestProductVersions() {
                 switch (_context8.prev = _context8.next) {
                   case 0:
                     _action$payload3 = action.payload, typeId = _action$payload3.typeId, vendorName = _action$payload3.vendorName, productName = _action$payload3.productName, productVersion = _action$payload3.productVersion;
-                    url = '/extensions/risks/productVersions.json';
+                    url = '/risks/productVersions.json';
                     params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName), "productVersion=".concat(productVersion)];
                     _context8.next = 5;
                     return fetchSafely(url + '?' + params.join('&'), {}, {
@@ -999,7 +999,7 @@ function watchRefreshRisks() {
               while (1) {
                 switch (_context11.prev = _context11.next) {
                   case 0:
-                    url = '/extensions/risks.json';
+                    url = '/risks.json';
                     _context11.next = 3;
                     return fetchSafely(url, {}, {
                       on200:

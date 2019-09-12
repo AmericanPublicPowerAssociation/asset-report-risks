@@ -435,13 +435,11 @@ export const VendorName = connect(
     vendorNameSuggestions: getVendorNameSuggestions(state),
   }),
   dispatch => ({
-    suggestVendorNames: payload => {
-      dispatch(
-        suggestVendorNames(payload))
+    suggestVendorNames: payload => {dispatch(
+      suggestVendorNames(payload))
     },
-    clearSuggestions: payload => {
-      dispatch(
-        clearSuggestions(payload))
+    clearSuggestions: payload => {dispatch(
+      clearSuggestions(payload))
     },
   }),
 )(_VendorName)
@@ -452,13 +450,11 @@ export const ProductName = connect(
     productNameSuggestions: getProductNameSuggestions(state),
   }),
   dispatch => ({
-    suggestProductNames: payload => {
-      dispatch(
-        suggestProductNames(payload))
+    suggestProductNames: payload => {dispatch(
+      suggestProductNames(payload))
     },
-    clearSuggestions: payload => {
-      dispatch(
-        clearSuggestions(payload))
+    clearSuggestions: payload => {dispatch(
+      clearSuggestions(payload))
     },
   }),
 )(_ProductName)
@@ -469,13 +465,11 @@ export const ProductVersion = connect(
     productVersionSuggestions: getProductVersionSuggestions(state),
   }),
   dispatch => ({
-    suggestProductVersions: payload => {
-      dispatch(
-        suggestProductVersions(payload))
+    suggestProductVersions: payload => {dispatch(
+      suggestProductVersions(payload))
     },
-    clearSuggestions: payload => {
-      dispatch(
-        clearSuggestions(payload))
+    clearSuggestions: payload => {dispatch(
+      clearSuggestions(payload))
     },
   }),
 )(_ProductVersion)
@@ -486,9 +480,8 @@ export const RisksWindow = connect(
     risks: getRisks(state),
   }),
   dispatch => ({
-    refreshRisks: payload => {
-      dispatch(
-        refreshRisks(payload))
+    refreshRisks: payload => {dispatch(
+      refreshRisks(payload))
     },
   }),
 )(_RisksWindow)
@@ -569,7 +562,7 @@ export function* watchSuggestVendorNames() {
       yield put(clearSuggestions())
       return
     }
-    const url = '/extensions/risks/vendorNames.json'
+    const url = '/risks/vendorNames.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
@@ -586,7 +579,7 @@ export function* watchSuggestVendorNames() {
 export function* watchSuggestProductNames() {
   yield takeLatest(SUGGEST_PRODUCT_NAMES, function* (action) {
     const { typeId, vendorName, productName } = action.payload
-    const url = '/extensions/risks/productNames.json'
+    const url = '/risks/productNames.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
@@ -604,7 +597,7 @@ export function* watchSuggestProductNames() {
 export function* watchSuggestProductVersions() {
   yield takeLatest(SUGGEST_PRODUCT_VERSIONS, function* (action) {
     const { typeId, vendorName, productName, productVersion } = action.payload
-    const url = '/extensions/risks/productVersions.json'
+    const url = '/risks/productVersions.json'
     const params = [
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
@@ -622,7 +615,7 @@ export function* watchSuggestProductVersions() {
 
 export function* watchRefreshRisks() {
   yield takeLatest(REFRESH_RISKS, function* (action) {
-    const url = '/extensions/risks.json'
+    const url = '/risks.json'
     yield fetchSafely(url, {}, {
       on200: function* (risks) {
         yield put(resetRisks(risks))
