@@ -2,6 +2,7 @@ from asset_tracker.models import Asset, Task, TaskStatus
 from collections import defaultdict
 from pyramid.view import view_config
 
+from .macros.calculator import get_percent
 from .routines import (
     get_risks,
     get_similar_product_names,
@@ -85,7 +86,7 @@ def get_risk_metrics_json(request):
         return {}
 
     risks = get_risks(asset_ids)
-    reference_uris = [_['uri'] for _ in risks]
+    reference_uris = [_['vulnerabilityUri'] for _ in risks]
 
     db = request.db
     tasks = db.query(Task).filter(
@@ -96,7 +97,7 @@ def get_risk_metrics_json(request):
 
     open_risks = []
     for risk in risks:
-        uri = risk['uri']
+        uri = risk['vulnerabilityUri']
         if uri in closed_uris:
             continue
         open_risks.append(risk)
@@ -108,20 +109,31 @@ def get_risk_metrics_json(request):
 
     risks_by_uri = defaultdict(list)
     for risk in open_risks:
-        uri = risk['uri']
+        uri = risk['vulnerabilityUri']
         risks_by_uri[uri].append(risk)
-    greatest_threat = 0
+    greatest_threat_score = 0
     greatest_threat_description = None
-    for uri, risks in risks_by_uri.items():
-        threat = sum(_['threat'] for _ in risks)
-        if threat > greatest_threat:
-            greatest_threat = threat
-            greatest_threat_description = risks[0]['description']
+    for uri, uri_risks in risks_by_uri.items():
+        threat_score = sum(_['threatScore'] for _ in uri_risks)
+        if threat_score > greatest_threat_score:
+            greatest_threat_score = threat_score
+            greatest_threat_description = uri_risks[0]['threatDescription']
+
+    aggregated_threat_score = sum(_['threatScore'] for _ in risks)
+    downstream_meter_count = sum(_['meterCount'] for _ in risks)
+    meter_count = db.query(Asset.id).filter(
+        Asset.type_id.startswith('m'),
+        Asset.id.in_(asset_ids),
+    ).count()
 
     return {
         'impacted_asset_count': impacted_asset_count,
-        'impacted_asset_percent': int(
-            100 * impacted_asset_count / asset_count),
+        'impacted_asset_percent': get_percent(
+            impacted_asset_count, asset_count),
         'cyber_vulnerability_count': len(open_risks),
         'greatest_threat_description': greatest_threat_description,
+        'aggregated_threat_score': aggregated_threat_score,
+        'downstream_meter_count': downstream_meter_count,
+        'downstream_meter_percent': get_percent(
+            downstream_meter_count, meter_count),
     }

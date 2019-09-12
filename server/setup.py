@@ -24,7 +24,7 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
 
 setup(
     name='asset-report-risks',
-    version='0.1',
+    version='0.2',
     description='Risks Report for Asset Tracker',
     long_description=DESCRIPTION,
     classifiers=APP_CLASSIFIERS,

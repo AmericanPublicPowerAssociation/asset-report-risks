@@ -610,22 +610,22 @@ function (_PureComponent7) {
     value: function render() {
       var risks = this.props.risks;
       return _react["default"].createElement(_Table["default"], null, _ref7, _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
-        var assetName = risk.get('name');
+        var assetName = risk.get('assetName');
         var meterCount = risk.get('meterCount');
-        var threat = risk.get('threat');
-        var description = risk.get('description');
-        var url = risk.get('url');
-        var date = risk.get('date');
+        var threatScore = risk.get('threatScore');
+        var threatDescription = risk.get('threatDescription');
+        var vulnerabilityUrl = risk.get('vulnerabilityUrl');
+        var vulnerabilityDate = risk.get('vulnerabilityDate');
         return _react["default"].createElement(_TableRow["default"], {
           key: index
         }, _react["default"].createElement(_TableCell["default"], {
           component: "th",
           scope: "row"
-        }, assetName), _react["default"].createElement(_TableCell["default"], null, meterCount), _react["default"].createElement(_TableCell["default"], null, threat), _react["default"].createElement(_TableCell["default"], null, description), _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement("a", {
+        }, assetName), _react["default"].createElement(_TableCell["default"], null, meterCount), _react["default"].createElement(_TableCell["default"], null, threatScore), _react["default"].createElement(_TableCell["default"], null, threatDescription), _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement("a", {
           target: "_blank",
           rel: "noopener noreferrer",
-          href: url
-        }, date)), _ref8, _ref9);
+          href: vulnerabilityUrl
+        }, vulnerabilityDate)), _ref8, _ref9);
       })));
     }
   }]);

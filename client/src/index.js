@@ -399,21 +399,22 @@ class _RisksWindow extends PureComponent {
         </TableHead>
         <TableBody>
           {risks.map((risk, index) => {
-            const assetName = risk.get('name')
+            const assetName = risk.get('assetName')
             const meterCount = risk.get('meterCount')
-            const threat = risk.get('threat')
-            const description = risk.get('description')
-            const url = risk.get('url')
-            const date = risk.get('date')
+            const threatScore = risk.get('threatScore')
+            const threatDescription = risk.get('threatDescription')
+            const vulnerabilityUrl = risk.get('vulnerabilityUrl')
+            const vulnerabilityDate = risk.get('vulnerabilityDate')
             return (
               <TableRow key={index}>
                 <TableCell component='th' scope='row'>{assetName}</TableCell>
                 <TableCell>{meterCount}</TableCell>
-                <TableCell>{threat}</TableCell>
-                <TableCell>{description}</TableCell>
+                <TableCell>{threatScore}</TableCell>
+                <TableCell>{threatDescription}</TableCell>
                 <TableCell>
+                  {/* !!! USE LINK HERE */}
                   <a target='_blank' rel='noopener noreferrer'
-                    href={url}>{date}</a>
+                    href={vulnerabilityUrl}>{vulnerabilityDate}</a>
                 </TableCell>
                 <TableCell>Untreated</TableCell>
                 <TableCell>

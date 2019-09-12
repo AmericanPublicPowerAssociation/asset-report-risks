@@ -71,22 +71,22 @@ def get_risks(asset_ids):
         'vulnerabilities': 1,
     })
     risks = []
-    for result in results:
-        asset_id = result['id']
-        asset_name = result['name']
-        meter_count = result['meterCount']
-        for vulnerability in result['vulnerabilities']:
-            impact = vulnerability['impact']
-            texts = vulnerability['texts']
+    for r in results:
+        asset_id = r['id']
+        asset_name = r['name']
+        meter_count = r['meterCount']
+        for d in r['vulnerabilities']:
+            impact = d['impact']
+            texts = d['texts']
             risks.append({
                 'assetId': asset_id,
                 'assetName': asset_name,
                 'meterCount': meter_count,
-                'threat': impact * meter_count,
-                'description': '\n'.join(texts),
-                'uri': 'nvd:%s' % vulnerability['id'],
-                'url': vulnerability['url'],
-                'date': vulnerability['date'].strftime('%Y%m%d'),
+                'threatScore': impact * meter_count,
+                'threatDescription': '\n'.join(texts),
+                'vulnerabilityUri': 'nvd:%s' % d['id'],
+                'vulnerabilityUrl': d['url'],
+                'vulnerabilityDate': d['date'].strftime('%Y%m%d'),
             })
     return risks
 
