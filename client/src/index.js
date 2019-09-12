@@ -111,7 +111,6 @@ class EnhancedInputWithoutStyles extends PureComponent {
                       </IconButton>
                     </InputAdornment>
                 })}
-                InputLabelProps={{ shrink: true }}
               />
               {isOpen && !suggestions.isEmpty() &&
                 <Paper className={classes.paper} square {...getMenuProps()}>

@@ -232,10 +232,7 @@ function (_PureComponent) {
             }, _react["default"].createElement(_IconButton["default"], {
               onClick: clearSelection
             }, _ref2))
-          }),
-          InputLabelProps: {
-            shrink: true
-          }
+          })
         }), isOpen && !suggestions.isEmpty() && _react["default"].createElement(_Paper["default"], _extends({
           className: classes.paper,
           square: true
