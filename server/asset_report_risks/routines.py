@@ -59,6 +59,38 @@ def load_cve():
     return pickle.load(open(CVE_PATH, 'rb'))
 
 
+def get_risks(asset_ids):
+    risks_client = get_risks_client()
+    results = risks_client.find({
+        'id': {'$in': list(asset_ids)},
+    }, {
+        '_id': 0,
+        'id': 1,
+        'name': 1,
+        'meterCount': 1,
+        'vulnerabilities': 1,
+    })
+    risks = []
+    for result in results:
+        asset_id = result['id']
+        asset_name = result['name']
+        meter_count = result['meterCount']
+        for vulnerability in result['vulnerabilities']:
+            impact = vulnerability['impact']
+            texts = vulnerability['texts']
+            risks.append({
+                'assetId': asset_id,
+                'assetName': asset_name,
+                'meterCount': meter_count,
+                'threat': impact * meter_count,
+                'description': '\n'.join(texts),
+                'uri': 'nvd:%s' % vulnerability['id'],
+                'url': vulnerability['url'],
+                'date': vulnerability['date'].strftime('%Y%m%d'),
+            })
+    return risks
+
+
 def get_matching_nvd_ids(
         cve,
         approximate_component_type,

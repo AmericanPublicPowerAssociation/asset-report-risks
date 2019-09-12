@@ -1,13 +1,13 @@
 from argparse import ArgumentParser
-from asset_tracker.models import Asset
 from asset_report_risks.routines import (
-    get_nvd_database,
     get_matching_nvd_ids,
+    get_nvd_database,
     get_risks_client,
     load_cve,
     yield_nvd_pack)
 from asset_report_risks.settings import (
     MINIMUM_SIMILARITY)
+from asset_tracker.models import Asset
 from os.path import join
 from pymongo import ASCENDING
 from pyramid.paster import bootstrap, setup_logging

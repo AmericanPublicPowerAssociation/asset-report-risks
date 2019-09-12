@@ -3,6 +3,9 @@ def includeme(config):
         'risks.json',
         '/risks.json')
     config.add_route(
+        'risk_metrics.json',
+        '/risks/metrics.json')
+    config.add_route(
         'vendor_names.json',
         '/risks/vendorNames.json')
     config.add_route(

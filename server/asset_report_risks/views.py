@@ -1,8 +1,9 @@
-from asset_tracker.models import Asset
+from asset_tracker.models import Asset, Task, TaskStatus
+from collections import defaultdict
 from pyramid.view import view_config
 
 from .routines import (
-    get_risks_client,
+    get_risks,
     get_similar_product_names,
     get_similar_product_versions,
     get_similar_vendor_names,
@@ -67,35 +68,60 @@ def get_product_versions_json(request):
     renderer='json',
     request_method='GET')
 def get_risks_json(request):
-    db = request.db
-    # !!! Limit to asset ids that the user has permission to view
-    asset_ids = [_[0] for _ in db.query(Asset.id).all()]
-    risks_client = get_risks_client()
-    results = risks_client.find({
-        'id': {'$in': list(asset_ids)},
-    }, {
-        '_id': 0,
-        'id': 1,
-        'name': 1,
-        'meterCount': 1,
-        'vulnerabilities': 1,
-    })
-    # !!! Return nested json instead of array
-    risks = []
-    for result in results:
-        asset_id = result['id']
-        asset_name = result['name']
-        meter_count = result['meterCount']
-        for vulnerability in result['vulnerabilities']:
-            impact = vulnerability['impact']
-            texts = vulnerability['texts']
-            risks.append({
-                'id': asset_id,
-                'name': asset_name,
-                'meterCount': meter_count,
-                'threat': impact * meter_count,
-                'description': '\n'.join(texts),
-                'url': vulnerability['url'],
-                'date': vulnerability['date'].strftime('%Y%m%d'),
-            })
+    asset_ids = Asset.get_readable_ids(request)
+    risks = get_risks(asset_ids)
     return risks
+
+
+@view_config(
+    route_name='risk_metrics.json',
+    renderer='json',
+    request_method='GET')
+# !!! cache these metrics using dogpile cache
+def get_risk_metrics_json(request):
+    asset_ids = Asset.get_readable_ids(request)
+    asset_count = len(asset_ids)
+    if not asset_count:
+        return {}
+
+    risks = get_risks(asset_ids)
+    reference_uris = [_['uri'] for _ in risks]
+
+    db = request.db
+    tasks = db.query(Task).filter(
+        Task.status == TaskStatus.done,
+        Task.reference_uri.in_(reference_uris),
+    ).all()
+    closed_uris = [_.reference_uri for _ in tasks]
+
+    open_risks = []
+    for risk in risks:
+        uri = risk['uri']
+        if uri in closed_uris:
+            continue
+        open_risks.append(risk)
+
+    asset_ids = set()
+    for risk in open_risks:
+        asset_ids.add(risk['assetId'])
+    impacted_asset_count = len(asset_ids)
+
+    risks_by_uri = defaultdict(list)
+    for risk in open_risks:
+        uri = risk['uri']
+        risks_by_uri[uri].append(risk)
+    greatest_threat = 0
+    greatest_threat_description = None
+    for uri, risks in risks_by_uri.items():
+        threat = sum(_['threat'] for _ in risks)
+        if threat > greatest_threat:
+            greatest_threat = threat
+            greatest_threat_description = risks[0]['description']
+
+    return {
+        'impacted_asset_count': impacted_asset_count,
+        'impacted_asset_percent': int(
+            100 * impacted_asset_count / asset_count),
+        'cyber_vulnerability_count': len(open_risks),
+        'greatest_threat_description': greatest_threat_description,
+    }
