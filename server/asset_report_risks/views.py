@@ -69,9 +69,27 @@ def get_product_versions_json(request):
     renderer='json',
     request_method='GET')
 def get_risks_json(request):
+    db = request.db
     asset_ids = Asset.get_readable_ids(request)
-    risks = get_risks(asset_ids)
-    return risks
+    asset_name_by_id = dict(db.query(Asset.id, Asset.name).filter(
+        Asset.id.in_(asset_ids)))
+    ds = []
+    for r in get_risks(asset_ids):
+        asset_id = r['assetId']
+        asset_name = asset_name_by_id[asset_id]
+        meter_ids = r['meterIds']
+        meter_count = len(meter_ids)
+        ds.append({
+            'assetId': asset_id,
+            'assetName': asset_name,
+            'meterCount': meter_count,
+            'threatScore': r['threatScore'],
+            'threatDescription': r['threatDescription'],
+            'vulnerabilityUri': r['vulnerabilityUri'],
+            'vulnerabilityUrl': r['vulnerabilityUrl'],
+            'vulnerabilityDate': r['vulnerabilityDate'],
+        })
+    return sorted(ds, key=lambda _: -1 * _['threatScore'])
 
 
 @view_config(
@@ -102,10 +120,10 @@ def get_risk_metrics_json(request):
             continue
         open_risks.append(risk)
 
-    asset_ids = set()
+    impacted_asset_ids = set()
     for risk in open_risks:
-        asset_ids.add(risk['assetId'])
-    impacted_asset_count = len(asset_ids)
+        impacted_asset_ids.add(risk['assetId'])
+    impacted_asset_count = len(impacted_asset_ids)
 
     risks_by_uri = defaultdict(list)
     for risk in open_risks:
@@ -120,20 +138,24 @@ def get_risk_metrics_json(request):
             greatest_threat_description = uri_risks[0]['threatDescription']
 
     aggregated_threat_score = sum(_['threatScore'] for _ in risks)
-    downstream_meter_count = sum(_['meterCount'] for _ in risks)
+
+    downstream_meter_ids = set()
+    for risk in risks:
+        downstream_meter_ids.update(risk['meterIds'])
+    downstream_meter_count = len(downstream_meter_ids)
     meter_count = db.query(Asset.id).filter(
-        Asset.type_id.startswith('m'),
         Asset.id.in_(asset_ids),
+        Asset.type_id.startswith('m'),
     ).count()
 
     return {
-        'impacted_asset_count': impacted_asset_count,
-        'impacted_asset_percent': get_percent(
+        'riskCount': len(open_risks),
+        'aggregatedThreatScore': aggregated_threat_score,
+        'impactedAssetCount': impacted_asset_count,
+        'impactedAssetPercent': get_percent(
             impacted_asset_count, asset_count),
-        'cyber_vulnerability_count': len(open_risks),
-        'greatest_threat_description': greatest_threat_description,
-        'aggregated_threat_score': aggregated_threat_score,
-        'downstream_meter_count': downstream_meter_count,
-        'downstream_meter_percent': get_percent(
+        'greatestThreatDescription': greatest_threat_description,
+        'downstreamMeterCount': downstream_meter_count,
+        'downstreamMeterPercent': get_percent(
             downstream_meter_count, meter_count),
     }

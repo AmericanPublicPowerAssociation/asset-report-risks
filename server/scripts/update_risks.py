@@ -58,10 +58,10 @@ if __name__ == '__main__':
                 })
             if not vulnerabilities:
                 continue
+            meters = get_downstream_meters(asset)
             risks.append({
                 'assetId': asset.id,
-                'assetName': asset.name,
-                'meterCount': len(get_downstream_meters(asset)),
+                'meterIds': [_.id for _ in meters],
                 'vulnerabilities': vulnerabilities,
             })
 

@@ -2,8 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { createSelector } from 'reselect'
-import { List, fromJS } from 'immutable'
+import { List, Map, fromJS } from 'immutable'
 import Downshift from 'downshift'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -15,22 +14,21 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
+// import Button from '@material-ui/core/Button'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
-import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
-import AddIcon from '@material-ui/icons/Add'
-import Fab from '@material-ui/core/Fab'
-import Tooltip from '@material-ui/core/Tooltip'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
+// import AddIcon from '@material-ui/icons/Add'
+// import Fab from '@material-ui/core/Fab'
+// import Tooltip from '@material-ui/core/Tooltip'
+// import Dialog from '@material-ui/core/Dialog'
+// import DialogActions from '@material-ui/core/DialogActions'
+// import DialogContent from '@material-ui/core/DialogContent'
+// import DialogContentText from '@material-ui/core/DialogContentText'
+// import DialogTitle from '@material-ui/core/DialogTitle'
 
 
 export const getVendorNameSuggestions = state => state.get(
@@ -41,13 +39,8 @@ export const getProductVersionSuggestions = state => state.get(
   'productVersionSuggestions')
 export const getRisks = state => state.get(
   'risks')
-
-
-export const getRiskCount = createSelector([
-  getRisks,
-], (
-  risks,
-) => risks.count())
+export const getRiskMetrics = state => state.get(
+  'riskMetrics')
 
 
 class EnhancedInputWithoutStyles extends PureComponent {
@@ -247,48 +240,74 @@ class _ProductVersion extends PureComponent {
 
 
 class _RisksCardWithoutStyles extends PureComponent {
+
+  componentDidMount() {
+    const { refreshRiskMetrics } = this.props
+    refreshRiskMetrics()
+  }
+
   render() {
     const {
       classes,
       to,
+      riskMetrics,
     } = this.props
+    const riskCount = riskMetrics.get(
+      'riskCount')
+    const aggregatedThreatScore = riskMetrics.get(
+      'aggregatedThreatScore')
+    const greatestThreatDescription = riskMetrics.get(
+      'greatestThreatDescription')
+    const downstreamMeterPercent = riskMetrics.get(
+      'downstreamMeterPercent')
     return (
-
-      <Grid container spacing={3}>
-        <Grid item xs>
-          <Link
-            underline='none'
-            component={RouterLink}
-            to={to}
-          >
-            <Card>
-              <CardActionArea className={classes.cardActionArea}>
-                <Typography className={classes.title} align='center'>
-                  Risks
-                </Typography>
-              </CardActionArea>
-            </Card>
-          </Link>
-        </Grid>
-      </Grid>
-
-
+      <Link underline='none' component={RouterLink} to={to}>
+        <Card>
+          <CardActionArea className={classes.cardActionArea}>
+            <Typography className={classes.title} align='center'>
+              Risks
+            </Typography>
+            <Table className={classes.section}>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Threat Score</TableCell>
+                  <TableCell align='right'>{aggregatedThreatScore}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Risks</TableCell>
+                  <TableCell align='right'>{riskCount}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Impacted Meters</TableCell>
+                  <TableCell align='right'>{downstreamMeterPercent}%</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <Typography className={classes.section}>
+              {greatestThreatDescription}
+            </Typography>
+          </CardActionArea>
+        </Card>
+      </Link>
     )
   }
 }
 
 
 const _RisksCard = withStyles(theme => ({
+  section: {
+    marginTop: theme.spacing(3),
+  },
   title: {
     fontSize: 24,
   },
   cardActionArea: {
     padding: theme.spacing(3),
-  }
-
+  },
 }))(_RisksCardWithoutStyles)
 
 
+/*
 class _RisksFormDialogWithoutStyle extends PureComponent {
   constructor(props) {
     super(props)
@@ -374,6 +393,7 @@ const RisksFormDialog = withStyles(theme => ({
     maxHeight: '40vh',
   }
 }))(_RisksFormDialogWithoutStyle)
+*/
 
 
 class _RisksWindow extends PureComponent {
@@ -384,7 +404,9 @@ class _RisksWindow extends PureComponent {
   }
 
   render() {
-    const { risks } = this.props
+    const {
+      risks,
+    } = this.props
     return (
       <Table>
         <TableHead>
@@ -489,8 +511,12 @@ export const RisksWindow = connect(
 
 export const RisksCard = connect(
   state => ({
+    riskMetrics: getRiskMetrics(state),
   }),
   dispatch => ({
+    refreshRiskMetrics: payload => {dispatch(
+      refreshRiskMetrics(payload))
+    },
   }),
 )(_RisksCard)
 
@@ -504,6 +530,7 @@ export const SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS'
 
 
 export const REFRESH_RISKS = 'REFRESH_RISKS'
+export const REFRESH_RISK_METRICS = 'REFRESH_RISK_METRICS'
 
 
 export const RESET_VENDOR_NAME_SUGGESTIONS = 'RESET_VENDOR_NAME_SUGGESTIONS'
@@ -513,46 +540,41 @@ export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
 
 
 export const RESET_RISKS = 'RESET_RISKS'
+export const RESET_RISK_METRICS = 'RESET_RISK_METRICS'
 
 
 export const logError = payload => ({
-  payload, type: LOG_ERROR,
-})
+  payload, type: LOG_ERROR})
 
 
 export const suggestVendorNames = payload => ({
-  payload, type: SUGGEST_VENDOR_NAMES,
-})
+  payload, type: SUGGEST_VENDOR_NAMES})
 export const suggestProductNames = payload => ({
-  payload, type: SUGGEST_PRODUCT_NAMES,
-})
+  payload, type: SUGGEST_PRODUCT_NAMES})
 export const suggestProductVersions = payload => ({
-  payload, type: SUGGEST_PRODUCT_VERSIONS,
-})
+  payload, type: SUGGEST_PRODUCT_VERSIONS})
 
 
 export const refreshRisks = payload => ({
-  payload, type: REFRESH_RISKS,
-})
+  payload, type: REFRESH_RISKS})
+export const refreshRiskMetrics = payload => ({
+  payload, type: REFRESH_RISK_METRICS})
 
 
 export const resetVendorNameSuggestions = payload => ({
-  payload, type: RESET_VENDOR_NAME_SUGGESTIONS,
-})
+  payload, type: RESET_VENDOR_NAME_SUGGESTIONS})
 export const resetProductNameSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS,
-})
+  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS})
 export const resetProductVersionSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS,
-})
+  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS})
 export const clearSuggestions = payload => ({
-  payload, type: CLEAR_SUGGESTIONS,
-})
+  payload, type: CLEAR_SUGGESTIONS})
 
 
 export const resetRisks = payload => ({
-  payload, type: RESET_RISKS,
-})
+  payload, type: RESET_RISKS})
+export const resetRiskMetrics = payload => ({
+  payload, type: RESET_RISK_METRICS})
 
 
 export function* watchSuggestVendorNames() {
@@ -619,6 +641,18 @@ export function* watchRefreshRisks() {
     yield fetchSafely(url, {}, {
       on200: function* (risks) {
         yield put(resetRisks(risks))
+      },
+    })
+  })
+}
+
+
+export function* watchRefreshRiskMetrics() {
+  yield takeLatest(REFRESH_RISK_METRICS, function* (action) {
+    const url = '/risks/metrics.json'
+    yield fetchSafely(url, {}, {
+      on200: function* (riskMetrics) {
+        yield put(resetRiskMetrics(riskMetrics))
       },
     })
   })
@@ -696,6 +730,19 @@ export const risks = (state = List(), action) => {
     case RESET_RISKS: {
       const risks = action.payload
       return risks
+    }
+    default: {
+      return state
+    }
+  }
+}
+
+
+export const riskMetrics = (state = Map(), action) => {
+  switch (action.type) {
+    case RESET_RISK_METRICS: {
+      const riskMetrics = action.payload
+      return riskMetrics
     }
     default: {
       return state
