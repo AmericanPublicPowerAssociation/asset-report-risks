@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { List, Map, fromJS } from 'immutable'
+import { List, fromJS } from 'immutable'
 import Downshift from 'downshift'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -39,8 +39,6 @@ export const getProductVersionSuggestions = state => state.get(
   'productVersionSuggestions')
 export const getRisks = state => state.get(
   'risks')
-export const getRiskMetrics = state => state.get(
-  'riskMetrics')
 
 
 class EnhancedInputWithoutStyles extends PureComponent {
@@ -241,28 +239,23 @@ class _ProductVersion extends PureComponent {
 
 class _RisksCardWithoutStyles extends PureComponent {
 
-  componentDidMount() {
-    const { refreshRiskMetrics } = this.props
-    refreshRiskMetrics()
-  }
-
   render() {
     const {
       classes,
       to,
-      riskMetrics,
+      values,
     } = this.props
-    const riskCount = riskMetrics.get(
+    const riskCount = values.get(
       'riskCount')
-    const aggregatedThreatScore = riskMetrics.get(
+    const aggregatedThreatScore = values.get(
       'aggregatedThreatScore')
-    const greatestThreatDescription = riskMetrics.get(
+    const greatestThreatDescription = values.get(
       'greatestThreatDescription')
-    const downstreamMeterPercent = riskMetrics.get(
+    const downstreamMeterPercent = values.get(
       'downstreamMeterPercent')
     return (
       <Link underline='none' component={RouterLink} to={to}>
-        <Card>
+        <Card className={classes.card}>
           <CardActionArea className={classes.cardActionArea}>
             <Typography className={classes.title} align='center'>
               Risks
@@ -294,12 +287,15 @@ class _RisksCardWithoutStyles extends PureComponent {
 }
 
 
-const _RisksCard = withStyles(theme => ({
+export const RisksCard = withStyles(theme => ({
   section: {
     marginTop: theme.spacing(3),
   },
   title: {
     fontSize: 24,
+  },
+  card: {
+    margin: theme.spacing(1),
   },
   cardActionArea: {
     padding: theme.spacing(3),
@@ -509,18 +505,6 @@ export const RisksWindow = connect(
 )(_RisksWindow)
 
 
-export const RisksCard = connect(
-  state => ({
-    riskMetrics: getRiskMetrics(state),
-  }),
-  dispatch => ({
-    refreshRiskMetrics: payload => {dispatch(
-      refreshRiskMetrics(payload))
-    },
-  }),
-)(_RisksCard)
-
-
 export const LOG_ERROR = 'LOG_ERROR'
 
 
@@ -557,8 +541,6 @@ export const suggestProductVersions = payload => ({
 
 export const refreshRisks = payload => ({
   payload, type: REFRESH_RISKS})
-export const refreshRiskMetrics = payload => ({
-  payload, type: REFRESH_RISK_METRICS})
 
 
 export const resetVendorNameSuggestions = payload => ({
@@ -573,8 +555,6 @@ export const clearSuggestions = payload => ({
 
 export const resetRisks = payload => ({
   payload, type: RESET_RISKS})
-export const resetRiskMetrics = payload => ({
-  payload, type: RESET_RISK_METRICS})
 
 
 export function* watchSuggestVendorNames() {
@@ -641,18 +621,6 @@ export function* watchRefreshRisks() {
     yield fetchSafely(url, {}, {
       on200: function* (risks) {
         yield put(resetRisks(risks))
-      },
-    })
-  })
-}
-
-
-export function* watchRefreshRiskMetrics() {
-  yield takeLatest(REFRESH_RISK_METRICS, function* (action) {
-    const url = '/risks/metrics.json'
-    yield fetchSafely(url, {}, {
-      on200: function* (riskMetrics) {
-        yield put(resetRiskMetrics(riskMetrics))
       },
     })
   })
@@ -730,19 +698,6 @@ export const risks = (state = List(), action) => {
     case RESET_RISKS: {
       const risks = action.payload
       return risks
-    }
-    default: {
-      return state
-    }
-  }
-}
-
-
-export const riskMetrics = (state = Map(), action) => {
-  switch (action.type) {
-    case RESET_RISK_METRICS: {
-      const riskMetrics = action.payload
-      return riskMetrics
     }
     default: {
       return state

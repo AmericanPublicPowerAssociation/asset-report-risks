@@ -7,9 +7,8 @@ exports.watchSuggestVendorNames = watchSuggestVendorNames;
 exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshRisks = watchRefreshRisks;
-exports.watchRefreshRiskMetrics = watchRefreshRiskMetrics;
 exports.fetchSafely = fetchSafely;
-exports.riskMetrics = exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetRiskMetrics = exports.resetRisks = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshRiskMetrics = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_RISK_METRICS = exports.RESET_RISKS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.RisksCard = exports.RisksWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.getRiskMetrics = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetRisks = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_RISK_METRICS = exports.RESET_RISKS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.RisksWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.RisksCard = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -75,9 +74,6 @@ regeneratorRuntime.mark(watchSuggestProductVersions),
 regeneratorRuntime.mark(watchRefreshRisks),
     _marked5 =
 /*#__PURE__*/
-regeneratorRuntime.mark(watchRefreshRiskMetrics),
-    _marked6 =
-/*#__PURE__*/
 regeneratorRuntime.mark(fetchSafely);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -133,12 +129,6 @@ var getRisks = function getRisks(state) {
 };
 
 exports.getRisks = getRisks;
-
-var getRiskMetrics = function getRiskMetrics(state) {
-  return state.get('riskMetrics');
-};
-
-exports.getRiskMetrics = getRiskMetrics;
 
 var _ref2 =
 /*#__PURE__*/
@@ -421,27 +411,23 @@ function (_PureComponent5) {
   }
 
   _createClass(_RisksCardWithoutStyles, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var refreshRiskMetrics = this.props.refreshRiskMetrics;
-      refreshRiskMetrics();
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this$props7 = this.props,
           classes = _this$props7.classes,
           to = _this$props7.to,
-          riskMetrics = _this$props7.riskMetrics;
-      var riskCount = riskMetrics.get('riskCount');
-      var aggregatedThreatScore = riskMetrics.get('aggregatedThreatScore');
-      var greatestThreatDescription = riskMetrics.get('greatestThreatDescription');
-      var downstreamMeterPercent = riskMetrics.get('downstreamMeterPercent');
+          values = _this$props7.values;
+      var riskCount = values.get('riskCount');
+      var aggregatedThreatScore = values.get('aggregatedThreatScore');
+      var greatestThreatDescription = values.get('greatestThreatDescription');
+      var downstreamMeterPercent = values.get('downstreamMeterPercent');
       return _react["default"].createElement(_Link["default"], {
         underline: "none",
         component: _reactRouterDom.Link,
         to: to
-      }, _react["default"].createElement(_Card["default"], null, _react["default"].createElement(_CardActionArea["default"], {
+      }, _react["default"].createElement(_Card["default"], {
+        className: classes.card
+      }, _react["default"].createElement(_CardActionArea["default"], {
         className: classes.cardActionArea
       }, _react["default"].createElement(_Typography["default"], {
         className: classes.title,
@@ -463,13 +449,16 @@ function (_PureComponent5) {
   return _RisksCardWithoutStyles;
 }(_react.PureComponent);
 
-var _RisksCard = (0, _styles.withStyles)(function (theme) {
+var RisksCard = (0, _styles.withStyles)(function (theme) {
   return {
     section: {
       marginTop: theme.spacing(3)
     },
     title: {
       fontSize: 24
+    },
+    card: {
+      margin: theme.spacing(1)
     },
     cardActionArea: {
       padding: theme.spacing(3)
@@ -564,6 +553,7 @@ const RisksFormDialog = withStyles(theme => ({
 }))(_RisksFormDialogWithoutStyle)
 */
 
+exports.RisksCard = RisksCard;
 
 var _ref6 =
 /*#__PURE__*/
@@ -671,18 +661,6 @@ var RisksWindow = (0, _reactRedux.connect)(function (state) {
   };
 })(_RisksWindow);
 exports.RisksWindow = RisksWindow;
-var RisksCard = (0, _reactRedux.connect)(function (state) {
-  return {
-    riskMetrics: getRiskMetrics(state)
-  };
-}, function (dispatch) {
-  return {
-    refreshRiskMetrics: function refreshRiskMetrics(payload) {
-      dispatch(_refreshRiskMetrics(payload));
-    }
-  };
-})(_RisksCard);
-exports.RisksCard = RisksCard;
 var LOG_ERROR = 'LOG_ERROR';
 exports.LOG_ERROR = LOG_ERROR;
 var SUGGEST_VENDOR_NAMES = 'SUGGEST_VENDOR_NAMES';
@@ -753,15 +731,6 @@ var _refreshRisks = function _refreshRisks(payload) {
 
 exports.refreshRisks = _refreshRisks;
 
-var _refreshRiskMetrics = function _refreshRiskMetrics(payload) {
-  return {
-    payload: payload,
-    type: REFRESH_RISK_METRICS
-  };
-};
-
-exports.refreshRiskMetrics = _refreshRiskMetrics;
-
 var resetVendorNameSuggestions = function resetVendorNameSuggestions(payload) {
   return {
     payload: payload,
@@ -806,15 +775,6 @@ var resetRisks = function resetRisks(payload) {
 };
 
 exports.resetRisks = resetRisks;
-
-var resetRiskMetrics = function resetRiskMetrics(payload) {
-  return {
-    payload: payload,
-    type: RESET_RISK_METRICS
-  };
-};
-
-exports.resetRiskMetrics = resetRiskMetrics;
 
 function watchSuggestVendorNames() {
   return regeneratorRuntime.wrap(function watchSuggestVendorNames$(_context3) {
@@ -1046,139 +1006,87 @@ function watchRefreshRisks() {
   }, _marked4);
 }
 
-function watchRefreshRiskMetrics() {
-  return regeneratorRuntime.wrap(function watchRefreshRiskMetrics$(_context15) {
-    while (1) {
-      switch (_context15.prev = _context15.next) {
-        case 0:
-          _context15.next = 2;
-          return (0, _effects.takeLatest)(REFRESH_RISK_METRICS,
-          /*#__PURE__*/
-          regeneratorRuntime.mark(function _callee5(action) {
-            var url;
-            return regeneratorRuntime.wrap(function _callee5$(_context14) {
-              while (1) {
-                switch (_context14.prev = _context14.next) {
-                  case 0:
-                    url = '/risks/metrics.json';
-                    _context14.next = 3;
-                    return fetchSafely(url, {}, {
-                      on200:
-                      /*#__PURE__*/
-                      regeneratorRuntime.mark(function on200(riskMetrics) {
-                        return regeneratorRuntime.wrap(function on200$(_context13) {
-                          while (1) {
-                            switch (_context13.prev = _context13.next) {
-                              case 0:
-                                _context13.next = 2;
-                                return (0, _effects.put)(resetRiskMetrics(riskMetrics));
-
-                              case 2:
-                              case "end":
-                                return _context13.stop();
-                            }
-                          }
-                        }, on200);
-                      })
-                    });
-
-                  case 3:
-                  case "end":
-                    return _context14.stop();
-                }
-              }
-            }, _callee5);
-          }));
-
-        case 2:
-        case "end":
-          return _context15.stop();
-      }
-    }
-  }, _marked5);
-}
-
 function fetchSafely(url, options, callbacks) {
   var response, status, _on, on400;
 
-  return regeneratorRuntime.wrap(function fetchSafely$(_context16) {
+  return regeneratorRuntime.wrap(function fetchSafely$(_context13) {
     while (1) {
-      switch (_context16.prev = _context16.next) {
+      switch (_context13.prev = _context13.next) {
         case 0:
-          _context16.prev = 0;
-          _context16.next = 3;
+          _context13.prev = 0;
+          _context13.next = 3;
           return (0, _effects.call)(fetch, url, options);
 
         case 3:
-          response = _context16.sent;
+          response = _context13.sent;
           status = response.status;
           _on = callbacks.on200, on400 = callbacks.on400;
 
           if (!(_on && status === 200)) {
-            _context16.next = 17;
+            _context13.next = 17;
             break;
           }
 
-          _context16.t0 = _on;
-          _context16.t1 = _immutable.fromJS;
-          _context16.next = 11;
+          _context13.t0 = _on;
+          _context13.t1 = _immutable.fromJS;
+          _context13.next = 11;
           return response.json();
 
         case 11:
-          _context16.t2 = _context16.sent;
-          _context16.t3 = (0, _context16.t1)(_context16.t2);
-          _context16.next = 15;
-          return (0, _context16.t0)(_context16.t3);
+          _context13.t2 = _context13.sent;
+          _context13.t3 = (0, _context13.t1)(_context13.t2);
+          _context13.next = 15;
+          return (0, _context13.t0)(_context13.t3);
 
         case 15:
-          _context16.next = 30;
+          _context13.next = 30;
           break;
 
         case 17:
           if (!(on400 && status === 400)) {
-            _context16.next = 28;
+            _context13.next = 28;
             break;
           }
 
-          _context16.t4 = on400;
-          _context16.t5 = _immutable.fromJS;
-          _context16.next = 22;
+          _context13.t4 = on400;
+          _context13.t5 = _immutable.fromJS;
+          _context13.next = 22;
           return response.json();
 
         case 22:
-          _context16.t6 = _context16.sent;
-          _context16.t7 = (0, _context16.t5)(_context16.t6);
-          _context16.next = 26;
-          return (0, _context16.t4)(_context16.t7);
+          _context13.t6 = _context13.sent;
+          _context13.t7 = (0, _context13.t5)(_context13.t6);
+          _context13.next = 26;
+          return (0, _context13.t4)(_context13.t7);
 
         case 26:
-          _context16.next = 30;
+          _context13.next = 30;
           break;
 
         case 28:
-          _context16.next = 30;
+          _context13.next = 30;
           return (0, _effects.put)(logError({
             status: status
           }));
 
         case 30:
-          _context16.next = 36;
+          _context13.next = 36;
           break;
 
         case 32:
-          _context16.prev = 32;
-          _context16.t8 = _context16["catch"](0);
-          _context16.next = 36;
+          _context13.prev = 32;
+          _context13.t8 = _context13["catch"](0);
+          _context13.next = 36;
           return (0, _effects.put)(logError({
-            text: _context16.t8
+            text: _context13.t8
           }));
 
         case 36:
         case "end":
-          return _context16.stop();
+          return _context13.stop();
       }
     }
-  }, _marked6, null, [[0, 32]]);
+  }, _marked5, null, [[0, 32]]);
 }
 
 var vendorNameSuggestions = function vendorNameSuggestions() {
@@ -1275,23 +1183,3 @@ var risks = function risks() {
 };
 
 exports.risks = risks;
-
-var riskMetrics = function riskMetrics() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.Map)();
-  var action = arguments.length > 1 ? arguments[1] : undefined;
-
-  switch (action.type) {
-    case RESET_RISK_METRICS:
-      {
-        var _riskMetrics = action.payload;
-        return _riskMetrics;
-      }
-
-    default:
-      {
-        return state;
-      }
-  }
-};
-
-exports.riskMetrics = riskMetrics;

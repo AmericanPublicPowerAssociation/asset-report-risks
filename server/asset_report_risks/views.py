@@ -93,11 +93,11 @@ def get_risks_json(request):
 
 
 @view_config(
-    route_name='risk_metrics.json',
+    route_name='risks_metrics.json',
     renderer='json',
     request_method='GET')
 # !!! cache these metrics using dogpile cache
-def get_risk_metrics_json(request):
+def see_risks_metrics_json(request):
     asset_ids = Asset.get_readable_ids(request)
     asset_count = len(asset_ids)
     if not asset_count:
