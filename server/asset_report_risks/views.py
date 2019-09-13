@@ -108,7 +108,7 @@ def see_risks_metrics_json(request):
 
     db = request.db
     tasks = db.query(Task).filter(
-        Task.status == TaskStatus.done,
+        Task.status == TaskStatus.Done,
         Task.reference_uri.in_(reference_uris),
     ).all()
     closed_uris = [_.reference_uri for _ in tasks]
