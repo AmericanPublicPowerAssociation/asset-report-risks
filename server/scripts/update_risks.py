@@ -8,6 +8,7 @@ from asset_report_risks.routines import (
 from asset_report_risks.settings import (
     MINIMUM_SIMILARITY)
 from asset_tracker.models import Asset
+from asset_tracker.routines.network import get_downstream_meters
 from os.path import join
 from pymongo import ASCENDING
 from pyramid.paster import bootstrap, setup_logging
@@ -58,7 +59,7 @@ if __name__ == '__main__':
             risks.append({
                 'assetId': asset.id,
                 'assetName': asset.name,
-                'meterCount': 0,
+                'meterCount': len(get_downstream_meters(asset)),
                 'vulnerabilities': vulnerabilities,
             })
 

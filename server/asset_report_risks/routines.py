@@ -62,18 +62,18 @@ def load_cve():
 def get_risks(asset_ids):
     risks_client = get_risks_client()
     results = risks_client.find({
-        'id': {'$in': list(asset_ids)},
+        'assetId': {'$in': list(asset_ids)},
     }, {
         '_id': 0,
-        'id': 1,
-        'name': 1,
+        'assetId': 1,
+        'assetName': 1,
         'meterCount': 1,
         'vulnerabilities': 1,
     })
     risks = []
     for r in results:
-        asset_id = r['id']
-        asset_name = r['name']
+        asset_id = r['assetId']
+        asset_name = r['assetName']
         meter_count = r['meterCount']
         for d in r['vulnerabilities']:
             impact = d['impact']
