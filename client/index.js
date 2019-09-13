@@ -578,15 +578,7 @@ var RisksFormDialog = (0, _styles.withStyles)(function (theme) {
 
 var _ref7 =
 /*#__PURE__*/
-_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], null, "Published"), _react["default"].createElement(_TableCell["default"], null, "Status")));
-
-var _ref8 =
-/*#__PURE__*/
-_react["default"].createElement(_TableCell["default"], null, "Untreated");
-
-var _ref9 =
-/*#__PURE__*/
-_react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(RisksFormDialog, null));
+_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], null, "Published")));
 
 var _RisksWindow =
 /*#__PURE__*/
@@ -621,11 +613,11 @@ function (_PureComponent7) {
         }, _react["default"].createElement(_TableCell["default"], {
           component: "th",
           scope: "row"
-        }, assetName), _react["default"].createElement(_TableCell["default"], null, meterCount), _react["default"].createElement(_TableCell["default"], null, threatScore), _react["default"].createElement(_TableCell["default"], null, threatDescription), _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement("a", {
+        }, assetName), _react["default"].createElement(_TableCell["default"], null, meterCount), _react["default"].createElement(_TableCell["default"], null, threatScore), _react["default"].createElement(_TableCell["default"], null, threatDescription), _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_Link["default"], {
           target: "_blank",
           rel: "noopener noreferrer",
           href: vulnerabilityUrl
-        }, vulnerabilityDate)), _ref8, _ref9);
+        }, vulnerabilityDate)));
       })));
     }
   }]);

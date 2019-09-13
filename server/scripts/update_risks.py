@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from asset_report_risks.routines import (
     get_matching_nvd_ids,
-    get_nvd_database,
+    get_nvd_client,
     get_risks_client,
     load_cve,
     yield_nvd_pack)
@@ -11,6 +11,7 @@ from asset_tracker.models import Asset
 from asset_tracker.routines.network import get_downstream_meters
 from os.path import join
 from pymongo import ASCENDING
+from pymongo.errors import BulkWriteError
 from pyramid.paster import bootstrap, setup_logging
 
 
@@ -22,7 +23,7 @@ if __name__ == '__main__':
     setup_logging(a.configuration_path)
 
     cve = load_cve()
-    nvd_database = get_nvd_database()
+    nvd_client = get_nvd_client()
 
     risks = []
     with bootstrap(a.configuration_path) as env, env['request'].tm:
@@ -47,8 +48,9 @@ if __name__ == '__main__':
                 nvd_texts,
                 nvd_date,
                 nvd_score,
-            ) in yield_nvd_pack(nvd_database, nvd_ids):
+            ) in yield_nvd_pack(nvd_client, nvd_ids):
                 vulnerabilities.append({
+                    'id': nvd_id,
                     'impact': nvd_score,
                     'texts': nvd_texts,
                     'url': join('nvd.nist.gov/vuln/detail', nvd_id),
@@ -67,7 +69,10 @@ if __name__ == '__main__':
         risks_client = get_risks_client()
         risks_client.drop()
         risks_client.create_index(
-            [('id', ASCENDING)], unique=True)
-        risks_client.insert_many(risks)
-
-    print(risks)
+            [('assetId', ASCENDING)], unique=True)
+        try:
+            risks_client.insert_many(risks)
+        except BulkWriteError as e:
+            print(e.details)
+        else:
+            print(risks)

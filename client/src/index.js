@@ -394,7 +394,6 @@ class _RisksWindow extends PureComponent {
             <TableCell>Aggregated Threat</TableCell>
             <TableCell>Vulnerability</TableCell>
             <TableCell>Published</TableCell>
-            <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -412,14 +411,14 @@ class _RisksWindow extends PureComponent {
                 <TableCell>{threatScore}</TableCell>
                 <TableCell>{threatDescription}</TableCell>
                 <TableCell>
-                  {/* !!! USE LINK HERE */}
-                  <a target='_blank' rel='noopener noreferrer'
-                    href={vulnerabilityUrl}>{vulnerabilityDate}</a>
+                  <Link target='_blank' rel='noopener noreferrer'
+                    href={vulnerabilityUrl}>{vulnerabilityDate}</Link>
                 </TableCell>
-                <TableCell>Untreated</TableCell>
+                {/*
                 <TableCell>
                   <RisksFormDialog />
                 </TableCell>
+                */}
               </TableRow>
             )
           })}
