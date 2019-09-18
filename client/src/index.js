@@ -7,28 +7,26 @@ import Downshift from 'downshift'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
+import FixIcon from '@material-ui/icons/Build'
+import DoneIcon from '@material-ui/icons/Check'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
 import Typography from '@material-ui/core/Typography'
-// import Button from '@material-ui/core/Button'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Link from '@material-ui/core/Link'
-// import AddIcon from '@material-ui/icons/Add'
-// import Fab from '@material-ui/core/Fab'
-// import Tooltip from '@material-ui/core/Tooltip'
-// import Dialog from '@material-ui/core/Dialog'
-// import DialogActions from '@material-ui/core/DialogActions'
-// import DialogContent from '@material-ui/core/DialogContent'
-// import DialogContentText from '@material-ui/core/DialogContentText'
-// import DialogTitle from '@material-ui/core/DialogTitle'
+
+
+const TOOLTIP_DELAY = 500
+const SET_TASK = 'SET_TASK'
 
 
 export const getVendorNameSuggestions = state => state.get(
@@ -41,7 +39,7 @@ export const getRisks = state => state.get(
   'risks')
 
 
-class EnhancedInputWithoutStyles extends PureComponent {
+class _EnhancedInputWithoutStyles extends PureComponent {
 
   handleStateChange = changes => {
     const {
@@ -132,7 +130,7 @@ const EnhancedInput = withStyles(theme => ({
     left: theme.spacing(1),
     right: theme.spacing(1),
   },
-}))(EnhancedInputWithoutStyles)
+}))(_EnhancedInputWithoutStyles)
 
 
 class _VendorName extends PureComponent {
@@ -303,140 +301,84 @@ export const RisksCard = withStyles(theme => ({
 }))(_RisksCardWithoutStyles)
 
 
-/*
-class _RisksFormDialogWithoutStyle extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-    }
-    this.handleClickOpen = this.handleClickOpen.bind(this)
-    this.handleClose = this.handleClose.bind(this)
-  }
-
-  handleClickOpen() {
-    this.setState({ open: true });
-  }
-
-  handleClose() {
-    this.setState({ open: false });
-  }
+class _RisksTableWithoutStyles extends PureComponent {
 
   render() {
     const {
-      classes
-    } = this.props
-    return (
-      <div>
-        <Tooltip title="Add" aria-label="add" onClick={this.handleClickOpen}>
-          <Fab color="primary" >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title" classes={{ paper: classes.dialogPaper }}>
-          <DialogTitle id="form-dialog-title">Notes</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              To solve this risk, please enter your email address here.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-            />
-
-            <TextField
-              id="outlined-full-width"
-              label="Notes"
-              type="search"
-              style={{ margin: 2 }}
-              placeholder="Write here"
-              helperText=""
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              InputProps={{ classes: { input: classes.inputNote } }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Create as a new record
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Save notes
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    );
-  }
-}
-
-
-const RisksFormDialog = withStyles(theme => ({
-  dialogPaper: {
-    minHeight: '80vh',
-    maxHeight: '80vh',
-},
-  inputNote:{
-    minHeight: '40vh',
-    maxHeight: '40vh',
-  }
-}))(_RisksFormDialogWithoutStyle)
-*/
-
-
-class _RisksWindow extends PureComponent {
-
-  componentDidMount() {
-    const { refreshRisks } = this.props
-    refreshRisks()
-  }
-
-  render() {
-    const {
+      classes,
       risks,
+      openTaskEditDialog,
+      setEditingTaskValues,
     } = this.props
     return (
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>Meter Count</TableCell>
-            <TableCell>Aggregated Threat</TableCell>
-            <TableCell>Vulnerability</TableCell>
-            <TableCell>Published</TableCell>
+            <TableCell align='center'>Meter Count</TableCell>
+            <TableCell align='center'>Aggregated Threat</TableCell>
+            <TableCell align='center'>Vulnerability</TableCell>
+            <TableCell align='center'>Published</TableCell>
+            <TableCell align='center'>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {risks.map((risk, index) => {
+            const assetId = risk.get('assetId')
             const assetName = risk.get('assetName')
             const meterCount = risk.get('meterCount')
             const threatScore = risk.get('threatScore')
             const threatDescription = risk.get('threatDescription')
+            const vulnerabilityUri = risk.get('vulnerabilityUri')
             const vulnerabilityUrl = risk.get('vulnerabilityUrl')
             const vulnerabilityDate = risk.get('vulnerabilityDate')
+            const taskId = risk.get('taskId')
+            const taskStatus = risk.get('taskStatus')
+            const taskName = risk.get('taskName')
+            const task = taskId ? {
+              id: taskId,
+              assetId,
+              name: taskName,
+              status: taskStatus,
+              referenceUri: vulnerabilityUri,
+            } : {
+              id: null,
+              assetId,
+              name: `Fix ${vulnerabilityUrl}`,
+              status: 0,
+              referenceUri: vulnerabilityUri,
+            }
+            const taskButtonTip = `${taskId ? 'Edit' : 'Add'} Task`
+            const taskButtonClassName = taskId ? {
+              '-100': classes.taskCancelled,
+              '0': classes.taskNew,
+              '50': classes.taskPending,
+              '100': classes.taskDone,
+            }[taskStatus] : classes.taskMissing
+
             return (
               <TableRow key={index}>
                 <TableCell component='th' scope='row'>{assetName}</TableCell>
-                <TableCell>{meterCount}</TableCell>
-                <TableCell>{threatScore}</TableCell>
+                <TableCell align='right'>{meterCount}</TableCell>
+                <TableCell align='right'>{threatScore}</TableCell>
                 <TableCell>{threatDescription}</TableCell>
                 <TableCell>
                   <Link target='_blank' rel='noopener noreferrer'
-                    href={vulnerabilityUrl}>{vulnerabilityDate}</Link>
+                    href={'//' + vulnerabilityUrl}>{vulnerabilityDate}</Link>
                 </TableCell>
-                {/*
-                <TableCell>
-                  <RisksFormDialog />
+                <TableCell align='center'>
+                  <Tooltip title={taskButtonTip} enterDelay={TOOLTIP_DELAY}>
+                    <IconButton
+                      className={taskButtonClassName}
+                      onClick={() => {
+                        setEditingTaskValues(task)
+                        openTaskEditDialog()
+                      }}
+                    >
+                      {taskStatus !== 100 ? <FixIcon /> : <DoneIcon />}
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
-                */}
               </TableRow>
             )
           })}
@@ -446,6 +388,26 @@ class _RisksWindow extends PureComponent {
   }
 
 }
+export const RisksTable = withStyles(theme => ({
+  taskMissing: {
+    color: 'lightgrey',
+  },
+  taskCancelled: {
+    backgroundColor: 'red',
+    color: 'white',
+  },
+  taskNew: {
+    color: 'black',
+  },
+  taskPending: {
+    backgroundColor: 'yellow',
+    color: 'black',
+  },
+  taskDone: {
+    backgroundColor: 'green',
+    color: 'white',
+  },
+}))(_RisksTableWithoutStyles)
 
 
 export const VendorName = connect(
@@ -491,18 +453,6 @@ export const ProductVersion = connect(
     },
   }),
 )(_ProductVersion)
-
-
-export const RisksWindow = connect(
-  state => ({
-    risks: getRisks(state),
-  }),
-  dispatch => ({
-    refreshRisks: payload => {dispatch(
-      refreshRisks(payload))
-    },
-  }),
-)(_RisksWindow)
 
 
 export const LOG_ERROR = 'LOG_ERROR'
@@ -698,6 +648,25 @@ export const risks = (state = List(), action) => {
     case RESET_RISKS: {
       const risks = action.payload
       return risks
+    }
+    case SET_TASK: {
+      const task = action.payload
+      const taskAssetId = task.get('assetId')
+      const taskReferenceUri = task.get('referenceUri')
+      const taskId = task.get('id')
+      const taskName = task.get('name')
+      const taskStatus = task.get('status')
+      return state.map(risk => {
+        const riskAssetId = risk.get('assetId')
+        const riskReferenceUri = risk.get('vulnerabilityUri')
+        if (
+          riskAssetId !== taskAssetId ||
+          riskReferenceUri !== taskReferenceUri
+        ) {
+          return risk
+        }
+        return risk.merge({taskId, taskName, taskStatus})
+      })
     }
     default: {
       return state

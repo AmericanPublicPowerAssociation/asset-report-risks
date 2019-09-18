@@ -8,7 +8,7 @@ exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshRisks = watchRefreshRisks;
 exports.fetchSafely = fetchSafely;
-exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetRisks = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_RISK_METRICS = exports.RESET_RISKS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.RisksWindow = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.RisksCard = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetRisks = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_RISK_METRICS = exports.RESET_RISKS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.RisksTable = exports.RisksCard = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -28,9 +28,15 @@ var _TextField = _interopRequireDefault(require("@material-ui/core/TextField"));
 
 var _InputAdornment = _interopRequireDefault(require("@material-ui/core/InputAdornment"));
 
+var _Tooltip = _interopRequireDefault(require("@material-ui/core/Tooltip"));
+
 var _IconButton = _interopRequireDefault(require("@material-ui/core/IconButton"));
 
 var _Clear = _interopRequireDefault(require("@material-ui/icons/Clear"));
+
+var _Build = _interopRequireDefault(require("@material-ui/icons/Build"));
+
+var _Check = _interopRequireDefault(require("@material-ui/icons/Check"));
 
 var _Paper = _interopRequireDefault(require("@material-ui/core/Paper"));
 
@@ -98,14 +104,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-// import AddIcon from '@material-ui/icons/Add'
-// import Fab from '@material-ui/core/Fab'
-// import Tooltip from '@material-ui/core/Tooltip'
-// import Dialog from '@material-ui/core/Dialog'
-// import DialogActions from '@material-ui/core/DialogActions'
-// import DialogContent from '@material-ui/core/DialogContent'
-// import DialogContentText from '@material-ui/core/DialogContentText'
-// import DialogTitle from '@material-ui/core/DialogTitle'
+var TOOLTIP_DELAY = 500;
+var SET_TASK = 'SET_TASK';
+
 var getVendorNameSuggestions = function getVendorNameSuggestions(state) {
   return state.get('vendorNameSuggestions');
 };
@@ -134,23 +135,23 @@ var _ref2 =
 /*#__PURE__*/
 _react["default"].createElement(_Clear["default"], null);
 
-var EnhancedInputWithoutStyles =
+var _EnhancedInputWithoutStyles =
 /*#__PURE__*/
 function (_PureComponent) {
-  _inherits(EnhancedInputWithoutStyles, _PureComponent);
+  _inherits(_EnhancedInputWithoutStyles, _PureComponent);
 
-  function EnhancedInputWithoutStyles() {
+  function _EnhancedInputWithoutStyles() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _classCallCheck(this, EnhancedInputWithoutStyles);
+    _classCallCheck(this, _EnhancedInputWithoutStyles);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(EnhancedInputWithoutStyles)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(_EnhancedInputWithoutStyles)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_this), "handleStateChange", function (changes) {
       var _this$props = _this.props,
@@ -184,7 +185,7 @@ function (_PureComponent) {
     return _this;
   }
 
-  _createClass(EnhancedInputWithoutStyles, [{
+  _createClass(_EnhancedInputWithoutStyles, [{
     key: "render",
     value: function render() {
       var _this$props3 = this.props,
@@ -231,7 +232,7 @@ function (_PureComponent) {
     }
   }]);
 
-  return EnhancedInputWithoutStyles;
+  return _EnhancedInputWithoutStyles;
 }(_react.PureComponent);
 
 var EnhancedInput = (0, _styles.withStyles)(function (theme) {
@@ -244,7 +245,7 @@ var EnhancedInput = (0, _styles.withStyles)(function (theme) {
       right: theme.spacing(1)
     }
   };
-})(EnhancedInputWithoutStyles);
+})(_EnhancedInputWithoutStyles);
 
 var _VendorName =
 /*#__PURE__*/
@@ -465,145 +466,136 @@ var RisksCard = (0, _styles.withStyles)(function (theme) {
     }
   };
 })(_RisksCardWithoutStyles);
-/*
-class _RisksFormDialogWithoutStyle extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      open: false,
-    }
-    this.handleClickOpen = this.handleClickOpen.bind(this)
-    this.handleClose = this.handleClose.bind(this)
-  }
-
-  handleClickOpen() {
-    this.setState({ open: true });
-  }
-
-  handleClose() {
-    this.setState({ open: false });
-  }
-
-  render() {
-    const {
-      classes
-    } = this.props
-    return (
-      <div>
-        <Tooltip title="Add" aria-label="add" onClick={this.handleClickOpen}>
-          <Fab color="primary" >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title" classes={{ paper: classes.dialogPaper }}>
-          <DialogTitle id="form-dialog-title">Notes</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              To solve this risk, please enter your email address here.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-            />
-
-            <TextField
-              id="outlined-full-width"
-              label="Notes"
-              type="search"
-              style={{ margin: 2 }}
-              placeholder="Write here"
-              helperText=""
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              InputProps={{ classes: { input: classes.inputNote } }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Create as a new record
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Save notes
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    );
-  }
-}
-
-
-const RisksFormDialog = withStyles(theme => ({
-  dialogPaper: {
-    minHeight: '80vh',
-    maxHeight: '80vh',
-},
-  inputNote:{
-    minHeight: '40vh',
-    maxHeight: '40vh',
-  }
-}))(_RisksFormDialogWithoutStyle)
-*/
-
 exports.RisksCard = RisksCard;
 
 var _ref6 =
 /*#__PURE__*/
-_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], null, "Meter Count"), _react["default"].createElement(_TableCell["default"], null, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], null, "Vulnerability"), _react["default"].createElement(_TableCell["default"], null, "Published")));
+_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], {
+  align: "center"
+}, "Meter Count"), _react["default"].createElement(_TableCell["default"], {
+  align: "center"
+}, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], {
+  align: "center"
+}, "Vulnerability"), _react["default"].createElement(_TableCell["default"], {
+  align: "center"
+}, "Published"), _react["default"].createElement(_TableCell["default"], {
+  align: "center"
+}, "Status")));
 
-var _RisksWindow =
+var _ref7 =
+/*#__PURE__*/
+_react["default"].createElement(_Build["default"], null);
+
+var _ref8 =
+/*#__PURE__*/
+_react["default"].createElement(_Check["default"], null);
+
+var _RisksTableWithoutStyles =
 /*#__PURE__*/
 function (_PureComponent6) {
-  _inherits(_RisksWindow, _PureComponent6);
+  _inherits(_RisksTableWithoutStyles, _PureComponent6);
 
-  function _RisksWindow() {
-    _classCallCheck(this, _RisksWindow);
+  function _RisksTableWithoutStyles() {
+    _classCallCheck(this, _RisksTableWithoutStyles);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(_RisksWindow).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(_RisksTableWithoutStyles).apply(this, arguments));
   }
 
-  _createClass(_RisksWindow, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var refreshRisks = this.props.refreshRisks;
-      refreshRisks();
-    }
-  }, {
+  _createClass(_RisksTableWithoutStyles, [{
     key: "render",
     value: function render() {
-      var risks = this.props.risks;
+      var _this$props8 = this.props,
+          classes = _this$props8.classes,
+          risks = _this$props8.risks,
+          openTaskEditDialog = _this$props8.openTaskEditDialog,
+          setEditingTaskValues = _this$props8.setEditingTaskValues;
       return _react["default"].createElement(_Table["default"], null, _ref6, _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
+        var assetId = risk.get('assetId');
         var assetName = risk.get('assetName');
         var meterCount = risk.get('meterCount');
         var threatScore = risk.get('threatScore');
         var threatDescription = risk.get('threatDescription');
+        var vulnerabilityUri = risk.get('vulnerabilityUri');
         var vulnerabilityUrl = risk.get('vulnerabilityUrl');
         var vulnerabilityDate = risk.get('vulnerabilityDate');
+        var taskId = risk.get('taskId');
+        var taskStatus = risk.get('taskStatus');
+        var taskName = risk.get('taskName');
+        var task = taskId ? {
+          id: taskId,
+          assetId: assetId,
+          name: taskName,
+          status: taskStatus,
+          referenceUri: vulnerabilityUri
+        } : {
+          id: null,
+          assetId: assetId,
+          name: "Fix ".concat(vulnerabilityUrl),
+          status: 0,
+          referenceUri: vulnerabilityUri
+        };
+        var taskButtonTip = "".concat(taskId ? 'Edit' : 'Add', " Task");
+        var taskButtonClassName = taskId ? {
+          '-100': classes.taskCancelled,
+          '0': classes.taskNew,
+          '50': classes.taskPending,
+          '100': classes.taskDone
+        }[taskStatus] : classes.taskMissing;
         return _react["default"].createElement(_TableRow["default"], {
           key: index
         }, _react["default"].createElement(_TableCell["default"], {
           component: "th",
           scope: "row"
-        }, assetName), _react["default"].createElement(_TableCell["default"], null, meterCount), _react["default"].createElement(_TableCell["default"], null, threatScore), _react["default"].createElement(_TableCell["default"], null, threatDescription), _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_Link["default"], {
+        }, assetName), _react["default"].createElement(_TableCell["default"], {
+          align: "right"
+        }, meterCount), _react["default"].createElement(_TableCell["default"], {
+          align: "right"
+        }, threatScore), _react["default"].createElement(_TableCell["default"], null, threatDescription), _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_Link["default"], {
           target: "_blank",
           rel: "noopener noreferrer",
-          href: vulnerabilityUrl
-        }, vulnerabilityDate)));
+          href: '//' + vulnerabilityUrl
+        }, vulnerabilityDate)), _react["default"].createElement(_TableCell["default"], {
+          align: "center"
+        }, _react["default"].createElement(_Tooltip["default"], {
+          title: taskButtonTip,
+          enterDelay: TOOLTIP_DELAY
+        }, _react["default"].createElement(_IconButton["default"], {
+          className: taskButtonClassName,
+          onClick: function onClick() {
+            setEditingTaskValues(task);
+            openTaskEditDialog();
+          }
+        }, taskStatus !== 100 ? _ref7 : _ref8))));
       })));
     }
   }]);
 
-  return _RisksWindow;
+  return _RisksTableWithoutStyles;
 }(_react.PureComponent);
 
+var RisksTable = (0, _styles.withStyles)(function (theme) {
+  return {
+    taskMissing: {
+      color: 'lightgrey'
+    },
+    taskCancelled: {
+      backgroundColor: 'red',
+      color: 'white'
+    },
+    taskNew: {
+      color: 'black'
+    },
+    taskPending: {
+      backgroundColor: 'yellow',
+      color: 'black'
+    },
+    taskDone: {
+      backgroundColor: 'green',
+      color: 'white'
+    }
+  };
+})(_RisksTableWithoutStyles);
+exports.RisksTable = RisksTable;
 var VendorName = (0, _reactRedux.connect)(function (state) {
   return {
     vendorNameSuggestions: getVendorNameSuggestions(state)
@@ -649,18 +641,6 @@ var ProductVersion = (0, _reactRedux.connect)(function (state) {
   };
 })(_ProductVersion);
 exports.ProductVersion = ProductVersion;
-var RisksWindow = (0, _reactRedux.connect)(function (state) {
-  return {
-    risks: getRisks(state)
-  };
-}, function (dispatch) {
-  return {
-    refreshRisks: function refreshRisks(payload) {
-      dispatch(_refreshRisks(payload));
-    }
-  };
-})(_RisksWindow);
-exports.RisksWindow = RisksWindow;
 var LOG_ERROR = 'LOG_ERROR';
 exports.LOG_ERROR = LOG_ERROR;
 var SUGGEST_VENDOR_NAMES = 'SUGGEST_VENDOR_NAMES';
@@ -722,14 +702,14 @@ var _suggestProductVersions = function _suggestProductVersions(payload) {
 
 exports.suggestProductVersions = _suggestProductVersions;
 
-var _refreshRisks = function _refreshRisks(payload) {
+var refreshRisks = function refreshRisks(payload) {
   return {
     payload: payload,
     type: REFRESH_RISKS
   };
 };
 
-exports.refreshRisks = _refreshRisks;
+exports.refreshRisks = refreshRisks;
 
 var resetVendorNameSuggestions = function resetVendorNameSuggestions(payload) {
   return {
@@ -1173,6 +1153,30 @@ var risks = function risks() {
       {
         var _risks = action.payload;
         return _risks;
+      }
+
+    case SET_TASK:
+      {
+        var task = action.payload;
+        var taskAssetId = task.get('assetId');
+        var taskReferenceUri = task.get('referenceUri');
+        var taskId = task.get('id');
+        var taskName = task.get('name');
+        var taskStatus = task.get('status');
+        return state.map(function (risk) {
+          var riskAssetId = risk.get('assetId');
+          var riskReferenceUri = risk.get('vulnerabilityUri');
+
+          if (riskAssetId !== taskAssetId || riskReferenceUri !== taskReferenceUri) {
+            return risk;
+          }
+
+          return risk.merge({
+            taskId: taskId,
+            taskName: taskName,
+            taskStatus: taskStatus
+          });
+        });
       }
 
     default:

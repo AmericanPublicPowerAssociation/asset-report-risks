@@ -73,22 +73,43 @@ def get_risks_json(request):
     asset_ids = Asset.get_readable_ids(request)
     asset_name_by_id = dict(db.query(Asset.id, Asset.name).filter(
         Asset.id.in_(asset_ids)))
+    risks = get_risks(asset_ids)
+    reference_uris = [_['vulnerabilityUri'] for _ in risks]
+
+    tasks = db.query(Task).filter(
+        Task.asset_id.in_(asset_ids),
+        Task.reference_uri.in_(reference_uris))
+    task_by_risk_pack = {(
+        task.asset_id,
+        task.reference_uri,
+    ): task for task in tasks}
+
     ds = []
-    for r in get_risks(asset_ids):
+    for r in risks:
         asset_id = r['assetId']
         asset_name = asset_name_by_id[asset_id]
         meter_ids = r['meterIds']
         meter_count = len(meter_ids)
-        ds.append({
+        reference_uri = r['vulnerabilityUri']
+        risk_pack = asset_id, reference_uri
+        task = task_by_risk_pack.get(risk_pack)
+        d = {
             'assetId': asset_id,
             'assetName': asset_name,
             'meterCount': meter_count,
             'threatScore': r['threatScore'],
             'threatDescription': r['threatDescription'],
-            'vulnerabilityUri': r['vulnerabilityUri'],
+            'vulnerabilityUri': reference_uri,
             'vulnerabilityUrl': r['vulnerabilityUrl'],
             'vulnerabilityDate': r['vulnerabilityDate'],
-        })
+        }
+        if task:
+            d.update({
+                'taskId': task.id,
+                'taskName': task.name,
+                'taskStatus': task.status.value,
+            })
+        ds.append(d)
     return sorted(ds, key=lambda _: -1 * _['threatScore'])
 
 
