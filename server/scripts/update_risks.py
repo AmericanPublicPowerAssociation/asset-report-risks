@@ -65,9 +65,9 @@ if __name__ == '__main__':
                 'vulnerabilities': vulnerabilities,
             })
 
+    risks_client = get_risks_client()
+    risks_client.drop()
     if risks:
-        risks_client = get_risks_client()
-        risks_client.drop()
         risks_client.create_index(
             [('assetId', ASCENDING)], unique=True)
         try:
