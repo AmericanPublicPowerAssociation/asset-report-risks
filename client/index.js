@@ -8,7 +8,7 @@ exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshRisks = watchRefreshRisks;
 exports.fetchSafely = fetchSafely;
-exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.resetRisks = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.RESET_RISK_METRICS = exports.RESET_RISKS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.RisksTable = exports.RisksCard = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.sortedRisks = exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.sortRisks = exports.resetRisks = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.SET_SORTED_RISKS = exports.RESET_RISK_METRICS = exports.RESET_RISKS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.RisksTable = exports.RisksCard = exports.getSortedRisks = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -57,6 +57,8 @@ var _TableBody = _interopRequireDefault(require("@material-ui/core/TableBody"));
 var _TableRow = _interopRequireDefault(require("@material-ui/core/TableRow"));
 
 var _TableCell = _interopRequireDefault(require("@material-ui/core/TableCell"));
+
+var _TableSortLabel = _interopRequireDefault(require("@material-ui/core/TableSortLabel"));
 
 var _Link = _interopRequireDefault(require("@material-ui/core/Link"));
 
@@ -130,6 +132,12 @@ var getRisks = function getRisks(state) {
 };
 
 exports.getRisks = getRisks;
+
+var getSortedRisks = function getSortedRisks(state) {
+  return state.get('sortedRisks');
+};
+
+exports.getSortedRisks = getSortedRisks;
 
 var _ref2 =
 /*#__PURE__*/
@@ -470,23 +478,21 @@ exports.RisksCard = RisksCard;
 
 var _ref6 =
 /*#__PURE__*/
-_react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, "Name"), _react["default"].createElement(_TableCell["default"], {
+_react["default"].createElement(_TableCell["default"], {
   align: "center"
-}, "Meter Count"), _react["default"].createElement(_TableCell["default"], {
-  align: "center"
-}, "Aggregated Threat"), _react["default"].createElement(_TableCell["default"], {
-  align: "center"
-}, "Vulnerability"), _react["default"].createElement(_TableCell["default"], {
-  align: "center"
-}, "Published"), _react["default"].createElement(_TableCell["default"], {
-  align: "center"
-}, "Status")));
+}, "Vulnerability");
 
 var _ref7 =
 /*#__PURE__*/
-_react["default"].createElement(_Build["default"], null);
+_react["default"].createElement(_TableCell["default"], {
+  align: "center"
+}, "Status");
 
 var _ref8 =
+/*#__PURE__*/
+_react["default"].createElement(_Build["default"], null);
+
+var _ref9 =
 /*#__PURE__*/
 _react["default"].createElement(_Check["default"], null);
 
@@ -502,14 +508,70 @@ function (_PureComponent6) {
   }
 
   _createClass(_RisksTableWithoutStyles, [{
+    key: "getSortLabelDirection",
+    value: function getSortLabelDirection(column, sortKey, order) {
+      return order;
+    }
+  }, {
+    key: "getSortColumnIsActive",
+    value: function getSortColumnIsActive(column, sortKey) {
+      return column === sortKey;
+    }
+  }, {
+    key: "onSortClick",
+    value: function onSortClick(clickedColumn, curCol, order) {
+      this.props.refreshRisks({
+        sortKey: clickedColumn,
+        order: order
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var _this$props8 = this.props,
           classes = _this$props8.classes,
           risks = _this$props8.risks,
           openTaskEditDialog = _this$props8.openTaskEditDialog,
-          setEditingTaskValues = _this$props8.setEditingTaskValues;
-      return _react["default"].createElement(_Table["default"], null, _ref6, _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
+          setEditingTaskValues = _this$props8.setEditingTaskValues,
+          sortedRisks = _this$props8.sortedRisks;
+
+      var _sortedRisks$toJS = sortedRisks.toJS(),
+          sortKey = _sortedRisks$toJS.sortKey,
+          order = _sortedRisks$toJS.order;
+
+      return _react["default"].createElement(_Table["default"], null, _react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_TableSortLabel["default"], {
+        active: this.getSortColumnIsActive('name', sortKey),
+        onClick: function onClick() {
+          return _this2.onSortClick('name', sortKey, order);
+        },
+        direction: this.getSortLabelDirection('name', sortKey, order)
+      }, "Name")), _react["default"].createElement(_TableCell["default"], {
+        align: "center"
+      }, _react["default"].createElement(_TableSortLabel["default"], {
+        active: this.getSortColumnIsActive('meter-count', sortKey),
+        onClick: function onClick() {
+          return _this2.onSortClick('meter-count', sortKey, order);
+        },
+        direction: this.getSortLabelDirection('meter-count', sortKey)
+      }, "Meter Count")), _react["default"].createElement(_TableCell["default"], {
+        align: "center"
+      }, _react["default"].createElement(_TableSortLabel["default"], {
+        active: this.getSortColumnIsActive('threat-score', sortKey),
+        onClick: function onClick() {
+          return _this2.onSortClick('threat-score', sortKey, order);
+        },
+        direction: this.getSortLabelDirection('threat-score', sortKey)
+      }, "Aggregated Threat")), _ref6, _react["default"].createElement(_TableCell["default"], {
+        align: "center"
+      }, _react["default"].createElement(_TableSortLabel["default"], {
+        active: this.getSortColumnIsActive('published', sortKey),
+        onClick: function onClick() {
+          return _this2.onSortClick('published', sortKey, order);
+        },
+        direction: this.getSortLabelDirection('published', sortKey)
+      }, "Published")), _ref7)), _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
         var assetId = risk.get('assetId');
         var assetName = risk.get('assetName');
         var meterCount = risk.get('meterCount');
@@ -565,7 +627,7 @@ function (_PureComponent6) {
             setEditingTaskValues(task);
             openTaskEditDialog();
           }
-        }, taskStatus !== 100 ? _ref7 : _ref8))));
+        }, taskStatus !== 100 ? _ref8 : _ref9))));
       })));
     }
   }]);
@@ -665,6 +727,8 @@ var RESET_RISKS = 'RESET_RISKS';
 exports.RESET_RISKS = RESET_RISKS;
 var RESET_RISK_METRICS = 'RESET_RISK_METRICS';
 exports.RESET_RISK_METRICS = RESET_RISK_METRICS;
+var SET_SORTED_RISKS = 'SET_SORTED_RISKS';
+exports.SET_SORTED_RISKS = SET_SORTED_RISKS;
 
 var logError = function logError(payload) {
   return {
@@ -703,6 +767,10 @@ var _suggestProductVersions = function _suggestProductVersions(payload) {
 exports.suggestProductVersions = _suggestProductVersions;
 
 var refreshRisks = function refreshRisks(payload) {
+  if (!payload) {
+    payload = {};
+  }
+
   return {
     payload: payload,
     type: REFRESH_RISKS
@@ -755,6 +823,15 @@ var resetRisks = function resetRisks(payload) {
 };
 
 exports.resetRisks = resetRisks;
+
+var sortRisks = function sortRisks(payload) {
+  return {
+    payload: payload,
+    type: SET_SORTED_RISKS
+  };
+};
+
+exports.sortRisks = sortRisks;
 
 function watchSuggestVendorNames() {
   return regeneratorRuntime.wrap(function watchSuggestVendorNames$(_context3) {
@@ -935,21 +1012,29 @@ function watchSuggestProductVersions() {
 }
 
 function watchRefreshRisks() {
-  return regeneratorRuntime.wrap(function watchRefreshRisks$(_context12) {
+  return regeneratorRuntime.wrap(function watchRefreshRisks$(_context13) {
     while (1) {
-      switch (_context12.prev = _context12.next) {
+      switch (_context13.prev = _context13.next) {
         case 0:
-          _context12.next = 2;
+          _context13.next = 2;
           return (0, _effects.takeLatest)(REFRESH_RISKS,
           /*#__PURE__*/
           regeneratorRuntime.mark(function _callee4(action) {
-            var url;
-            return regeneratorRuntime.wrap(function _callee4$(_context11) {
+            var payload, sortKey, order, url, params;
+            return regeneratorRuntime.wrap(function _callee4$(_context12) {
               while (1) {
-                switch (_context11.prev = _context11.next) {
+                switch (_context12.prev = _context12.next) {
                   case 0:
+                    payload = action.payload;
+                    sortKey = payload.sortKey, order = payload.order;
                     url = '/risks.json';
-                    _context11.next = 3;
+
+                    if (!false) {
+                      _context12.next = 8;
+                      break;
+                    }
+
+                    _context12.next = 6;
                     return fetchSafely(url, {}, {
                       on200:
                       /*#__PURE__*/
@@ -970,9 +1055,42 @@ function watchRefreshRisks() {
                       })
                     });
 
-                  case 3:
+                  case 6:
+                    _context12.next = 11;
+                    break;
+
+                  case 8:
+                    params = "?sort_key=".concat(sortKey, "&order=").concat(order);
+                    _context12.next = 11;
+                    return fetchSafely(url + params, {}, {
+                      on200:
+                      /*#__PURE__*/
+                      regeneratorRuntime.mark(function on200(risks) {
+                        var payload;
+                        return regeneratorRuntime.wrap(function on200$(_context11) {
+                          while (1) {
+                            switch (_context11.prev = _context11.next) {
+                              case 0:
+                                payload = (0, _immutable.Map)({
+                                  sortKey: sortKey,
+                                  order: order,
+                                  risks: risks
+                                });
+                                _context11.next = 3;
+                                return (0, _effects.put)(sortRisks(payload));
+
+                              case 3:
+                              case "end":
+                                return _context11.stop();
+                            }
+                          }
+                        }, on200);
+                      })
+                    });
+
+                  case 11:
                   case "end":
-                    return _context11.stop();
+                    return _context12.stop();
                 }
               }
             }, _callee4);
@@ -980,7 +1098,7 @@ function watchRefreshRisks() {
 
         case 2:
         case "end":
-          return _context12.stop();
+          return _context13.stop();
       }
     }
   }, _marked4);
@@ -989,81 +1107,81 @@ function watchRefreshRisks() {
 function fetchSafely(url, options, callbacks) {
   var response, status, _on, on400;
 
-  return regeneratorRuntime.wrap(function fetchSafely$(_context13) {
+  return regeneratorRuntime.wrap(function fetchSafely$(_context14) {
     while (1) {
-      switch (_context13.prev = _context13.next) {
+      switch (_context14.prev = _context14.next) {
         case 0:
-          _context13.prev = 0;
-          _context13.next = 3;
+          _context14.prev = 0;
+          _context14.next = 3;
           return (0, _effects.call)(fetch, url, options);
 
         case 3:
-          response = _context13.sent;
+          response = _context14.sent;
           status = response.status;
           _on = callbacks.on200, on400 = callbacks.on400;
 
           if (!(_on && status === 200)) {
-            _context13.next = 17;
+            _context14.next = 17;
             break;
           }
 
-          _context13.t0 = _on;
-          _context13.t1 = _immutable.fromJS;
-          _context13.next = 11;
+          _context14.t0 = _on;
+          _context14.t1 = _immutable.fromJS;
+          _context14.next = 11;
           return response.json();
 
         case 11:
-          _context13.t2 = _context13.sent;
-          _context13.t3 = (0, _context13.t1)(_context13.t2);
-          _context13.next = 15;
-          return (0, _context13.t0)(_context13.t3);
+          _context14.t2 = _context14.sent;
+          _context14.t3 = (0, _context14.t1)(_context14.t2);
+          _context14.next = 15;
+          return (0, _context14.t0)(_context14.t3);
 
         case 15:
-          _context13.next = 30;
+          _context14.next = 30;
           break;
 
         case 17:
           if (!(on400 && status === 400)) {
-            _context13.next = 28;
+            _context14.next = 28;
             break;
           }
 
-          _context13.t4 = on400;
-          _context13.t5 = _immutable.fromJS;
-          _context13.next = 22;
+          _context14.t4 = on400;
+          _context14.t5 = _immutable.fromJS;
+          _context14.next = 22;
           return response.json();
 
         case 22:
-          _context13.t6 = _context13.sent;
-          _context13.t7 = (0, _context13.t5)(_context13.t6);
-          _context13.next = 26;
-          return (0, _context13.t4)(_context13.t7);
+          _context14.t6 = _context14.sent;
+          _context14.t7 = (0, _context14.t5)(_context14.t6);
+          _context14.next = 26;
+          return (0, _context14.t4)(_context14.t7);
 
         case 26:
-          _context13.next = 30;
+          _context14.next = 30;
           break;
 
         case 28:
-          _context13.next = 30;
+          _context14.next = 30;
           return (0, _effects.put)(logError({
             status: status
           }));
 
         case 30:
-          _context13.next = 36;
+          _context14.next = 36;
           break;
 
         case 32:
-          _context13.prev = 32;
-          _context13.t8 = _context13["catch"](0);
-          _context13.next = 36;
+          _context14.prev = 32;
+          _context14.t8 = _context14["catch"](0);
+          _context14.next = 36;
           return (0, _effects.put)(logError({
-            text: _context13.t8
+            text: _context14.t8
           }));
 
         case 36:
         case "end":
-          return _context13.stop();
+          return _context14.stop();
       }
     }
   }, _marked5, null, [[0, 32]]);
@@ -1149,9 +1267,11 @@ var risks = function risks() {
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
+    case SET_SORTED_RISKS:
     case RESET_RISKS:
       {
-        var _risks = action.payload;
+        var _risks = action.payload.get('risks');
+
         return _risks;
       }
 
@@ -1187,3 +1307,31 @@ var risks = function risks() {
 };
 
 exports.risks = risks;
+
+var sortedRisks = function sortedRisks() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.Map)({
+    sortKey: 'threat-score',
+    order: 'desc'
+  });
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case SET_SORTED_RISKS:
+      {
+        var payload = action.payload;
+        var sortKey = payload.get('sortKey');
+        var order = payload.get('order');
+        return state.mergeDeep({
+          sortKey: sortKey,
+          order: order
+        });
+      }
+
+    default:
+      {
+        return state;
+      }
+  }
+};
+
+exports.sortedRisks = sortedRisks;

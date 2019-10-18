@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { List, fromJS } from 'immutable'
+import { Map, List, fromJS } from 'immutable'
 import Downshift from 'downshift'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -22,6 +22,7 @@ import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
+import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Link from '@material-ui/core/Link'
 
 
@@ -37,6 +38,8 @@ export const getProductVersionSuggestions = state => state.get(
   'productVersionSuggestions')
 export const getRisks = state => state.get(
   'risks')
+export const getSortedRisks = state => state.get(
+  'sortedRisks')
 
 
 class _EnhancedInputWithoutStyles extends PureComponent {
@@ -302,6 +305,17 @@ export const RisksCard = withStyles(theme => ({
 
 
 class _RisksTableWithoutStyles extends PureComponent {
+  getSortLabelDirection(column, sortKey, order) {
+    return order
+  }
+
+  getSortColumnIsActive(column, sortKey) {
+    return column === sortKey
+  }
+
+  onSortClick(clickedColumn, curCol, order) {
+    this.props.refreshRisks({sortKey: clickedColumn, order})
+  }
 
   render() {
     const {
@@ -309,17 +323,52 @@ class _RisksTableWithoutStyles extends PureComponent {
       risks,
       openTaskEditDialog,
       setEditingTaskValues,
+      sortedRisks,
     } = this.props
+    const {sortKey, order} = sortedRisks.toJS()
     return (
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align='center'>Meter Count</TableCell>
-            <TableCell align='center'>Aggregated Threat</TableCell>
-            <TableCell align='center'>Vulnerability</TableCell>
-            <TableCell align='center'>Published</TableCell>
-            <TableCell align='center'>Status</TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={this.getSortColumnIsActive('name', sortKey)}
+                onClick={ () => this.onSortClick('name', sortKey, order)}
+                direction={this.getSortLabelDirection('name', sortKey, order)}>
+                Name
+              </TableSortLabel>
+            </TableCell>
+            <TableCell align='center'>
+              <TableSortLabel
+                active={this.getSortColumnIsActive('meter-count', sortKey)}
+                onClick={ () => this.onSortClick('meter-count', sortKey, order)}
+                direction={this.getSortLabelDirection('meter-count', sortKey)}>
+
+                Meter Count
+              </TableSortLabel>
+            </TableCell>
+            <TableCell align='center'>
+              <TableSortLabel
+                active={this.getSortColumnIsActive('threat-score', sortKey)}
+                onClick={ () => this.onSortClick('threat-score', sortKey, order)}
+                direction={this.getSortLabelDirection('threat-score', sortKey)}>
+                Aggregated Threat
+              </TableSortLabel>
+            </TableCell>
+            <TableCell align='center'>
+              Vulnerability
+            </TableCell>
+            <TableCell align='center'>
+              <TableSortLabel
+                active={ this.getSortColumnIsActive('published', sortKey)}
+                onClick={ () => this.onSortClick('published', sortKey, order)}
+                direction={this.getSortLabelDirection('published', sortKey)}>
+                Published
+              </TableSortLabel>
+            </TableCell>
+            <TableCell align='center'>
+              Status
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -475,6 +524,7 @@ export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
 
 export const RESET_RISKS = 'RESET_RISKS'
 export const RESET_RISK_METRICS = 'RESET_RISK_METRICS'
+export const SET_SORTED_RISKS = 'SET_SORTED_RISKS'
 
 
 export const logError = payload => ({
@@ -489,8 +539,12 @@ export const suggestProductVersions = payload => ({
   payload, type: SUGGEST_PRODUCT_VERSIONS})
 
 
-export const refreshRisks = payload => ({
-  payload, type: REFRESH_RISKS})
+export const refreshRisks = payload => {
+  if (!payload){
+    payload = {}
+  }
+  return {payload, type: REFRESH_RISKS} 
+}
 
 
 export const resetVendorNameSuggestions = payload => ({
@@ -506,6 +560,10 @@ export const clearSuggestions = payload => ({
 export const resetRisks = payload => ({
   payload, type: RESET_RISKS})
 
+
+export const sortRisks = payload => ({
+  payload, type: SET_SORTED_RISKS
+})
 
 export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
@@ -567,12 +625,25 @@ export function* watchSuggestProductVersions() {
 
 export function* watchRefreshRisks() {
   yield takeLatest(REFRESH_RISKS, function* (action) {
+    const payload = action.payload
+    const { sortKey, order } = payload
     const url = '/risks.json'
-    yield fetchSafely(url, {}, {
-      on200: function* (risks) {
-        yield put(resetRisks(risks))
-      },
-    })
+    if (false) {
+        yield fetchSafely(url, {}, {
+        on200: function* (risks) {
+          yield put(resetRisks(risks))
+        },
+      })
+    }
+    else {
+      const params = `?sort_key=${sortKey}&order=${order}`
+      yield fetchSafely(url + params, {}, {
+        on200: function* (risks) {
+          const payload = Map({sortKey, order, risks})
+          yield put(sortRisks(payload))
+        },
+      })
+    }
   })
 }
 
@@ -645,8 +716,9 @@ export const productVersionSuggestions = (state = List(), action) => {
 
 export const risks = (state = List(), action) => {
   switch (action.type) {
+    case SET_SORTED_RISKS:
     case RESET_RISKS: {
-      const risks = action.payload
+      const risks = action.payload.get('risks')
       return risks
     }
     case SET_TASK: {
@@ -672,4 +744,22 @@ export const risks = (state = List(), action) => {
       return state
     }
   }
+}
+
+
+export const sortedRisks = (
+  state = Map({sortKey: 'threat-score', order: 'desc'}), 
+  action
+) => {
+ switch (action.type) {
+    case SET_SORTED_RISKS: {
+      const payload = action.payload
+      const sortKey = payload.get('sortKey')
+      const order = payload.get('order')
+      return state.mergeDeep({sortKey, order})
+    }
+    default: {
+      return state
+    }
+ }
 }
