@@ -305,12 +305,10 @@ export const RisksCard = withStyles(theme => ({
 
 
 class _RisksTableWithoutStyles extends PureComponent {
-  getSortLabelDirection(column, sortKey, order) {
-    if (column === sortKey && order === 'asc') {
-      order = 'desc'
-    }
-    else {
-      order = 'asc'
+  getSortLabelDirection(column, oldSortKey, oldOrder) {
+    let order = 'desc'
+    if (column === oldSortKey) {
+      order = oldOrder
     }
     return order
   }
@@ -320,9 +318,9 @@ class _RisksTableWithoutStyles extends PureComponent {
   }
 
   onSortClick(column, oldSortKey, oldOrder) {
-    let order = 'asc'
-    if (column === oldSortKey && oldOrder === 'asc') {
-      order = 'desc'
+    let order = 'desc'
+    if (column === oldSortKey && oldOrder === 'desc') {
+      order = 'asc'
     }
     this.props.refreshRisks({sortKey:column, order})
   }
@@ -352,7 +350,7 @@ class _RisksTableWithoutStyles extends PureComponent {
               <TableSortLabel
                 active={this.getSortColumnIsActive('meter-count', sortKey)}
                 onClick={ () => this.onSortClick('meter-count', sortKey, order)}
-                direction={this.getSortLabelDirection('meter-count', sortKey)}>
+                direction={this.getSortLabelDirection('meter-count', sortKey, order)}>
 
                 Meter Count
               </TableSortLabel>
@@ -361,7 +359,7 @@ class _RisksTableWithoutStyles extends PureComponent {
               <TableSortLabel
                 active={this.getSortColumnIsActive('threat-score', sortKey)}
                 onClick={ () => this.onSortClick('threat-score', sortKey, order)}
-                direction={this.getSortLabelDirection('threat-score', sortKey)}>
+                direction={this.getSortLabelDirection('threat-score', sortKey, order)}>
                 Aggregated Threat
               </TableSortLabel>
             </TableCell>
@@ -372,7 +370,7 @@ class _RisksTableWithoutStyles extends PureComponent {
               <TableSortLabel
                 active={ this.getSortColumnIsActive('published', sortKey)}
                 onClick={ () => this.onSortClick('published', sortKey, order)}
-                direction={this.getSortLabelDirection('published', sortKey)}>
+                direction={this.getSortLabelDirection('published', sortKey, order)}>
                 Published
               </TableSortLabel>
             </TableCell>

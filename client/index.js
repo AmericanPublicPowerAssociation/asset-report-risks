@@ -509,11 +509,11 @@ function (_PureComponent6) {
 
   _createClass(_RisksTableWithoutStyles, [{
     key: "getSortLabelDirection",
-    value: function getSortLabelDirection(column, sortKey, order) {
-      if (column === sortKey && order === 'asc') {
-        order = 'desc';
-      } else {
-        order = 'asc';
+    value: function getSortLabelDirection(column, oldSortKey, oldOrder) {
+      var order = 'desc';
+
+      if (column === oldSortKey) {
+        order = oldOrder;
       }
 
       return order;
@@ -526,10 +526,10 @@ function (_PureComponent6) {
   }, {
     key: "onSortClick",
     value: function onSortClick(column, oldSortKey, oldOrder) {
-      var order = 'asc';
+      var order = 'desc';
 
-      if (column === oldSortKey && oldOrder === 'asc') {
-        order = 'desc';
+      if (column === oldSortKey && oldOrder === 'desc') {
+        order = 'asc';
       }
 
       this.props.refreshRisks({
@@ -566,7 +566,7 @@ function (_PureComponent6) {
         onClick: function onClick() {
           return _this2.onSortClick('meter-count', sortKey, order);
         },
-        direction: this.getSortLabelDirection('meter-count', sortKey)
+        direction: this.getSortLabelDirection('meter-count', sortKey, order)
       }, "Meter Count")), _react["default"].createElement(_TableCell["default"], {
         align: "center"
       }, _react["default"].createElement(_TableSortLabel["default"], {
@@ -574,7 +574,7 @@ function (_PureComponent6) {
         onClick: function onClick() {
           return _this2.onSortClick('threat-score', sortKey, order);
         },
-        direction: this.getSortLabelDirection('threat-score', sortKey)
+        direction: this.getSortLabelDirection('threat-score', sortKey, order)
       }, "Aggregated Threat")), _ref6, _react["default"].createElement(_TableCell["default"], {
         align: "center"
       }, _react["default"].createElement(_TableSortLabel["default"], {
@@ -582,7 +582,7 @@ function (_PureComponent6) {
         onClick: function onClick() {
           return _this2.onSortClick('published', sortKey, order);
         },
-        direction: this.getSortLabelDirection('published', sortKey)
+        direction: this.getSortLabelDirection('published', sortKey, order)
       }, "Published")), _ref7)), _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
         var assetId = risk.get('assetId');
         var assetName = risk.get('assetName');
