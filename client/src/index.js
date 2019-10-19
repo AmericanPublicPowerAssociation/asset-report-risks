@@ -306,6 +306,12 @@ export const RisksCard = withStyles(theme => ({
 
 class _RisksTableWithoutStyles extends PureComponent {
   getSortLabelDirection(column, sortKey, order) {
+    if (column === sortKey && order === 'asc') {
+      order = 'desc'
+    }
+    else {
+      order = 'asc'
+    }
     return order
   }
 
@@ -313,8 +319,12 @@ class _RisksTableWithoutStyles extends PureComponent {
     return column === sortKey
   }
 
-  onSortClick(clickedColumn, curCol, order) {
-    this.props.refreshRisks({sortKey: clickedColumn, order})
+  onSortClick(column, oldSortKey, oldOrder) {
+    let order = 'asc'
+    if (column === oldSortKey && oldOrder === 'asc') {
+      order = 'desc'
+    }
+    this.props.refreshRisks({sortKey:column, order})
   }
 
   render() {

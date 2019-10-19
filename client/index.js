@@ -510,6 +510,12 @@ function (_PureComponent6) {
   _createClass(_RisksTableWithoutStyles, [{
     key: "getSortLabelDirection",
     value: function getSortLabelDirection(column, sortKey, order) {
+      if (column === sortKey && order === 'asc') {
+        order = 'desc';
+      } else {
+        order = 'asc';
+      }
+
       return order;
     }
   }, {
@@ -519,9 +525,15 @@ function (_PureComponent6) {
     }
   }, {
     key: "onSortClick",
-    value: function onSortClick(clickedColumn, curCol, order) {
+    value: function onSortClick(column, oldSortKey, oldOrder) {
+      var order = 'asc';
+
+      if (column === oldSortKey && oldOrder === 'asc') {
+        order = 'desc';
+      }
+
       this.props.refreshRisks({
-        sortKey: clickedColumn,
+        sortKey: column,
         order: order
       });
     }
