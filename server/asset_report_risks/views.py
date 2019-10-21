@@ -110,7 +110,16 @@ def get_risks_json(request):
                 'taskStatus': task.status.value,
             })
         ds.append(d)
-    return sorted(ds, key=lambda _: -1 * _['threatScore'])
+    valid_sort_keys = {
+        'name': 'assetName',
+        'meter-count': 'meterCount',
+        'threat-score': 'threatScore',
+        'published': 'vulnerabilityDate',
+    }
+    request_sort_key = request.GET.get('sort_key', '')
+    reverse = request.GET.get('order', 'asc') == 'desc'
+    sort_key = valid_sort_keys.get(request_sort_key, 'threatScore')
+    return sorted(ds, key=lambda _: _[sort_key], reverse=reverse)
 
 
 @view_config(
