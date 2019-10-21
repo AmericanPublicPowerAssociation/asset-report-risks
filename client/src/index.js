@@ -762,6 +762,7 @@ export const sortedRisks = (
  switch (action.type) {
     case SET_SORTED_RISKS: {
       const payload = action.payload
+      const risks = payload.get('risks')
       const sortKey = payload.get('sortKey')
       const order = payload.get('order')
       return state.mergeDeep({sortKey, order})
