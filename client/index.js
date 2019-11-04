@@ -1331,6 +1331,9 @@ var sortedRisks = function sortedRisks() {
     case SET_SORTED_RISKS:
       {
         var payload = action.payload;
+
+        var _risks2 = payload.get('risks');
+
         var sortKey = payload.get('sortKey');
         var order = payload.get('order');
         return state.mergeDeep({
