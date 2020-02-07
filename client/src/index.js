@@ -30,16 +30,11 @@ const TOOLTIP_DELAY = 500
 const SET_TASK = 'SET_TASK'
 
 
-export const getVendorNameSuggestions = state => state.get(
-  'vendorNameSuggestions')
-export const getProductNameSuggestions = state => state.get(
-  'productNameSuggestions')
-export const getProductVersionSuggestions = state => state.get(
-  'productVersionSuggestions')
-export const getRisks = state => state.get(
-  'risks')
-export const getSortedRisks = state => state.get(
-  'sortedRisks')
+export const getVendorNameSuggestions = state => state.vendorNameSuggestions
+export const getProductNameSuggestions = state => state.productNameSuggestions
+export const getProductVersionSuggestions = state => state.productVersionSuggestions
+export const getRisks = state => state.risks
+export const getSortedRisks = state => state.sortedRisks
 
 
 class _EnhancedInputWithoutStyles extends PureComponent {
@@ -80,6 +75,7 @@ class _EnhancedInputWithoutStyles extends PureComponent {
       label,
       value,
       suggestions,
+      disableTextInput
     } = this.props
     return (
       <Downshift selectedItem={value} onStateChange={this.handleStateChange}>
@@ -93,15 +89,18 @@ class _EnhancedInputWithoutStyles extends PureComponent {
         }) => (
             <div className={className}>
               <TextField
+                disabled={disableTextInput}
                 fullWidth
                 label={label}
                 InputProps={getInputProps({
-                  endAdornment:
+                  endAdornment: (
+                    !disableTextInput &&
                     <InputAdornment position='end'>
                       <IconButton onClick={clearSelection}>
                         <ClearIcon />
                       </IconButton>
                     </InputAdornment>
+                  ),
                 })}
               />
               {isOpen && !suggestions.isEmpty() &&
@@ -145,6 +144,7 @@ class _VendorName extends PureComponent {
       vendorName,
       trackChanges,
       saveChanges,
+      disableTextInput,
       // Get redux variables
       vendorNameSuggestions,
       suggestVendorNames,
@@ -163,6 +163,7 @@ class _VendorName extends PureComponent {
         clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
+        disableTextInput={disableTextInput}
       />
     )
   }
@@ -183,6 +184,7 @@ class _ProductName extends PureComponent {
       productNameSuggestions,
       suggestProductNames,
       clearSuggestions,
+      disableTextInput
     } = this.props
     return (
       <EnhancedInput
@@ -197,6 +199,7 @@ class _ProductName extends PureComponent {
         clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
+        disableTextInput={disableTextInput}
       />
     )
   }
@@ -218,6 +221,7 @@ class _ProductVersion extends PureComponent {
       productVersionSuggestions,
       suggestProductVersions,
       clearSuggestions,
+      disableTextInput,
     } = this.props
     return (
       <EnhancedInput
@@ -232,6 +236,7 @@ class _ProductVersion extends PureComponent {
         clearSuggestions={clearSuggestions}
         saveChanges={saveChanges}
         trackChanges={trackChanges}
+        disableTextInput={disableTextInput}
       />
     )
   }
@@ -575,6 +580,7 @@ export const sortRisks = payload => ({
 
 export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
+    console.log('suggest-_ven')
     const { typeId, vendorName } = action.payload
     if (!vendorName.trim()) {
       yield put(clearSuggestions())
@@ -585,9 +591,11 @@ export function* watchSuggestVendorNames() {
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
     ]
+    console.log(params)
     yield fetchSafely(url + '?' + params.join('&'), {}, {
       on200: function* (vendorNames) {
         yield put(resetVendorNameSuggestions(vendorNames))
+        console.log(vendorNames)
       },
     })
   })
