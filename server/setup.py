@@ -24,9 +24,10 @@ DESCRIPTION = '\n\n'.join(open(join(FOLDER, x)).read().strip() for x in [
 
 setup(
     name='asset-report-risks',
-    version='0.2',
+    version='0.3',
     description='Risks Report for Asset Tracker',
     long_description=DESCRIPTION,
+    long_description_content_type='text/markdown',
     classifiers=APP_CLASSIFIERS,
     author='CrossCompute Inc.',
     author_email='support@crosscompute.com',
