@@ -24,17 +24,13 @@ var _styles = require("@material-ui/core/styles");
 
 var _TextField = _interopRequireDefault(require("@material-ui/core/TextField"));
 
-var _InputAdornment = _interopRequireDefault(require("@material-ui/core/InputAdornment"));
-
 var _Tooltip = _interopRequireDefault(require("@material-ui/core/Tooltip"));
 
 var _IconButton = _interopRequireDefault(require("@material-ui/core/IconButton"));
 
-var _Clear = _interopRequireDefault(require("@material-ui/icons/Clear"));
+var _Check = _interopRequireDefault(require("@material-ui/icons/Check"));
 
 var _Build = _interopRequireDefault(require("@material-ui/icons/Build"));
-
-var _Check = _interopRequireDefault(require("@material-ui/icons/Check"));
 
 var _Paper = _interopRequireDefault(require("@material-ui/core/Paper"));
 
@@ -86,7 +82,7 @@ regeneratorRuntime.mark(watchRefreshRisks),
 /*#__PURE__*/
 regeneratorRuntime.mark(fetchSafely);
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -137,10 +133,6 @@ var getSortedRisks = function getSortedRisks(state) {
 };
 
 exports.getSortedRisks = getSortedRisks;
-
-var _ref2 =
-/*#__PURE__*/
-_react["default"].createElement(_Clear["default"], null);
 
 var _EnhancedInputWithoutStyles =
 /*#__PURE__*/
@@ -210,8 +202,8 @@ function (_PureComponent) {
       }, function (_ref) {
         var isOpen = _ref.isOpen,
             highlightedIndex = _ref.highlightedIndex,
-            getInputProps = _ref.getInputProps,
             getMenuProps = _ref.getMenuProps,
+            getInputProps = _ref.getInputProps,
             getItemProps = _ref.getItemProps,
             clearSelection = _ref.clearSelection;
         return _react["default"].createElement("div", {
@@ -220,14 +212,8 @@ function (_PureComponent) {
           fullWidth: true,
           label: label,
           disabled: disableTextInput,
-          InputProps: getInputProps({
-            endAdornment: !disableTextInput && _react["default"].createElement(_InputAdornment["default"], {
-              position: "end"
-            }, _react["default"].createElement(_IconButton["default"], {
-              onClick: clearSelection
-            }, _ref2))
-          })
-        }), isOpen && suggestions.length && _react["default"].createElement(_Paper["default"], _extends({
+          InputProps: getInputProps()
+        }), isOpen && suggestions.length > 0 && _react["default"].createElement(_Paper["default"], _extends({
           className: classes.paper,
           square: true
         }, getMenuProps()), suggestions.map(function (suggestion, index) {
@@ -405,15 +391,15 @@ function (_PureComponent4) {
   return _ProductVersion;
 }(_react.PureComponent);
 
-var _ref3 =
+var _ref2 =
 /*#__PURE__*/
 _react["default"].createElement(_TableCell["default"], null, "Threat Score");
 
-var _ref4 =
+var _ref3 =
 /*#__PURE__*/
 _react["default"].createElement(_TableCell["default"], null, "Risks");
 
-var _ref5 =
+var _ref4 =
 /*#__PURE__*/
 _react["default"].createElement(_TableCell["default"], null, "Impacted Meters");
 
@@ -452,11 +438,11 @@ function (_PureComponent5) {
         align: "center"
       }, "Risks"), _react["default"].createElement(_Table["default"], {
         className: classes.section
-      }, _react["default"].createElement(_TableBody["default"], null, _react["default"].createElement(_TableRow["default"], null, _ref3, _react["default"].createElement(_TableCell["default"], {
+      }, _react["default"].createElement(_TableBody["default"], null, _react["default"].createElement(_TableRow["default"], null, _ref2, _react["default"].createElement(_TableCell["default"], {
         align: "right"
-      }, aggregatedThreatScore)), _react["default"].createElement(_TableRow["default"], null, _ref4, _react["default"].createElement(_TableCell["default"], {
+      }, aggregatedThreatScore)), _react["default"].createElement(_TableRow["default"], null, _ref3, _react["default"].createElement(_TableCell["default"], {
         align: "right"
-      }, riskCount)), _react["default"].createElement(_TableRow["default"], null, _ref5, _react["default"].createElement(_TableCell["default"], {
+      }, riskCount)), _react["default"].createElement(_TableRow["default"], null, _ref4, _react["default"].createElement(_TableCell["default"], {
         align: "right"
       }, downstreamMeterPercent, "%")))), _react["default"].createElement(_Typography["default"], {
         className: classes.section
@@ -485,23 +471,23 @@ var RisksCard = (0, _styles.withStyles)(function (theme) {
 })(_RisksCardWithoutStyles);
 exports.RisksCard = RisksCard;
 
-var _ref6 =
+var _ref5 =
 /*#__PURE__*/
 _react["default"].createElement(_TableCell["default"], {
   align: "center"
 }, "Vulnerability");
 
-var _ref7 =
+var _ref6 =
 /*#__PURE__*/
 _react["default"].createElement(_TableCell["default"], {
   align: "center"
 }, "Status");
 
-var _ref8 =
+var _ref7 =
 /*#__PURE__*/
 _react["default"].createElement(_Build["default"], null);
 
-var _ref9 =
+var _ref8 =
 /*#__PURE__*/
 _react["default"].createElement(_Check["default"], null);
 
@@ -584,7 +570,7 @@ function (_PureComponent6) {
           return _this2.onSortClick('threat-score', sortKey, order);
         },
         direction: this.getSortLabelDirection('threat-score', sortKey, order)
-      }, "Aggregated Threat")), _ref6, _react["default"].createElement(_TableCell["default"], {
+      }, "Aggregated Threat")), _ref5, _react["default"].createElement(_TableCell["default"], {
         align: "center"
       }, _react["default"].createElement(_TableSortLabel["default"], {
         active: this.getSortColumnIsActive('published', sortKey),
@@ -592,7 +578,7 @@ function (_PureComponent6) {
           return _this2.onSortClick('published', sortKey, order);
         },
         direction: this.getSortLabelDirection('published', sortKey, order)
-      }, "Published")), _ref7)), _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
+      }, "Published")), _ref6)), _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
         var assetId = risk.assetId,
             assetName = risk.assetName,
             meterCount = risk.meterCount,
@@ -647,7 +633,7 @@ function (_PureComponent6) {
             setEditingTaskValues(task);
             openTaskEditDialog();
           }
-        }, taskStatus !== 100 ? _ref8 : _ref9))));
+        }, taskStatus !== 100 ? _ref7 : _ref8))));
       })));
     }
   }]);
