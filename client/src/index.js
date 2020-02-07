@@ -98,7 +98,7 @@ class _EnhancedInputWithoutStyles extends PureComponent {
                   ),
                 })}
               />
-              {isOpen && !suggestions.isEmpty() &&
+              {isOpen && suggestions.length &&
                 <Paper className={classes.paper} square {...getMenuProps()}>
                   {suggestions.map((suggestion, index) => {
                     const isHighlighted = highlightedIndex === index

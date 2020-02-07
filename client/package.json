@@ -1,6 +1,6 @@
 {
   "name": "asset-report-risks",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Identify potential risks by vendor and product",
   "main": "index.js",
   "scripts": {

@@ -227,7 +227,7 @@ function (_PureComponent) {
               onClick: clearSelection
             }, _ref2))
           })
-        }), isOpen && !suggestions.isEmpty() && _react["default"].createElement(_Paper["default"], _extends({
+        }), isOpen && suggestions.length && _react["default"].createElement(_Paper["default"], _extends({
           className: classes.paper,
           square: true
         }, getMenuProps()), suggestions.map(function (suggestion, index) {

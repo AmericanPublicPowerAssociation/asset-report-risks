@@ -1,4 +1,8 @@
-from asset_tracker.models import Asset, Task, TaskStatus
+from asset_tracker.models import (
+    Asset,
+    # Task,
+    # TaskStatus,
+)
 from collections import defaultdict
 from pyramid.view import view_config
 
@@ -74,6 +78,7 @@ def get_risks_json(request):
     asset_name_by_id = dict(db.query(Asset.id, Asset.name).filter(
         Asset.id.in_(asset_ids)))
     risks = get_risks(asset_ids)
+    '''
     reference_uris = [_['vulnerabilityUri'] for _ in risks]
 
     tasks = db.query(Task).filter(
@@ -83,6 +88,7 @@ def get_risks_json(request):
         task.asset_id,
         task.reference_uri,
     ): task for task in tasks}
+    '''
 
     ds = []
     for r in risks:
@@ -91,8 +97,10 @@ def get_risks_json(request):
         meter_ids = r['meterIds']
         meter_count = len(meter_ids)
         reference_uri = r['vulnerabilityUri']
+        '''
         risk_pack = asset_id, reference_uri
         task = task_by_risk_pack.get(risk_pack)
+        '''
         d = {
             'assetId': asset_id,
             'assetName': asset_name,
@@ -103,12 +111,14 @@ def get_risks_json(request):
             'vulnerabilityUrl': r['vulnerabilityUrl'],
             'vulnerabilityDate': r['vulnerabilityDate'],
         }
+        '''
         if task:
             d.update({
                 'taskId': task.id,
                 'taskName': task.name,
                 'taskStatus': task.status.value,
             })
+        '''
         ds.append(d)
     valid_sort_keys = {
         'name': 'assetName',
@@ -134,14 +144,17 @@ def see_risks_metrics_json(request):
         return {}
 
     risks = get_risks(asset_ids)
-    reference_uris = [_['vulnerabilityUri'] for _ in risks]
+    # reference_uris = [_['vulnerabilityUri'] for _ in risks]
 
     db = request.db
+    '''
     tasks = db.query(Task).filter(
         Task.status == TaskStatus.Done,
         Task.reference_uri.in_(reference_uris),
     ).all()
     closed_uris = [_.reference_uri for _ in tasks]
+    '''
+    closed_uris = []
 
     open_risks = []
     for risk in risks:
