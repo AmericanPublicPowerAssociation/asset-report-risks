@@ -8,7 +8,7 @@ exports.watchSuggestProductNames = watchSuggestProductNames;
 exports.watchSuggestProductVersions = watchSuggestProductVersions;
 exports.watchRefreshRisks = watchRefreshRisks;
 exports.fetchSafely = fetchSafely;
-exports.sortedRisks = exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.sortRisks = exports.resetRisks = exports.clearSuggestions = exports.resetProductVersionSuggestions = exports.resetProductNameSuggestions = exports.resetVendorNameSuggestions = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.SET_SORTED_RISKS = exports.RESET_RISK_METRICS = exports.RESET_RISKS = exports.CLEAR_SUGGESTIONS = exports.RESET_PRODUCT_VERSION_SUGGESTIONS = exports.RESET_PRODUCT_NAME_SUGGESTIONS = exports.RESET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.RisksTable = exports.RisksCard = exports.getSortedRisks = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
+exports.sortedRisks = exports.risks = exports.productVersionSuggestions = exports.productNameSuggestions = exports.vendorNameSuggestions = exports.sortRisks = exports.setRisks = exports.clearSuggestions = exports.setProductVersionSuggestions = exports.setProductNameSuggestions = exports.setVendorNameSuggestions = exports.refreshRisks = exports.suggestProductVersions = exports.suggestProductNames = exports.suggestVendorNames = exports.logError = exports.SET_SORTED_RISKS = exports.SET_RISKS = exports.SET_TASK = exports.CLEAR_SUGGESTIONS = exports.SET_PRODUCT_VERSION_SUGGESTIONS = exports.SET_PRODUCT_NAME_SUGGESTIONS = exports.SET_VENDOR_NAME_SUGGESTIONS = exports.REFRESH_RISK_METRICS = exports.REFRESH_RISKS = exports.SUGGEST_PRODUCT_VERSIONS = exports.SUGGEST_PRODUCT_NAMES = exports.SUGGEST_VENDOR_NAMES = exports.LOG_ERROR = exports.ProductVersion = exports.ProductName = exports.VendorName = exports.RisksTable = exports.RisksCard = exports.getSortedRisks = exports.getRisks = exports.getProductVersionSuggestions = exports.getProductNameSuggestions = exports.getVendorNameSuggestions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -17,8 +17,6 @@ var _reactRedux = require("react-redux");
 var _reactRouterDom = require("react-router-dom");
 
 var _effects = require("redux-saga/effects");
-
-var _immutable = require("immutable");
 
 var _downshift = _interopRequireDefault(require("downshift"));
 
@@ -66,7 +64,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 var _marked =
 /*#__PURE__*/
@@ -84,7 +86,7 @@ regeneratorRuntime.mark(watchRefreshRisks),
 /*#__PURE__*/
 regeneratorRuntime.mark(fetchSafely);
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -106,35 +108,32 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var TOOLTIP_DELAY = 500;
-var SET_TASK = 'SET_TASK';
-
 var getVendorNameSuggestions = function getVendorNameSuggestions(state) {
-  return state.get('vendorNameSuggestions');
+  return state.vendorNameSuggestions;
 };
 
 exports.getVendorNameSuggestions = getVendorNameSuggestions;
 
 var getProductNameSuggestions = function getProductNameSuggestions(state) {
-  return state.get('productNameSuggestions');
+  return state.productNameSuggestions;
 };
 
 exports.getProductNameSuggestions = getProductNameSuggestions;
 
 var getProductVersionSuggestions = function getProductVersionSuggestions(state) {
-  return state.get('productVersionSuggestions');
+  return state.productVersionSuggestions;
 };
 
 exports.getProductVersionSuggestions = getProductVersionSuggestions;
 
 var getRisks = function getRisks(state) {
-  return state.get('risks');
+  return state.risks;
 };
 
 exports.getRisks = getRisks;
 
 var getSortedRisks = function getSortedRisks(state) {
-  return state.get('sortedRisks');
+  return state.sortedRisks;
 };
 
 exports.getSortedRisks = getSortedRisks;
@@ -165,29 +164,31 @@ function (_PureComponent) {
       var _this$props = _this.props,
           attribute = _this$props.attribute,
           onSuggest = _this$props.onSuggest,
-          trackChanges = _this$props.trackChanges;
+          trackChange = _this$props.trackChange;
 
       if (changes.hasOwnProperty('selectedItem')) {
         var value = changes.selectedItem;
 
-        _this.saveChanges(_defineProperty({}, attribute, value));
+        _this.saveChange(attribute, value);
       } else if (changes.type === _downshift["default"].stateChangeTypes.changeInput) {
         var _value = changes.inputValue;
-        trackChanges(_defineProperty({}, attribute, _value));
+        trackChange(attribute, _value);
         onSuggest(_value);
       } else if (changes.isOpen === false) {
         var _value2 = _this.props.value;
 
-        _this.saveChanges(_defineProperty({}, attribute, _value2));
+        _this.saveChange(attribute, _value2);
       }
     });
 
-    _defineProperty(_assertThisInitialized(_this), "saveChanges", function (attributes) {
+    _defineProperty(_assertThisInitialized(_this), "saveChange", function (attribute, value) {
       var _this$props2 = _this.props,
           clearSuggestions = _this$props2.clearSuggestions,
-          saveChanges = _this$props2.saveChanges;
+          saveChange = _this$props2.saveChange,
+          trackChange = _this$props2.trackChange;
       clearSuggestions();
-      saveChanges(attributes);
+      trackChange(attribute, value);
+      saveChange(attribute, value);
     });
 
     return _this;
@@ -201,7 +202,8 @@ function (_PureComponent) {
           className = _this$props3.className,
           label = _this$props3.label,
           value = _this$props3.value,
-          suggestions = _this$props3.suggestions;
+          suggestions = _this$props3.suggestions,
+          disableTextInput = _this$props3.disableTextInput;
       return _react["default"].createElement(_downshift["default"], {
         selectedItem: value,
         onStateChange: this.handleStateChange
@@ -217,8 +219,9 @@ function (_PureComponent) {
         }, _react["default"].createElement(_TextField["default"], {
           fullWidth: true,
           label: label,
+          disabled: disableTextInput,
           InputProps: getInputProps({
-            endAdornment: _react["default"].createElement(_InputAdornment["default"], {
+            endAdornment: !disableTextInput && _react["default"].createElement(_InputAdornment["default"], {
               position: "end"
             }, _react["default"].createElement(_IconButton["default"], {
               onClick: clearSelection
@@ -273,8 +276,9 @@ function (_PureComponent2) {
           className = _this$props4.className,
           typeId = _this$props4.typeId,
           vendorName = _this$props4.vendorName,
-          trackChanges = _this$props4.trackChanges,
-          saveChanges = _this$props4.saveChanges,
+          trackChange = _this$props4.trackChange,
+          saveChange = _this$props4.saveChange,
+          disableTextInput = _this$props4.disableTextInput,
           vendorNameSuggestions = _this$props4.vendorNameSuggestions,
           suggestVendorNames = _this$props4.suggestVendorNames,
           clearSuggestions = _this$props4.clearSuggestions;
@@ -291,8 +295,9 @@ function (_PureComponent2) {
           });
         },
         clearSuggestions: clearSuggestions,
-        saveChanges: saveChanges,
-        trackChanges: trackChanges
+        saveChange: saveChange,
+        trackChange: trackChange,
+        disableTextInput: disableTextInput
       });
     }
   }]);
@@ -319,11 +324,12 @@ function (_PureComponent3) {
           typeId = _this$props5.typeId,
           vendorName = _this$props5.vendorName,
           productName = _this$props5.productName,
-          trackChanges = _this$props5.trackChanges,
-          saveChanges = _this$props5.saveChanges,
+          trackChange = _this$props5.trackChange,
+          saveChange = _this$props5.saveChange,
           productNameSuggestions = _this$props5.productNameSuggestions,
           suggestProductNames = _this$props5.suggestProductNames,
-          clearSuggestions = _this$props5.clearSuggestions;
+          clearSuggestions = _this$props5.clearSuggestions,
+          disableTextInput = _this$props5.disableTextInput;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
         label: "Product Name",
@@ -338,8 +344,9 @@ function (_PureComponent3) {
           });
         },
         clearSuggestions: clearSuggestions,
-        saveChanges: saveChanges,
-        trackChanges: trackChanges
+        saveChange: saveChange,
+        trackChange: trackChange,
+        disableTextInput: disableTextInput
       });
     }
   }]);
@@ -367,11 +374,12 @@ function (_PureComponent4) {
           vendorName = _this$props6.vendorName,
           productName = _this$props6.productName,
           productVersion = _this$props6.productVersion,
-          trackChanges = _this$props6.trackChanges,
-          saveChanges = _this$props6.saveChanges,
+          trackChange = _this$props6.trackChange,
+          saveChange = _this$props6.saveChange,
           productVersionSuggestions = _this$props6.productVersionSuggestions,
           suggestProductVersions = _this$props6.suggestProductVersions,
-          clearSuggestions = _this$props6.clearSuggestions;
+          clearSuggestions = _this$props6.clearSuggestions,
+          disableTextInput = _this$props6.disableTextInput;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
         label: "Product Version",
@@ -387,8 +395,9 @@ function (_PureComponent4) {
           });
         },
         clearSuggestions: clearSuggestions,
-        saveChanges: saveChanges,
-        trackChanges: trackChanges
+        saveChange: saveChange,
+        trackChange: trackChange,
+        disableTextInput: disableTextInput
       });
     }
   }]);
@@ -426,10 +435,10 @@ function (_PureComponent5) {
           classes = _this$props7.classes,
           to = _this$props7.to,
           values = _this$props7.values;
-      var riskCount = values.get('riskCount');
-      var aggregatedThreatScore = values.get('aggregatedThreatScore');
-      var greatestThreatDescription = values.get('greatestThreatDescription');
-      var downstreamMeterPercent = values.get('downstreamMeterPercent');
+      var riskCount = values.riskCount,
+          aggregatedThreatScore = values.aggregatedThreatScore,
+          greatestThreatDescription = values.greatestThreatDescription,
+          downstreamMeterPercent = values.downstreamMeterPercent;
       return _react["default"].createElement(_Link["default"], {
         underline: "none",
         component: _reactRouterDom.Link,
@@ -584,17 +593,17 @@ function (_PureComponent6) {
         },
         direction: this.getSortLabelDirection('published', sortKey, order)
       }, "Published")), _ref7)), _react["default"].createElement(_TableBody["default"], null, risks.map(function (risk, index) {
-        var assetId = risk.get('assetId');
-        var assetName = risk.get('assetName');
-        var meterCount = risk.get('meterCount');
-        var threatScore = risk.get('threatScore');
-        var threatDescription = risk.get('threatDescription');
-        var vulnerabilityUri = risk.get('vulnerabilityUri');
-        var vulnerabilityUrl = risk.get('vulnerabilityUrl');
-        var vulnerabilityDate = risk.get('vulnerabilityDate');
-        var taskId = risk.get('taskId');
-        var taskStatus = risk.get('taskStatus');
-        var taskName = risk.get('taskName');
+        var assetId = risk.assetId,
+            assetName = risk.assetName,
+            meterCount = risk.meterCount,
+            threatScore = risk.threatScore,
+            threatDescription = risk.threatDescription,
+            vulnerabilityUri = risk.vulnerabilityUri,
+            vulnerabilityUrl = risk.vulnerabilityUrl,
+            vulnerabilityDate = risk.vulnerabilityDate,
+            taskId = risk.taskId,
+            taskStatus = risk.taskStatus,
+            taskName = risk.taskName;
         var task = taskId ? {
           id: taskId,
           assetId: assetId,
@@ -631,8 +640,7 @@ function (_PureComponent6) {
         }, vulnerabilityDate)), _react["default"].createElement(_TableCell["default"], {
           align: "center"
         }, _react["default"].createElement(_Tooltip["default"], {
-          title: taskButtonTip,
-          enterDelay: TOOLTIP_DELAY
+          title: taskButtonTip
         }, _react["default"].createElement(_IconButton["default"], {
           className: taskButtonClassName,
           onClick: function onClick() {
@@ -727,18 +735,18 @@ var REFRESH_RISKS = 'REFRESH_RISKS';
 exports.REFRESH_RISKS = REFRESH_RISKS;
 var REFRESH_RISK_METRICS = 'REFRESH_RISK_METRICS';
 exports.REFRESH_RISK_METRICS = REFRESH_RISK_METRICS;
-var RESET_VENDOR_NAME_SUGGESTIONS = 'RESET_VENDOR_NAME_SUGGESTIONS';
-exports.RESET_VENDOR_NAME_SUGGESTIONS = RESET_VENDOR_NAME_SUGGESTIONS;
-var RESET_PRODUCT_NAME_SUGGESTIONS = 'RESET_PRODUCT_NAME_SUGGESTIONS';
-exports.RESET_PRODUCT_NAME_SUGGESTIONS = RESET_PRODUCT_NAME_SUGGESTIONS;
-var RESET_PRODUCT_VERSION_SUGGESTIONS = 'RESET_PRODUCT_VERSION_SUGGESTIONS';
-exports.RESET_PRODUCT_VERSION_SUGGESTIONS = RESET_PRODUCT_VERSION_SUGGESTIONS;
+var SET_VENDOR_NAME_SUGGESTIONS = 'SET_VENDOR_NAME_SUGGESTIONS';
+exports.SET_VENDOR_NAME_SUGGESTIONS = SET_VENDOR_NAME_SUGGESTIONS;
+var SET_PRODUCT_NAME_SUGGESTIONS = 'SET_PRODUCT_NAME_SUGGESTIONS';
+exports.SET_PRODUCT_NAME_SUGGESTIONS = SET_PRODUCT_NAME_SUGGESTIONS;
+var SET_PRODUCT_VERSION_SUGGESTIONS = 'SET_PRODUCT_VERSION_SUGGESTIONS';
+exports.SET_PRODUCT_VERSION_SUGGESTIONS = SET_PRODUCT_VERSION_SUGGESTIONS;
 var CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS';
 exports.CLEAR_SUGGESTIONS = CLEAR_SUGGESTIONS;
-var RESET_RISKS = 'RESET_RISKS';
-exports.RESET_RISKS = RESET_RISKS;
-var RESET_RISK_METRICS = 'RESET_RISK_METRICS';
-exports.RESET_RISK_METRICS = RESET_RISK_METRICS;
+var SET_TASK = 'SET_TASK';
+exports.SET_TASK = SET_TASK;
+var SET_RISKS = 'SET_RISKS';
+exports.SET_RISKS = SET_RISKS;
 var SET_SORTED_RISKS = 'SET_SORTED_RISKS';
 exports.SET_SORTED_RISKS = SET_SORTED_RISKS;
 
@@ -791,32 +799,32 @@ var refreshRisks = function refreshRisks(payload) {
 
 exports.refreshRisks = refreshRisks;
 
-var resetVendorNameSuggestions = function resetVendorNameSuggestions(payload) {
+var setVendorNameSuggestions = function setVendorNameSuggestions(payload) {
   return {
     payload: payload,
-    type: RESET_VENDOR_NAME_SUGGESTIONS
+    type: SET_VENDOR_NAME_SUGGESTIONS
   };
 };
 
-exports.resetVendorNameSuggestions = resetVendorNameSuggestions;
+exports.setVendorNameSuggestions = setVendorNameSuggestions;
 
-var resetProductNameSuggestions = function resetProductNameSuggestions(payload) {
+var setProductNameSuggestions = function setProductNameSuggestions(payload) {
   return {
     payload: payload,
-    type: RESET_PRODUCT_NAME_SUGGESTIONS
+    type: SET_PRODUCT_NAME_SUGGESTIONS
   };
 };
 
-exports.resetProductNameSuggestions = resetProductNameSuggestions;
+exports.setProductNameSuggestions = setProductNameSuggestions;
 
-var resetProductVersionSuggestions = function resetProductVersionSuggestions(payload) {
+var setProductVersionSuggestions = function setProductVersionSuggestions(payload) {
   return {
     payload: payload,
-    type: RESET_PRODUCT_VERSION_SUGGESTIONS
+    type: SET_PRODUCT_VERSION_SUGGESTIONS
   };
 };
 
-exports.resetProductVersionSuggestions = resetProductVersionSuggestions;
+exports.setProductVersionSuggestions = setProductVersionSuggestions;
 
 var _clearSuggestions = function _clearSuggestions(payload) {
   return {
@@ -827,14 +835,14 @@ var _clearSuggestions = function _clearSuggestions(payload) {
 
 exports.clearSuggestions = _clearSuggestions;
 
-var resetRisks = function resetRisks(payload) {
+var setRisks = function setRisks(payload) {
   return {
     payload: payload,
-    type: RESET_RISKS
+    type: SET_RISKS
   };
 };
 
-exports.resetRisks = resetRisks;
+exports.setRisks = setRisks;
 
 var sortRisks = function sortRisks(payload) {
   return {
@@ -886,7 +894,7 @@ function watchSuggestVendorNames() {
                             switch (_context.prev = _context.next) {
                               case 0:
                                 _context.next = 2;
-                                return (0, _effects.put)(resetVendorNameSuggestions(vendorNames));
+                                return (0, _effects.put)(setVendorNameSuggestions(vendorNames));
 
                               case 2:
                               case "end":
@@ -941,7 +949,7 @@ function watchSuggestProductNames() {
                             switch (_context4.prev = _context4.next) {
                               case 0:
                                 _context4.next = 2;
-                                return (0, _effects.put)(resetProductNameSuggestions(productNames));
+                                return (0, _effects.put)(setProductNameSuggestions(productNames));
 
                               case 2:
                               case "end":
@@ -996,7 +1004,7 @@ function watchSuggestProductVersions() {
                             switch (_context7.prev = _context7.next) {
                               case 0:
                                 _context7.next = 2;
-                                return (0, _effects.put)(resetProductVersionSuggestions(productVersions));
+                                return (0, _effects.put)(setProductVersionSuggestions(productVersions));
 
                               case 2:
                               case "end":
@@ -1056,7 +1064,7 @@ function watchRefreshRisks() {
                             switch (_context10.prev = _context10.next) {
                               case 0:
                                 _context10.next = 2;
-                                return (0, _effects.put)(resetRisks(risks));
+                                return (0, _effects.put)(setRisks(risks));
 
                               case 2:
                               case "end":
@@ -1083,11 +1091,11 @@ function watchRefreshRisks() {
                           while (1) {
                             switch (_context11.prev = _context11.next) {
                               case 0:
-                                payload = (0, _immutable.Map)({
+                                payload = {
                                   sortKey: sortKey,
                                   order: order,
                                   risks: risks
-                                });
+                                };
                                 _context11.next = 3;
                                 return (0, _effects.put)(sortRisks(payload));
 
@@ -1133,78 +1141,74 @@ function fetchSafely(url, options, callbacks) {
           _on = callbacks.on200, on400 = callbacks.on400;
 
           if (!(_on && status === 200)) {
-            _context14.next = 17;
+            _context14.next = 15;
             break;
           }
 
           _context14.t0 = _on;
-          _context14.t1 = _immutable.fromJS;
-          _context14.next = 11;
+          _context14.next = 10;
           return response.json();
 
-        case 11:
-          _context14.t2 = _context14.sent;
-          _context14.t3 = (0, _context14.t1)(_context14.t2);
-          _context14.next = 15;
-          return (0, _context14.t0)(_context14.t3);
+        case 10:
+          _context14.t1 = _context14.sent;
+          _context14.next = 13;
+          return (0, _context14.t0)(_context14.t1);
 
-        case 15:
-          _context14.next = 30;
+        case 13:
+          _context14.next = 26;
           break;
 
-        case 17:
+        case 15:
           if (!(on400 && status === 400)) {
-            _context14.next = 28;
+            _context14.next = 24;
             break;
           }
 
-          _context14.t4 = on400;
-          _context14.t5 = _immutable.fromJS;
-          _context14.next = 22;
+          _context14.t2 = on400;
+          _context14.next = 19;
           return response.json();
 
-        case 22:
-          _context14.t6 = _context14.sent;
-          _context14.t7 = (0, _context14.t5)(_context14.t6);
-          _context14.next = 26;
-          return (0, _context14.t4)(_context14.t7);
+        case 19:
+          _context14.t3 = _context14.sent;
+          _context14.next = 22;
+          return (0, _context14.t2)(_context14.t3);
 
-        case 26:
-          _context14.next = 30;
+        case 22:
+          _context14.next = 26;
           break;
 
-        case 28:
-          _context14.next = 30;
+        case 24:
+          _context14.next = 26;
           return (0, _effects.put)(logError({
             status: status
           }));
 
-        case 30:
-          _context14.next = 36;
+        case 26:
+          _context14.next = 32;
           break;
 
-        case 32:
-          _context14.prev = 32;
-          _context14.t8 = _context14["catch"](0);
-          _context14.next = 36;
+        case 28:
+          _context14.prev = 28;
+          _context14.t4 = _context14["catch"](0);
+          _context14.next = 32;
           return (0, _effects.put)(logError({
-            text: _context14.t8
+            text: _context14.t4
           }));
 
-        case 36:
+        case 32:
         case "end":
           return _context14.stop();
       }
     }
-  }, _marked5, null, [[0, 32]]);
+  }, _marked5, null, [[0, 28]]);
 }
 
 var vendorNameSuggestions = function vendorNameSuggestions() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.List)();
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case RESET_VENDOR_NAME_SUGGESTIONS:
+    case SET_VENDOR_NAME_SUGGESTIONS:
       {
         var vendorNames = action.payload;
         return vendorNames;
@@ -1212,7 +1216,7 @@ var vendorNameSuggestions = function vendorNameSuggestions() {
 
     case CLEAR_SUGGESTIONS:
       {
-        return state.clear();
+        return [];
       }
 
     default:
@@ -1225,11 +1229,11 @@ var vendorNameSuggestions = function vendorNameSuggestions() {
 exports.vendorNameSuggestions = vendorNameSuggestions;
 
 var productNameSuggestions = function productNameSuggestions() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.List)();
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case RESET_PRODUCT_NAME_SUGGESTIONS:
+    case SET_PRODUCT_NAME_SUGGESTIONS:
       {
         var productNames = action.payload;
         return productNames;
@@ -1237,7 +1241,7 @@ var productNameSuggestions = function productNameSuggestions() {
 
     case CLEAR_SUGGESTIONS:
       {
-        return state.clear();
+        return [];
       }
 
     default:
@@ -1250,11 +1254,11 @@ var productNameSuggestions = function productNameSuggestions() {
 exports.productNameSuggestions = productNameSuggestions;
 
 var productVersionSuggestions = function productVersionSuggestions() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.List)();
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
-    case RESET_PRODUCT_VERSION_SUGGESTIONS:
+    case SET_PRODUCT_VERSION_SUGGESTIONS:
       {
         var productVersions = action.payload;
         return productVersions;
@@ -1262,7 +1266,7 @@ var productVersionSuggestions = function productVersionSuggestions() {
 
     case CLEAR_SUGGESTIONS:
       {
-        return state.clear();
+        return [];
       }
 
     default:
@@ -1275,35 +1279,34 @@ var productVersionSuggestions = function productVersionSuggestions() {
 exports.productVersionSuggestions = productVersionSuggestions;
 
 var risks = function risks() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.List)();
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
     case SET_SORTED_RISKS:
-    case RESET_RISKS:
+    case SET_RISKS:
       {
-        var _risks = action.payload.get('risks');
-
+        var _risks = action.payload.risks;
         return _risks;
       }
 
     case SET_TASK:
       {
         var task = action.payload;
-        var taskAssetId = task.get('assetId');
-        var taskReferenceUri = task.get('referenceUri');
-        var taskId = task.get('id');
-        var taskName = task.get('name');
-        var taskStatus = task.get('status');
+        var taskAssetId = task.assetId;
+        var taskReferenceUri = task.referenceUri;
+        var taskId = task.id;
+        var taskName = task.name;
+        var taskStatus = task.status;
         return state.map(function (risk) {
-          var riskAssetId = risk.get('assetId');
-          var riskReferenceUri = risk.get('vulnerabilityUri');
+          var riskAssetId = risk.assetId;
+          var riskReferenceUri = risk.vulnerabilityUri;
 
           if (riskAssetId !== taskAssetId || riskReferenceUri !== taskReferenceUri) {
             return risk;
           }
 
-          return risk.merge({
+          return _objectSpread({}, risk, {}, {
             taskId: taskId,
             taskName: taskName,
             taskStatus: taskStatus
@@ -1321,25 +1324,22 @@ var risks = function risks() {
 exports.risks = risks;
 
 var sortedRisks = function sortedRisks() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _immutable.Map)({
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
     sortKey: 'threat-score',
     order: 'desc'
-  });
+  };
   var action = arguments.length > 1 ? arguments[1] : undefined;
 
   switch (action.type) {
     case SET_SORTED_RISKS:
       {
-        var payload = action.payload;
-
-        var _risks2 = payload.get('risks');
-
-        var sortKey = payload.get('sortKey');
-        var order = payload.get('order');
-        return state.mergeDeep({
+        var _action$payload4 = action.payload,
+            sortKey = _action$payload4.sortKey,
+            order = _action$payload4.order;
+        return {
           sortKey: sortKey,
           order: order
-        });
+        };
       }
 
     default:

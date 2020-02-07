@@ -1,6 +1,14 @@
 # vim
 *.sw[op]
 *~
+# node
+.env
+.reify-cache
+node_modules
+npm-debug.log*
+nvd*.json
+package-lock.json
+yarn.lock
 # python
 *.egg
 *.egg-info
@@ -23,10 +31,3 @@ alembic
 *.tmp
 .DS_Store
 data_*
-# Node
-.env
-.reify-cache
-node_modules
-npm-debug.log*
-nvd*.json
-package-lock.json

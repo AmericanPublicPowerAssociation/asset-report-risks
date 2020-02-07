@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { Map, List, fromJS } from 'immutable'
 import Downshift from 'downshift'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -25,17 +24,11 @@ import TableCell from '@material-ui/core/TableCell'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Link from '@material-ui/core/Link'
 
-
-const TOOLTIP_DELAY = 500
-const SET_TASK = 'SET_TASK'
-
-
 export const getVendorNameSuggestions = state => state.vendorNameSuggestions
 export const getProductNameSuggestions = state => state.productNameSuggestions
 export const getProductVersionSuggestions = state => state.productVersionSuggestions
 export const getRisks = state => state.risks
 export const getSortedRisks = state => state.sortedRisks
-
 
 class _EnhancedInputWithoutStyles extends PureComponent {
 
@@ -43,29 +36,31 @@ class _EnhancedInputWithoutStyles extends PureComponent {
     const {
       attribute,
       onSuggest,
-      trackChanges,
+      trackChange,
     } = this.props
 
     if (changes.hasOwnProperty('selectedItem')) {
       const value = changes.selectedItem
-      this.saveChanges({ [attribute]: value })
+      this.saveChange(attribute, value)
     } else if (changes.type === Downshift.stateChangeTypes.changeInput) {
       const value = changes.inputValue
-      trackChanges({ [attribute]: value })
+      trackChange(attribute, value)
       onSuggest(value)
     } else if (changes.isOpen === false) {
       const value = this.props.value
-      this.saveChanges({ [attribute]: value })
+      this.saveChange(attribute, value)
     }
   }
 
-  saveChanges = attributes => {
+  saveChange = (attribute, value) => {
     const {
       clearSuggestions,
-      saveChanges,
+      saveChange,
+      trackChange,
     } = this.props
     clearSuggestions()
-    saveChanges(attributes)
+    trackChange(attribute, value)
+    saveChange(attribute, value)
   }
 
   render() {
@@ -75,7 +70,7 @@ class _EnhancedInputWithoutStyles extends PureComponent {
       label,
       value,
       suggestions,
-      disableTextInput
+      disableTextInput,
     } = this.props
     return (
       <Downshift selectedItem={value} onStateChange={this.handleStateChange}>
@@ -89,9 +84,9 @@ class _EnhancedInputWithoutStyles extends PureComponent {
         }) => (
             <div className={className}>
               <TextField
-                disabled={disableTextInput}
                 fullWidth
                 label={label}
+                disabled={disableTextInput}
                 InputProps={getInputProps({
                   endAdornment: (
                     !disableTextInput &&
@@ -134,7 +129,6 @@ const EnhancedInput = withStyles(theme => ({
   },
 }))(_EnhancedInputWithoutStyles)
 
-
 class _VendorName extends PureComponent {
 
   render() {
@@ -142,8 +136,8 @@ class _VendorName extends PureComponent {
       className,
       typeId,
       vendorName,
-      trackChanges,
-      saveChanges,
+      trackChange,
+      saveChange,
       disableTextInput,
       // Get redux variables
       vendorNameSuggestions,
@@ -161,14 +155,13 @@ class _VendorName extends PureComponent {
           typeId, vendorName: value
         })}
         clearSuggestions={clearSuggestions}
-        saveChanges={saveChanges}
-        trackChanges={trackChanges}
+        saveChange={saveChange}
+        trackChange={trackChange}
         disableTextInput={disableTextInput}
       />
     )
   }
 }
-
 
 class _ProductName extends PureComponent {
 
@@ -178,8 +171,8 @@ class _ProductName extends PureComponent {
       typeId,
       vendorName,
       productName,
-      trackChanges,
-      saveChanges,
+      trackChange,
+      saveChange,
       // Get redux variables
       productNameSuggestions,
       suggestProductNames,
@@ -197,14 +190,13 @@ class _ProductName extends PureComponent {
           typeId, vendorName, productName: value
         })}
         clearSuggestions={clearSuggestions}
-        saveChanges={saveChanges}
-        trackChanges={trackChanges}
+        saveChange={saveChange}
+        trackChange={trackChange}
         disableTextInput={disableTextInput}
       />
     )
   }
 }
-
 
 class _ProductVersion extends PureComponent {
 
@@ -215,8 +207,8 @@ class _ProductVersion extends PureComponent {
       vendorName,
       productName,
       productVersion,
-      trackChanges,
-      saveChanges,
+      trackChange,
+      saveChange,
       // Get redux variables
       productVersionSuggestions,
       suggestProductVersions,
@@ -234,14 +226,13 @@ class _ProductVersion extends PureComponent {
           typeId, vendorName, productName, productVersion: value
         })}
         clearSuggestions={clearSuggestions}
-        saveChanges={saveChanges}
-        trackChanges={trackChanges}
+        saveChange={saveChange}
+        trackChange={trackChange}
         disableTextInput={disableTextInput}
       />
     )
   }
 }
-
 
 class _RisksCardWithoutStyles extends PureComponent {
 
@@ -251,14 +242,12 @@ class _RisksCardWithoutStyles extends PureComponent {
       to,
       values,
     } = this.props
-    const riskCount = values.get(
-      'riskCount')
-    const aggregatedThreatScore = values.get(
-      'aggregatedThreatScore')
-    const greatestThreatDescription = values.get(
-      'greatestThreatDescription')
-    const downstreamMeterPercent = values.get(
-      'downstreamMeterPercent')
+    const {
+      riskCount,
+      aggregatedThreatScore,
+      greatestThreatDescription,
+      downstreamMeterPercent,
+    } = values
     return (
       <Link underline='none' component={RouterLink} to={to}>
         <Card className={classes.card}>
@@ -292,7 +281,6 @@ class _RisksCardWithoutStyles extends PureComponent {
   }
 }
 
-
 export const RisksCard = withStyles(theme => ({
   section: {
     marginTop: theme.spacing(3),
@@ -307,7 +295,6 @@ export const RisksCard = withStyles(theme => ({
     padding: theme.spacing(3),
   },
 }))(_RisksCardWithoutStyles)
-
 
 class _RisksTableWithoutStyles extends PureComponent {
   getSortLabelDirection(column, oldSortKey, oldOrder) {
@@ -386,17 +373,19 @@ class _RisksTableWithoutStyles extends PureComponent {
         </TableHead>
         <TableBody>
           {risks.map((risk, index) => {
-            const assetId = risk.get('assetId')
-            const assetName = risk.get('assetName')
-            const meterCount = risk.get('meterCount')
-            const threatScore = risk.get('threatScore')
-            const threatDescription = risk.get('threatDescription')
-            const vulnerabilityUri = risk.get('vulnerabilityUri')
-            const vulnerabilityUrl = risk.get('vulnerabilityUrl')
-            const vulnerabilityDate = risk.get('vulnerabilityDate')
-            const taskId = risk.get('taskId')
-            const taskStatus = risk.get('taskStatus')
-            const taskName = risk.get('taskName')
+            const {
+              assetId,
+              assetName,
+              meterCount,
+              threatScore,
+              threatDescription,
+              vulnerabilityUri,
+              vulnerabilityUrl,
+              vulnerabilityDate,
+              taskId,
+              taskStatus,
+              taskName,
+            } = risk
             const task = taskId ? {
               id: taskId,
               assetId,
@@ -429,7 +418,7 @@ class _RisksTableWithoutStyles extends PureComponent {
                     href={'//' + vulnerabilityUrl}>{vulnerabilityDate}</Link>
                 </TableCell>
                 <TableCell align='center'>
-                  <Tooltip title={taskButtonTip} enterDelay={TOOLTIP_DELAY}>
+                  <Tooltip title={taskButtonTip}>
                     <IconButton
                       className={taskButtonClassName}
                       onClick={() => {
@@ -448,8 +437,8 @@ class _RisksTableWithoutStyles extends PureComponent {
       </Table>
     )
   }
-
 }
+
 export const RisksTable = withStyles(theme => ({
   taskMissing: {
     color: 'lightgrey',
@@ -471,7 +460,6 @@ export const RisksTable = withStyles(theme => ({
   },
 }))(_RisksTableWithoutStyles)
 
-
 export const VendorName = connect(
   state => ({
     vendorNameSuggestions: getVendorNameSuggestions(state),
@@ -485,7 +473,6 @@ export const VendorName = connect(
     },
   }),
 )(_VendorName)
-
 
 export const ProductName = connect(
   state => ({
@@ -501,7 +488,6 @@ export const ProductName = connect(
   }),
 )(_ProductName)
 
-
 export const ProductVersion = connect(
   state => ({
     productVersionSuggestions: getProductVersionSuggestions(state),
@@ -516,33 +502,27 @@ export const ProductVersion = connect(
   }),
 )(_ProductVersion)
 
-
 export const LOG_ERROR = 'LOG_ERROR'
-
 
 export const SUGGEST_VENDOR_NAMES = 'SUGGEST_VENDOR_NAMES'
 export const SUGGEST_PRODUCT_NAMES = 'SUGGEST_PRODUCT_NAMES'
 export const SUGGEST_PRODUCT_VERSIONS = 'SUGGEST_PRODUCT_VERSIONS'
 
-
 export const REFRESH_RISKS = 'REFRESH_RISKS'
 export const REFRESH_RISK_METRICS = 'REFRESH_RISK_METRICS'
 
-
-export const RESET_VENDOR_NAME_SUGGESTIONS = 'RESET_VENDOR_NAME_SUGGESTIONS'
-export const RESET_PRODUCT_NAME_SUGGESTIONS = 'RESET_PRODUCT_NAME_SUGGESTIONS'
-export const RESET_PRODUCT_VERSION_SUGGESTIONS = 'RESET_PRODUCT_VERSION_SUGGESTIONS'
+export const SET_VENDOR_NAME_SUGGESTIONS = 'SET_VENDOR_NAME_SUGGESTIONS'
+export const SET_PRODUCT_NAME_SUGGESTIONS = 'SET_PRODUCT_NAME_SUGGESTIONS'
+export const SET_PRODUCT_VERSION_SUGGESTIONS = 'SET_PRODUCT_VERSION_SUGGESTIONS'
 export const CLEAR_SUGGESTIONS = 'CLEAR_SUGGESTIONS'
 
+export const SET_TASK = 'SET_TASK'
 
-export const RESET_RISKS = 'RESET_RISKS'
-export const RESET_RISK_METRICS = 'RESET_RISK_METRICS'
+export const SET_RISKS = 'SET_RISKS'
 export const SET_SORTED_RISKS = 'SET_SORTED_RISKS'
-
 
 export const logError = payload => ({
   payload, type: LOG_ERROR})
-
 
 export const suggestVendorNames = payload => ({
   payload, type: SUGGEST_VENDOR_NAMES})
@@ -551,7 +531,6 @@ export const suggestProductNames = payload => ({
 export const suggestProductVersions = payload => ({
   payload, type: SUGGEST_PRODUCT_VERSIONS})
 
-
 export const refreshRisks = payload => {
   if (!payload){
     payload = {}
@@ -559,20 +538,17 @@ export const refreshRisks = payload => {
   return {payload, type: REFRESH_RISKS} 
 }
 
-
-export const resetVendorNameSuggestions = payload => ({
-  payload, type: RESET_VENDOR_NAME_SUGGESTIONS})
-export const resetProductNameSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_NAME_SUGGESTIONS})
-export const resetProductVersionSuggestions = payload => ({
-  payload, type: RESET_PRODUCT_VERSION_SUGGESTIONS})
+export const setVendorNameSuggestions = payload => ({
+  payload, type: SET_VENDOR_NAME_SUGGESTIONS})
+export const setProductNameSuggestions = payload => ({
+  payload, type: SET_PRODUCT_NAME_SUGGESTIONS})
+export const setProductVersionSuggestions = payload => ({
+  payload, type: SET_PRODUCT_VERSION_SUGGESTIONS})
 export const clearSuggestions = payload => ({
   payload, type: CLEAR_SUGGESTIONS})
 
-
-export const resetRisks = payload => ({
-  payload, type: RESET_RISKS})
-
+export const setRisks = payload => ({
+  payload, type: SET_RISKS})
 
 export const sortRisks = payload => ({
   payload, type: SET_SORTED_RISKS
@@ -580,7 +556,6 @@ export const sortRisks = payload => ({
 
 export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
-    console.log('suggest-_ven')
     const { typeId, vendorName } = action.payload
     if (!vendorName.trim()) {
       yield put(clearSuggestions())
@@ -591,16 +566,13 @@ export function* watchSuggestVendorNames() {
       `typeId=${typeId}`,
       `vendorName=${vendorName}`,
     ]
-    console.log(params)
     yield fetchSafely(url + '?' + params.join('&'), {}, {
       on200: function* (vendorNames) {
-        yield put(resetVendorNameSuggestions(vendorNames))
-        console.log(vendorNames)
+        yield put(setVendorNameSuggestions(vendorNames))
       },
     })
   })
 }
-
 
 export function* watchSuggestProductNames() {
   yield takeLatest(SUGGEST_PRODUCT_NAMES, function* (action) {
@@ -613,12 +585,11 @@ export function* watchSuggestProductNames() {
     ]
     yield fetchSafely(url + '?' + params.join('&'), {}, {
       on200: function* (productNames) {
-        yield put(resetProductNameSuggestions(productNames))
+        yield put(setProductNameSuggestions(productNames))
       },
     })
   })
 }
-
 
 export function* watchSuggestProductVersions() {
   yield takeLatest(SUGGEST_PRODUCT_VERSIONS, function* (action) {
@@ -632,12 +603,11 @@ export function* watchSuggestProductVersions() {
     ]
     yield fetchSafely(url + '?' + params.join('&'), {}, {
       on200: function* (productVersions) {
-        yield put(resetProductVersionSuggestions(productVersions))
+        yield put(setProductVersionSuggestions(productVersions))
       },
     })
   })
 }
-
 
 export function* watchRefreshRisks() {
   yield takeLatest(REFRESH_RISKS, function* (action) {
@@ -647,7 +617,7 @@ export function* watchRefreshRisks() {
     if (false) {
         yield fetchSafely(url, {}, {
         on200: function* (risks) {
-          yield put(resetRisks(risks))
+          yield put(setRisks(risks))
         },
       })
     }
@@ -655,7 +625,7 @@ export function* watchRefreshRisks() {
       const params = `?sort_key=${sortKey}&order=${order}`
       yield fetchSafely(url + params, {}, {
         on200: function* (risks) {
-          const payload = Map({sortKey, order, risks})
+          const payload = {sortKey, order, risks}
           yield put(sortRisks(payload))
         },
       })
@@ -663,16 +633,15 @@ export function* watchRefreshRisks() {
   })
 }
 
-
 export function* fetchSafely(url, options, callbacks) {
   try {
     const response = yield call(fetch, url, options)
     const status = response.status
     const { on200, on400 } = callbacks
     if (on200 && status === 200) {
-      yield on200(fromJS(yield response.json()))
+      yield on200(yield response.json())
     } else if (on400 && status === 400) {
-      yield on400(fromJS(yield response.json()))
+      yield on400(yield response.json())
     } else {
       yield put(logError({ status }))
     }
@@ -681,15 +650,14 @@ export function* fetchSafely(url, options, callbacks) {
   }
 }
 
-
-export const vendorNameSuggestions = (state = List(), action) => {
-  switch (action.type) {
-    case RESET_VENDOR_NAME_SUGGESTIONS: {
+export const vendorNameSuggestions = (state=[], action) => {
+  switch(action.type) {
+    case SET_VENDOR_NAME_SUGGESTIONS: {
       const vendorNames = action.payload
       return vendorNames
     }
     case CLEAR_SUGGESTIONS: {
-      return state.clear()
+      return []
     }
     default: {
       return state
@@ -697,15 +665,14 @@ export const vendorNameSuggestions = (state = List(), action) => {
   }
 }
 
-
-export const productNameSuggestions = (state = List(), action) => {
+export const productNameSuggestions = (state=[], action) => {
   switch (action.type) {
-    case RESET_PRODUCT_NAME_SUGGESTIONS: {
+    case SET_PRODUCT_NAME_SUGGESTIONS: {
       const productNames = action.payload
       return productNames
     }
     case CLEAR_SUGGESTIONS: {
-      return state.clear()
+      return []
     }
     default: {
       return state
@@ -713,15 +680,14 @@ export const productNameSuggestions = (state = List(), action) => {
   }
 }
 
-
-export const productVersionSuggestions = (state = List(), action) => {
-  switch (action.type) {
-    case RESET_PRODUCT_VERSION_SUGGESTIONS: {
+export const productVersionSuggestions = (state=[], action) => {
+  switch(action.type) {
+    case SET_PRODUCT_VERSION_SUGGESTIONS: {
       const productVersions = action.payload
       return productVersions
     }
     case CLEAR_SUGGESTIONS: {
-      return state.clear()
+      return []
     }
     default: {
       return state
@@ -729,31 +695,30 @@ export const productVersionSuggestions = (state = List(), action) => {
   }
 }
 
-
-export const risks = (state = List(), action) => {
+export const risks = (state=[], action) => {
   switch (action.type) {
     case SET_SORTED_RISKS:
-    case RESET_RISKS: {
-      const risks = action.payload.get('risks')
+    case SET_RISKS: {
+      const { risks } = action.payload
       return risks
     }
     case SET_TASK: {
       const task = action.payload
-      const taskAssetId = task.get('assetId')
-      const taskReferenceUri = task.get('referenceUri')
-      const taskId = task.get('id')
-      const taskName = task.get('name')
-      const taskStatus = task.get('status')
+      const taskAssetId = task.assetId
+      const taskReferenceUri = task.referenceUri
+      const taskId = task.id
+      const taskName = task.name
+      const taskStatus = task.status
       return state.map(risk => {
-        const riskAssetId = risk.get('assetId')
-        const riskReferenceUri = risk.get('vulnerabilityUri')
+        const riskAssetId = risk.assetId
+        const riskReferenceUri = risk.vulnerabilityUri
         if (
           riskAssetId !== taskAssetId ||
           riskReferenceUri !== taskReferenceUri
         ) {
           return risk
         }
-        return risk.merge({taskId, taskName, taskStatus})
+        return {...risk, ...{taskId, taskName, taskStatus}}
       })
     }
     default: {
@@ -762,18 +727,14 @@ export const risks = (state = List(), action) => {
   }
 }
 
-
 export const sortedRisks = (
-  state = Map({sortKey: 'threat-score', order: 'desc'}), 
-  action
+  state = {sortKey: 'threat-score', order: 'desc'},
+  action,
 ) => {
  switch (action.type) {
     case SET_SORTED_RISKS: {
-      const payload = action.payload
-      const risks = payload.get('risks')
-      const sortKey = payload.get('sortKey')
-      const order = payload.get('order')
-      return state.mergeDeep({sortKey, order})
+      const { sortKey, order } = action.payload
+      return { sortKey, order }
     }
     default: {
       return state

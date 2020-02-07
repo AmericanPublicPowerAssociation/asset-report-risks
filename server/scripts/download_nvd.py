@@ -10,11 +10,10 @@ import requests
 from argparse import ArgumentParser
 from collections import namedtuple
 from glob import glob
+from invisibleroads_macros_disk import TemporaryStorage, make_folder
 from os.path import basename, exists, getsize, join, splitext
 
 from asset_report_risks.macros.disk import (
-    TemporaryStorage,
-    make_folder,
     move_path,
     uncompress)
 from asset_report_risks.settings import DATASET_FOLDER
