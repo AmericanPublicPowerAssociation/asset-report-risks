@@ -543,11 +543,8 @@ function (_PureComponent6) {
           openTaskEditDialog = _this$props8.openTaskEditDialog,
           setEditingTaskValues = _this$props8.setEditingTaskValues,
           sortedRisks = _this$props8.sortedRisks;
-
-      var _sortedRisks$toJS = sortedRisks.toJS(),
-          sortKey = _sortedRisks$toJS.sortKey,
-          order = _sortedRisks$toJS.order;
-
+      var sortKey = sortedRisks.sortKey,
+          order = sortedRisks.order;
       return _react["default"].createElement(_Table["default"], null, _react["default"].createElement(_TableHead["default"], null, _react["default"].createElement(_TableRow["default"], null, _react["default"].createElement(_TableCell["default"], null, _react["default"].createElement(_TableSortLabel["default"], {
         active: this.getSortColumnIsActive('name', sortKey),
         onClick: function onClick() {

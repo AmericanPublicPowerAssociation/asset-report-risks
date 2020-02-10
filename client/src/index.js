@@ -314,7 +314,7 @@ class _RisksTableWithoutStyles extends PureComponent {
       setEditingTaskValues,
       sortedRisks,
     } = this.props
-    const {sortKey, order} = sortedRisks.toJS()
+    const {sortKey, order} = sortedRisks
     return (
       <Table>
         <TableHead>
