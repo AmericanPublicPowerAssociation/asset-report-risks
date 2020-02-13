@@ -74,7 +74,7 @@ def get_product_versions_json(request):
     request_method='GET')
 def get_risks_json(request):
     db = request.db
-    asset_ids = Asset.get_readable_ids(request)
+    asset_ids = Asset.get_viewable_ids(request)
     asset_name_by_id = dict(db.query(Asset.id, Asset.name).filter(
         Asset.id.in_(asset_ids)))
     risks = get_risks(asset_ids)
