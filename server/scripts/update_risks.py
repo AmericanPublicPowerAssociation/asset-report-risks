@@ -8,7 +8,7 @@ from asset_report_risks.routines import (
 from asset_report_risks.settings import (
     MINIMUM_SIMILARITY)
 from asset_tracker.models import Asset
-from asset_tracker.routines.network import get_downstream_meters
+# from asset_tracker.routines.network import get_downstream_meters
 from os.path import join
 from pymongo import ASCENDING
 from pymongo.errors import BulkWriteError
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     risks = []
     with bootstrap(a.configuration_path) as env, env['request'].tm:
         db = env['request'].db
-        for asset in db.query(Asset).all():
+        for asset in db.query(Asset):
             asset_type_id = asset.type_id
             component_type = '*' if asset_type_id[0] == 'X' else 'h'
             asset_attributes = asset.attributes or {}
@@ -58,7 +58,8 @@ if __name__ == '__main__':
                 })
             if not vulnerabilities:
                 continue
-            meters = get_downstream_meters(asset)
+            # meters = get_downstream_meters(asset)
+            meters = []
             risks.append({
                 'assetId': asset.id,
                 'meterIds': [_.id for _ in meters],
