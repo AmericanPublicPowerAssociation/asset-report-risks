@@ -29,8 +29,8 @@ if __name__ == '__main__':
     with bootstrap(a.configuration_path) as env, env['request'].tm:
         db = env['request'].db
         for asset in db.query(Asset):
-            asset_type_id = asset.type_id
-            component_type = '*' if asset_type_id[0] == 'X' else 'h'
+            asset_type_code = asset.type_code
+            component_type = '*' if asset_type_code == 'X' else 'h'
             asset_attributes = asset.attributes or {}
             vendor_name = asset_attributes.get('vendorName') or ''
             product_name = asset_attributes.get('productName') or ''
