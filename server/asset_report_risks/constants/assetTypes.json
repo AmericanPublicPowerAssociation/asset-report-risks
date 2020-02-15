@@ -1,0 +1,50 @@
+[{
+  "code": "m",
+  "assetAttributes": [
+    ["vendorName", "vendorName"],
+    ["productName", "productName"],
+    ["productVersion", "productVersion"]
+  ]
+}, {
+  "code": "t",
+  "assetAttributes": [
+    ["vendorName", "vendorName"],
+    ["productName", "productName"],
+    ["productVersion", "productVersion"]
+  ]
+}, {
+  "code": "x",
+  "assetAttributes": [
+    ["vendorName", "vendorName"],
+    ["productName", "productName"],
+    ["productVersion", "productVersion"]
+  ]
+}, {
+  "code": "q",
+  "assetAttributes": [
+    ["vendorName", "vendorName"],
+    ["productName", "productName"],
+    ["productVersion", "productVersion"]
+  ]
+}, {
+  "code": "o",
+  "assetAttributes": [
+    ["vendorName", "vendorName"],
+    ["productName", "productName"],
+    ["productVersion", "productVersion"]
+  ]
+}, {
+  "code": "g",
+  "assetAttributes": [
+    ["vendorName", "vendorName"],
+    ["productName", "productName"],
+    ["productVersion", "productVersion"]
+  ]
+}, {
+  "code": "X",
+  "assetAttributes": [
+    ["vendorName", "vendorName"],
+    ["productName", "productName"],
+    ["productVersion", "productVersion"]
+  ]
+}]
