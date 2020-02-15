@@ -14,4 +14,3 @@ def includeme(config):
     config.add_route(
         'product_versions.json',
         '/risks/productVersions.json')
-    config.scan()

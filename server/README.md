@@ -1,10 +1,9 @@
 # Asset Report Risks Server
 
-    pushd ~/Downloads
-    curl -o /tmp/mongodb-org-server.rpm https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/RPMS/mongodb-org-server-4.0.10-1.el7.x86_64.rpm
+    curl -o /tmp/mongodb-org-server.rpm \
+        https://repo.mongodb.org/yum/redhat/8/mongodb-org/4.2/x86_64/RPMS/mongodb-org-server-4.2.3-1.el8.x86_64.rpm
     sudo dnf -y install /tmp/mongodb-org-server.rpm
     sudo systemctl start mongod
-    popd
 
     virtualenv ~/.virtualenvs/asset-tracker -p $(which python3)
     source ~/.virtualenvs/asset-tracker/bin/activate
