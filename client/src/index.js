@@ -1,3 +1,4 @@
+// TODO: Use hooks instead of classes
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { Link as RouterLink } from 'react-router-dom'
@@ -58,17 +59,17 @@ class _EnhancedInputWithoutStyles extends PureComponent {
     } = this.props
     clearSuggestions()
     trackChange(attribute, value)
-    saveChange(attribute, value)
+    saveChange && saveChange(attribute, value)
   }
 
   render() {
     const {
       classes,
       className,
+      disabled,
       label,
       value,
       suggestions,
-      disableTextInput,
     } = this.props
     return (
       <Downshift selectedItem={value} onStateChange={this.handleStateChange}>
@@ -84,7 +85,7 @@ class _EnhancedInputWithoutStyles extends PureComponent {
               <TextField
                 fullWidth
                 label={label}
-                disabled={disableTextInput}
+                disabled={disabled}
                 InputProps={getInputProps()}
               />
               {isOpen && suggestions.length > 0 &&
@@ -123,11 +124,11 @@ class _VendorName extends PureComponent {
   render() {
     let {
       className,
-      typeId,
+      disabled,
+      typeCode,
       vendorName,
       trackChange,
       saveChange,
-      disableTextInput,
       // Get redux variables
       vendorNameSuggestions,
       suggestVendorNames,
@@ -136,17 +137,17 @@ class _VendorName extends PureComponent {
     return (
       <EnhancedInput
         className={className}
+        disabled={disabled}
         label='Vendor Name'
         attribute='vendorName'
         value={vendorName}
         suggestions={vendorNameSuggestions}
         onSuggest={value => suggestVendorNames({
-          typeId, vendorName: value
+          typeCode, vendorName: value
         })}
         clearSuggestions={clearSuggestions}
         saveChange={saveChange}
         trackChange={trackChange}
-        disableTextInput={disableTextInput}
       />
     )
   }
@@ -157,7 +158,8 @@ class _ProductName extends PureComponent {
   render() {
     const {
       className,
-      typeId,
+      disabled,
+      typeCode,
       vendorName,
       productName,
       trackChange,
@@ -166,22 +168,21 @@ class _ProductName extends PureComponent {
       productNameSuggestions,
       suggestProductNames,
       clearSuggestions,
-      disableTextInput
     } = this.props
     return (
       <EnhancedInput
         className={className}
+        disabled={disabled}
         label='Product Name'
         attribute='productName'
         value={productName}
         suggestions={productNameSuggestions}
         onSuggest={value => suggestProductNames({
-          typeId, vendorName, productName: value
+          typeCode, vendorName, productName: value
         })}
         clearSuggestions={clearSuggestions}
         saveChange={saveChange}
         trackChange={trackChange}
-        disableTextInput={disableTextInput}
       />
     )
   }
@@ -192,7 +193,8 @@ class _ProductVersion extends PureComponent {
   render() {
     const {
       className,
-      typeId,
+      disabled,
+      typeCode,
       vendorName,
       productName,
       productVersion,
@@ -202,22 +204,21 @@ class _ProductVersion extends PureComponent {
       productVersionSuggestions,
       suggestProductVersions,
       clearSuggestions,
-      disableTextInput,
     } = this.props
     return (
       <EnhancedInput
         className={className}
+        disabled={disabled}
         label='Product Version'
         attribute='productVersion'
         value={productVersion}
         suggestions={productVersionSuggestions}
         onSuggest={value => suggestProductVersions({
-          typeId, vendorName, productName, productVersion: value
+          typeCode, vendorName, productName, productVersion: value
         })}
         clearSuggestions={clearSuggestions}
         saveChange={saveChange}
         trackChange={trackChange}
-        disableTextInput={disableTextInput}
       />
     )
   }
@@ -545,14 +546,14 @@ export const sortRisks = payload => ({
 
 export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
-    const { typeId, vendorName } = action.payload
+    const { typeCode, vendorName } = action.payload
     if (!vendorName.trim()) {
       yield put(clearSuggestions())
       return
     }
     const url = '/risks/vendorNames.json'
     const params = [
-      `typeId=${typeId}`,
+      `typeCode=${typeCode}`,
       `vendorName=${vendorName}`,
     ]
     yield fetchSafely(url + '?' + params.join('&'), {}, {
@@ -565,10 +566,10 @@ export function* watchSuggestVendorNames() {
 
 export function* watchSuggestProductNames() {
   yield takeLatest(SUGGEST_PRODUCT_NAMES, function* (action) {
-    const { typeId, vendorName, productName } = action.payload
+    const { typeCode, vendorName, productName } = action.payload
     const url = '/risks/productNames.json'
     const params = [
-      `typeId=${typeId}`,
+      `typeCode=${typeCode}`,
       `vendorName=${vendorName}`,
       `productName=${productName}`,
     ]
@@ -582,10 +583,10 @@ export function* watchSuggestProductNames() {
 
 export function* watchSuggestProductVersions() {
   yield takeLatest(SUGGEST_PRODUCT_VERSIONS, function* (action) {
-    const { typeId, vendorName, productName, productVersion } = action.payload
+    const { typeCode, vendorName, productName, productVersion } = action.payload
     const url = '/risks/productVersions.json'
     const params = [
-      `typeId=${typeId}`,
+      `typeCode=${typeCode}`,
       `vendorName=${vendorName}`,
       `productName=${productName}`,
       `productVersion=${productVersion}`,

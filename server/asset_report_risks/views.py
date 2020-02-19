@@ -27,11 +27,11 @@ CVE = load_cve()
     request_method='GET')
 def get_vendor_names_json(request):
     params = request.params
-    asset_type_id = params.get('typeId', 'X')
+    asset_type_code = params.get('typeCode', 'X')
     vendor_name = params.get('vendorName', '').strip()
     if not vendor_name:
         return []
-    component_type = '*' if asset_type_id[0] == 'X' else 'h'
+    component_type = '*' if asset_type_code[0] == 'X' else 'h'
     return get_similar_vendor_names(
         CVE, component_type, vendor_name, MINIMUM_SIMILARITY,
         MAXIMUM_COUNT)
@@ -43,10 +43,10 @@ def get_vendor_names_json(request):
     request_method='GET')
 def get_product_names_json(request):
     params = request.params
-    asset_type_id = params.get('typeId', 'X')
+    asset_type_code = params.get('typeCode', 'X')
     vendor_name = params.get('vendorName', '').strip()
     product_name = params.get('productName', '').strip()
-    component_type = '*' if asset_type_id[0] == 'X' else 'h'
+    component_type = '*' if asset_type_code[0] == 'X' else 'h'
     return get_similar_product_names(
         CVE, component_type, vendor_name, product_name,
         MINIMUM_SIMILARITY, MAXIMUM_COUNT)
@@ -58,11 +58,11 @@ def get_product_names_json(request):
     request_method='GET')
 def get_product_versions_json(request):
     params = request.params
-    asset_type_id = params.get('typeId', 'X')
+    asset_type_code = params.get('typeCode', 'X')
     vendor_name = params.get('vendorName', '').strip()
     product_name = params.get('productName', '').strip()
     product_version = params.get('productVersion', '').strip()
-    component_type = '*' if asset_type_id[0] == 'X' else 'h'
+    component_type = '*' if asset_type_code[0] == 'X' else 'h'
     return get_similar_product_versions(
         CVE, component_type, vendor_name, product_name,
         product_version, MINIMUM_SIMILARITY, MAXIMUM_COUNT)
@@ -188,7 +188,7 @@ def see_risks_metrics_json(request):
     downstream_meter_count = len(downstream_meter_ids)
     meter_count = db.query(Asset.id).filter(
         Asset.id.in_(asset_ids),
-        Asset.type_id.startswith('m'),
+        Asset.type_code.startswith('m'),
     ).count()
 
     return {

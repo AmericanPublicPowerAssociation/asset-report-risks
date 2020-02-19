@@ -180,7 +180,7 @@ function (_PureComponent) {
           trackChange = _this$props2.trackChange;
       clearSuggestions();
       trackChange(attribute, value);
-      saveChange(attribute, value);
+      saveChange && saveChange(attribute, value);
     });
 
     return _this;
@@ -192,10 +192,10 @@ function (_PureComponent) {
       var _this$props3 = this.props,
           classes = _this$props3.classes,
           className = _this$props3.className,
+          disabled = _this$props3.disabled,
           label = _this$props3.label,
           value = _this$props3.value,
-          suggestions = _this$props3.suggestions,
-          disableTextInput = _this$props3.disableTextInput;
+          suggestions = _this$props3.suggestions;
       return _react["default"].createElement(_downshift["default"], {
         selectedItem: value,
         onStateChange: this.handleStateChange
@@ -211,7 +211,7 @@ function (_PureComponent) {
         }, _react["default"].createElement(_TextField["default"], {
           fullWidth: true,
           label: label,
-          disabled: disableTextInput,
+          disabled: disabled,
           InputProps: getInputProps()
         }), isOpen && suggestions.length > 0 && _react["default"].createElement(_Paper["default"], _extends({
           className: classes.paper,
@@ -260,30 +260,30 @@ function (_PureComponent2) {
     value: function render() {
       var _this$props4 = this.props,
           className = _this$props4.className,
-          typeId = _this$props4.typeId,
+          disabled = _this$props4.disabled,
+          typeCode = _this$props4.typeCode,
           vendorName = _this$props4.vendorName,
           trackChange = _this$props4.trackChange,
           saveChange = _this$props4.saveChange,
-          disableTextInput = _this$props4.disableTextInput,
           vendorNameSuggestions = _this$props4.vendorNameSuggestions,
           suggestVendorNames = _this$props4.suggestVendorNames,
           clearSuggestions = _this$props4.clearSuggestions;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
+        disabled: disabled,
         label: "Vendor Name",
         attribute: "vendorName",
         value: vendorName,
         suggestions: vendorNameSuggestions,
         onSuggest: function onSuggest(value) {
           return suggestVendorNames({
-            typeId: typeId,
+            typeCode: typeCode,
             vendorName: value
           });
         },
         clearSuggestions: clearSuggestions,
         saveChange: saveChange,
-        trackChange: trackChange,
-        disableTextInput: disableTextInput
+        trackChange: trackChange
       });
     }
   }]);
@@ -307,32 +307,32 @@ function (_PureComponent3) {
     value: function render() {
       var _this$props5 = this.props,
           className = _this$props5.className,
-          typeId = _this$props5.typeId,
+          disabled = _this$props5.disabled,
+          typeCode = _this$props5.typeCode,
           vendorName = _this$props5.vendorName,
           productName = _this$props5.productName,
           trackChange = _this$props5.trackChange,
           saveChange = _this$props5.saveChange,
           productNameSuggestions = _this$props5.productNameSuggestions,
           suggestProductNames = _this$props5.suggestProductNames,
-          clearSuggestions = _this$props5.clearSuggestions,
-          disableTextInput = _this$props5.disableTextInput;
+          clearSuggestions = _this$props5.clearSuggestions;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
+        disabled: disabled,
         label: "Product Name",
         attribute: "productName",
         value: productName,
         suggestions: productNameSuggestions,
         onSuggest: function onSuggest(value) {
           return suggestProductNames({
-            typeId: typeId,
+            typeCode: typeCode,
             vendorName: vendorName,
             productName: value
           });
         },
         clearSuggestions: clearSuggestions,
         saveChange: saveChange,
-        trackChange: trackChange,
-        disableTextInput: disableTextInput
+        trackChange: trackChange
       });
     }
   }]);
@@ -356,7 +356,8 @@ function (_PureComponent4) {
     value: function render() {
       var _this$props6 = this.props,
           className = _this$props6.className,
-          typeId = _this$props6.typeId,
+          disabled = _this$props6.disabled,
+          typeCode = _this$props6.typeCode,
           vendorName = _this$props6.vendorName,
           productName = _this$props6.productName,
           productVersion = _this$props6.productVersion,
@@ -364,17 +365,17 @@ function (_PureComponent4) {
           saveChange = _this$props6.saveChange,
           productVersionSuggestions = _this$props6.productVersionSuggestions,
           suggestProductVersions = _this$props6.suggestProductVersions,
-          clearSuggestions = _this$props6.clearSuggestions,
-          disableTextInput = _this$props6.disableTextInput;
+          clearSuggestions = _this$props6.clearSuggestions;
       return _react["default"].createElement(EnhancedInput, {
         className: className,
+        disabled: disabled,
         label: "Product Version",
         attribute: "productVersion",
         value: productVersion,
         suggestions: productVersionSuggestions,
         onSuggest: function onSuggest(value) {
           return suggestProductVersions({
-            typeId: typeId,
+            typeCode: typeCode,
             vendorName: vendorName,
             productName: productName,
             productVersion: value
@@ -382,8 +383,7 @@ function (_PureComponent4) {
         },
         clearSuggestions: clearSuggestions,
         saveChange: saveChange,
-        trackChange: trackChange,
-        disableTextInput: disableTextInput
+        trackChange: trackChange
       });
     }
   }]);
@@ -845,13 +845,13 @@ function watchSuggestVendorNames() {
           return (0, _effects.takeLatest)(SUGGEST_VENDOR_NAMES,
           /*#__PURE__*/
           regeneratorRuntime.mark(function _callee(action) {
-            var _action$payload, typeId, vendorName, url, params;
+            var _action$payload, typeCode, vendorName, url, params;
 
             return regeneratorRuntime.wrap(function _callee$(_context2) {
               while (1) {
                 switch (_context2.prev = _context2.next) {
                   case 0:
-                    _action$payload = action.payload, typeId = _action$payload.typeId, vendorName = _action$payload.vendorName;
+                    _action$payload = action.payload, typeCode = _action$payload.typeCode, vendorName = _action$payload.vendorName;
 
                     if (vendorName.trim()) {
                       _context2.next = 5;
@@ -866,7 +866,7 @@ function watchSuggestVendorNames() {
 
                   case 5:
                     url = '/risks/vendorNames.json';
-                    params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName)];
+                    params = ["typeCode=".concat(typeCode), "vendorName=".concat(vendorName)];
                     _context2.next = 9;
                     return fetchSafely(url + '?' + params.join('&'), {}, {
                       on200:
@@ -913,15 +913,15 @@ function watchSuggestProductNames() {
           return (0, _effects.takeLatest)(SUGGEST_PRODUCT_NAMES,
           /*#__PURE__*/
           regeneratorRuntime.mark(function _callee2(action) {
-            var _action$payload2, typeId, vendorName, productName, url, params;
+            var _action$payload2, typeCode, vendorName, productName, url, params;
 
             return regeneratorRuntime.wrap(function _callee2$(_context5) {
               while (1) {
                 switch (_context5.prev = _context5.next) {
                   case 0:
-                    _action$payload2 = action.payload, typeId = _action$payload2.typeId, vendorName = _action$payload2.vendorName, productName = _action$payload2.productName;
+                    _action$payload2 = action.payload, typeCode = _action$payload2.typeCode, vendorName = _action$payload2.vendorName, productName = _action$payload2.productName;
                     url = '/risks/productNames.json';
-                    params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName)];
+                    params = ["typeCode=".concat(typeCode), "vendorName=".concat(vendorName), "productName=".concat(productName)];
                     _context5.next = 5;
                     return fetchSafely(url + '?' + params.join('&'), {}, {
                       on200:
@@ -968,15 +968,15 @@ function watchSuggestProductVersions() {
           return (0, _effects.takeLatest)(SUGGEST_PRODUCT_VERSIONS,
           /*#__PURE__*/
           regeneratorRuntime.mark(function _callee3(action) {
-            var _action$payload3, typeId, vendorName, productName, productVersion, url, params;
+            var _action$payload3, typeCode, vendorName, productName, productVersion, url, params;
 
             return regeneratorRuntime.wrap(function _callee3$(_context8) {
               while (1) {
                 switch (_context8.prev = _context8.next) {
                   case 0:
-                    _action$payload3 = action.payload, typeId = _action$payload3.typeId, vendorName = _action$payload3.vendorName, productName = _action$payload3.productName, productVersion = _action$payload3.productVersion;
+                    _action$payload3 = action.payload, typeCode = _action$payload3.typeCode, vendorName = _action$payload3.vendorName, productName = _action$payload3.productName, productVersion = _action$payload3.productVersion;
                     url = '/risks/productVersions.json';
-                    params = ["typeId=".concat(typeId), "vendorName=".concat(vendorName), "productName=".concat(productName), "productVersion=".concat(productVersion)];
+                    params = ["typeCode=".concat(typeCode), "vendorName=".concat(vendorName), "productName=".concat(productName), "productVersion=".concat(productVersion)];
                     _context8.next = 5;
                     return fetchSafely(url + '?' + params.join('&'), {}, {
                       on200:
