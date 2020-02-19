@@ -70,6 +70,7 @@ class _EnhancedInputWithoutStyles extends PureComponent {
       label,
       value,
       suggestions,
+      TextFieldProps,
     } = this.props
     return (
       <Downshift selectedItem={value} onStateChange={this.handleStateChange}>
@@ -81,29 +82,29 @@ class _EnhancedInputWithoutStyles extends PureComponent {
           getItemProps,
           clearSelection,
         }) => (
-            <div className={className}>
-              <TextField
-                fullWidth
-                label={label}
-                disabled={disabled}
-                InputProps={getInputProps()}
-              />
-              {isOpen && suggestions.length > 0 &&
-                <Paper className={classes.paper} square {...getMenuProps()}>
-                  {suggestions.map((suggestion, index) => {
-                    const isHighlighted = highlightedIndex === index
-                    return (
-                      <MenuItem
-                        key={index}
-                        selected={isHighlighted}
-                        {...getItemProps({ item: suggestion })}
-                      >{suggestion}</MenuItem>
-                    )
-                  })}
-                </Paper>
-              }
-            </div>
-          )}
+          <div className={className}>
+            <TextField
+              label={label}
+              disabled={disabled}
+              {...TextFieldProps}
+              InputProps={getInputProps()}
+            />
+            {isOpen && suggestions.length > 0 &&
+              <Paper className={classes.paper} square {...getMenuProps()}>
+                {suggestions.map((suggestion, index) => {
+                  const isHighlighted = highlightedIndex === index
+                  return (
+                    <MenuItem
+                      key={index}
+                      selected={isHighlighted}
+                      {...getItemProps({ item: suggestion })}
+                    >{suggestion}</MenuItem>
+                  )
+                })}
+              </Paper>
+            }
+          </div>
+        )}
       </Downshift>
     )
   }
@@ -127,6 +128,7 @@ class _VendorName extends PureComponent {
       disabled,
       typeCode,
       vendorName,
+      TextFieldProps,
       trackChange,
       saveChange,
       // Get redux variables
@@ -142,6 +144,7 @@ class _VendorName extends PureComponent {
         attribute='vendorName'
         value={vendorName}
         suggestions={vendorNameSuggestions}
+        TextFieldProps={TextFieldProps}
         onSuggest={value => suggestVendorNames({
           typeCode, vendorName: value
         })}
@@ -162,6 +165,7 @@ class _ProductName extends PureComponent {
       typeCode,
       vendorName,
       productName,
+      TextFieldProps,
       trackChange,
       saveChange,
       // Get redux variables
@@ -177,6 +181,7 @@ class _ProductName extends PureComponent {
         attribute='productName'
         value={productName}
         suggestions={productNameSuggestions}
+        TextFieldProps={TextFieldProps}
         onSuggest={value => suggestProductNames({
           typeCode, vendorName, productName: value
         })}
@@ -198,6 +203,7 @@ class _ProductVersion extends PureComponent {
       vendorName,
       productName,
       productVersion,
+      TextFieldProps,
       trackChange,
       saveChange,
       // Get redux variables
@@ -213,6 +219,7 @@ class _ProductVersion extends PureComponent {
         attribute='productVersion'
         value={productVersion}
         suggestions={productVersionSuggestions}
+        TextFieldProps={TextFieldProps}
         onSuggest={value => suggestProductVersions({
           typeCode, vendorName, productName, productVersion: value
         })}

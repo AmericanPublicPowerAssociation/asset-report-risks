@@ -195,7 +195,8 @@ function (_PureComponent) {
           disabled = _this$props3.disabled,
           label = _this$props3.label,
           value = _this$props3.value,
-          suggestions = _this$props3.suggestions;
+          suggestions = _this$props3.suggestions,
+          TextFieldProps = _this$props3.TextFieldProps;
       return _react["default"].createElement(_downshift["default"], {
         selectedItem: value,
         onStateChange: this.handleStateChange
@@ -208,12 +209,12 @@ function (_PureComponent) {
             clearSelection = _ref.clearSelection;
         return _react["default"].createElement("div", {
           className: className
-        }, _react["default"].createElement(_TextField["default"], {
-          fullWidth: true,
+        }, _react["default"].createElement(_TextField["default"], _extends({
           label: label,
-          disabled: disabled,
+          disabled: disabled
+        }, TextFieldProps, {
           InputProps: getInputProps()
-        }), isOpen && suggestions.length > 0 && _react["default"].createElement(_Paper["default"], _extends({
+        })), isOpen && suggestions.length > 0 && _react["default"].createElement(_Paper["default"], _extends({
           className: classes.paper,
           square: true
         }, getMenuProps()), suggestions.map(function (suggestion, index) {
@@ -263,6 +264,7 @@ function (_PureComponent2) {
           disabled = _this$props4.disabled,
           typeCode = _this$props4.typeCode,
           vendorName = _this$props4.vendorName,
+          TextFieldProps = _this$props4.TextFieldProps,
           trackChange = _this$props4.trackChange,
           saveChange = _this$props4.saveChange,
           vendorNameSuggestions = _this$props4.vendorNameSuggestions,
@@ -275,6 +277,7 @@ function (_PureComponent2) {
         attribute: "vendorName",
         value: vendorName,
         suggestions: vendorNameSuggestions,
+        TextFieldProps: TextFieldProps,
         onSuggest: function onSuggest(value) {
           return suggestVendorNames({
             typeCode: typeCode,
@@ -311,6 +314,7 @@ function (_PureComponent3) {
           typeCode = _this$props5.typeCode,
           vendorName = _this$props5.vendorName,
           productName = _this$props5.productName,
+          TextFieldProps = _this$props5.TextFieldProps,
           trackChange = _this$props5.trackChange,
           saveChange = _this$props5.saveChange,
           productNameSuggestions = _this$props5.productNameSuggestions,
@@ -323,6 +327,7 @@ function (_PureComponent3) {
         attribute: "productName",
         value: productName,
         suggestions: productNameSuggestions,
+        TextFieldProps: TextFieldProps,
         onSuggest: function onSuggest(value) {
           return suggestProductNames({
             typeCode: typeCode,
@@ -361,6 +366,7 @@ function (_PureComponent4) {
           vendorName = _this$props6.vendorName,
           productName = _this$props6.productName,
           productVersion = _this$props6.productVersion,
+          TextFieldProps = _this$props6.TextFieldProps,
           trackChange = _this$props6.trackChange,
           saveChange = _this$props6.saveChange,
           productVersionSuggestions = _this$props6.productVersionSuggestions,
@@ -373,6 +379,7 @@ function (_PureComponent4) {
         attribute: "productVersion",
         value: productVersion,
         suggestions: productVersionSuggestions,
+        TextFieldProps: TextFieldProps,
         onSuggest: function onSuggest(value) {
           return suggestProductVersions({
             typeCode: typeCode,

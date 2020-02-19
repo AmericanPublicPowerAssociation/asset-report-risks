@@ -18,6 +18,7 @@ from .settings import (
     MINIMUM_SIMILARITY)
 
 
+# TODO: Load using dogpile.cache to refresh from disk periodically
 CVE = load_cve()
 
 
