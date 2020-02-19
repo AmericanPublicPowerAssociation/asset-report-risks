@@ -340,7 +340,6 @@ class _RisksTableWithoutStyles extends PureComponent {
                 active={this.getSortColumnIsActive('meter-count', sortKey)}
                 onClick={ () => this.onSortClick('meter-count', sortKey, order)}
                 direction={this.getSortLabelDirection('meter-count', sortKey, order)}>
-
                 Meter Count
               </TableSortLabel>
             </TableCell>
