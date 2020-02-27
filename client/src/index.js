@@ -314,6 +314,10 @@ class _RisksTableWithoutStyles extends PureComponent {
     this.props.refreshRisks({sortKey:column, order})
   }
 
+  onRowClick(assetId) {
+    this.props.onRowClickCallBack && this.props.onRowClickCallBack(assetId)
+  }
+
   render() {
     const {
       classes,
@@ -402,9 +406,8 @@ class _RisksTableWithoutStyles extends PureComponent {
               '50': classes.taskPending,
               '100': classes.taskDone,
             }[taskStatus] : classes.taskMissing
-
             return (
-              <TableRow key={index}>
+              <TableRow key={index} onClick={() => this.onRowClick(assetId)}>
                 <TableCell component='th' scope='row'>{assetName}</TableCell>
                 <TableCell align='right'>{meterCount}</TableCell>
                 <TableCell align='right'>{threatScore}</TableCell>

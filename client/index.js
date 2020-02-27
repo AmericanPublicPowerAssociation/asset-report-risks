@@ -540,6 +540,11 @@ function (_PureComponent6) {
       });
     }
   }, {
+    key: "onRowClick",
+    value: function onRowClick(assetId) {
+      this.props.onRowClickCallBack && this.props.onRowClickCallBack(assetId);
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
@@ -615,7 +620,10 @@ function (_PureComponent6) {
           '100': classes.taskDone
         }[taskStatus] : classes.taskMissing;
         return _react["default"].createElement(_TableRow["default"], {
-          key: index
+          key: index,
+          onClick: function onClick() {
+            return _this2.onRowClick(assetId);
+          }
         }, _react["default"].createElement(_TableCell["default"], {
           component: "th",
           scope: "row"
