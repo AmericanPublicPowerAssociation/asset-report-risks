@@ -1,8 +1,7 @@
 # Asset Report Risks Server
 
-    curl -o /tmp/mongodb-org-server.rpm \
+    sudo dnf -y install \
         https://repo.mongodb.org/yum/redhat/8/mongodb-org/4.2/x86_64/RPMS/mongodb-org-server-4.2.3-1.el8.x86_64.rpm
-    sudo dnf -y install /tmp/mongodb-org-server.rpm
     sudo systemctl start mongod
 
     virtualenv ~/.virtualenvs/asset-tracker -p $(which python3)
