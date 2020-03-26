@@ -21,7 +21,7 @@ export default function ProductVersion(props) {
     TextFieldProps,
     trackChange,
     saveChange,
-  } = this.props
+  } = props
 
   const dispatch = useDispatch()
   const productVersionSuggestions = useSelector(getProductVersionSuggestions)
@@ -37,7 +37,7 @@ export default function ProductVersion(props) {
       onSuggest={value => suggestProductVersions({
         typeCode, vendorName, productName, productVersion: value
       })}
-      clearSuggestions={() => dispatch(clearSuggestions)}
+      clearSuggestions={() => dispatch(clearSuggestions())}
       saveChange={saveChange}
       trackChange={trackChange}
     />

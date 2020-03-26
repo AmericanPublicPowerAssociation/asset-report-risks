@@ -58,7 +58,7 @@ export default function RisksTable(props) {
   })
 
   const data = useSelector(getRisks)
-  console.log('data', data) 
+
   function getHeaderLabel(header) {
     const result = header.replace( /([A-Z])/g, " $1" );
     var headerLabel = result.charAt(0).toUpperCase() + result.slice(1);

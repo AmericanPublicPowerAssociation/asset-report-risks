@@ -20,7 +20,7 @@ export default function ProductName(props) {
     TextFieldProps,
     trackChange,
     saveChange,
-  } = this.props
+  } = props
 
   const dispatch = useDispatch()
   const productNameSuggestions = useSelector(getProductNameSuggestions)
@@ -37,7 +37,7 @@ export default function ProductName(props) {
       onSuggest={value => dispatch(suggestProductNames({
         typeCode, vendorName, productName: value
       }))}
-      clearSuggestions={() => dispatch(clearSuggestions)}
+      clearSuggestions={() => dispatch(clearSuggestions())}
       saveChange={saveChange}
       trackChange={trackChange}
     />

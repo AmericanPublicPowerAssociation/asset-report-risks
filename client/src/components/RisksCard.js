@@ -58,7 +58,7 @@ class _RisksCardWithoutStyles extends PureComponent {
   }
 }
 
-export const RisksCard = withStyles(theme => ({
+export default const RisksCard = withStyles(theme => ({
   section: {
     marginTop: theme.spacing(3),
   },

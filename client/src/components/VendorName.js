@@ -19,7 +19,7 @@ export default function VendorName(props) {
     TextFieldProps,
     trackChange,
     saveChange,
-  } = this.props
+  } = props
   const dispatch = useDispatch()
   const vendorNameSuggestions = useSelector(getVendorNameSuggestions)
   return (
