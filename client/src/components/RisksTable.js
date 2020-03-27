@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react'
 import { useSelector } from 'react-redux'
+import Link from '@material-ui/core/Link'
 import MaterialTable from 'material-table'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowDownward from '@material-ui/icons/ArrowDownward'
@@ -42,20 +43,36 @@ const tableIcons = {
 }
 
 const RISK_TABLE_COLUMN_NAMES = [
-  'name',
-  'meter Count',
-  'aggregated threat',
-  'vulnerability',
-  'published',
-  'status',
+  {
+    title: 'Name',
+    field: 'assetName',
+  },
+  {
+    title: 'Meter Count',
+    field: 'meterCount',
+  },
+  {
+    title: 'Aggregated Threat',
+    field: 'threatScore',
+  },
+  {
+    title: 'Vulnerability',
+    field: 'threatDescription',
+  },
+  {
+    title: 'Published',
+    field: 'vulnerabilityUrl',
+    render: rowData => (
+      <Link target='_blank' rel='noopener noreferrer'
+        href={'//' + rowData.vulnerabilityUrl}>{rowData.vulnerabilityDate}</Link>
+    )
+  },
 ]
 
 export default function RisksTable(props) {
   const tableName = 'Risks'
 
-  const columns = RISK_TABLE_COLUMN_NAMES.map( field => {
-    return {field, title: getHeaderLabel(field)}
-  })
+  const columns = RISK_TABLE_COLUMN_NAMES
 
   const data = useSelector(getRisks)
 
