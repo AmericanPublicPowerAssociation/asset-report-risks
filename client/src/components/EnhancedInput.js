@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 const useStyles = makeStyles(theme => ({
   paper: {
     position: 'absolute',
-    zIndex: 1,
+    zIndex: 2,
     marginTop: theme.spacing(1),
     left: theme.spacing(1),
     right: theme.spacing(1),
