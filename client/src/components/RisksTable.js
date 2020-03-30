@@ -58,6 +58,7 @@ const RISK_TABLE_COLUMN_NAMES = [
   {
     title: 'Vulnerability',
     field: 'threatDescription',
+    width: '60%',
   },
   {
     title: 'Published',
@@ -71,10 +72,9 @@ const RISK_TABLE_COLUMN_NAMES = [
 
 export default function RisksTable(props) {
   const tableName = 'Risks'
-
   const columns = RISK_TABLE_COLUMN_NAMES
-
   const data = useSelector(getRisks)
+  const { onRowClick } = props
 
   function getHeaderLabel(header) {
     const result = header.replace( /([A-Z])/g, " $1" );
@@ -82,13 +82,22 @@ export default function RisksTable(props) {
     return headerLabel
   }
 
+  function handleRowClick(e, rowData) {
+    const { assetId } = rowData
+    onRowClick && onRowClick(assetId)
+  }
+
   return (
     <MaterialTable
+      components={{
+        Container: props => <div style={{background: 'white'}}>{props.children}</div>
+      }}
       icons={tableIcons}
       title={tableName}
       options={ {search: true} }
       columns={columns}
       data={data}
+      onRowClick={handleRowClick}
     />
   )
 }
