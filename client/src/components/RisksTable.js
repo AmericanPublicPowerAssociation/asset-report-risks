@@ -74,7 +74,10 @@ export default function RisksTable(props) {
   const tableName = 'Risks'
   const columns = RISK_TABLE_COLUMN_NAMES
   const data = useSelector(getRisks)
-  const { onRowClick } = props
+  const {
+    onRowClick,
+    pageSizeOptions,
+  } = props
 
   function getHeaderLabel(header) {
     const result = header.replace( /([A-Z])/g, " $1" );
@@ -94,7 +97,10 @@ export default function RisksTable(props) {
       }}
       icons={tableIcons}
       title={tableName}
-      options={ {search: true} }
+      options={{
+        search: true,
+        pageSizeOptions,
+      }}
       columns={columns}
       data={data}
       onRowClick={handleRowClick}
