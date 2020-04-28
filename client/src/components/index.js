@@ -1,4 +1,4 @@
-export EnhancedInput  from './EnhancedInput'
+export EnhancedInput from './EnhancedInput'
 export ProductName from './ProductName'
 export ProductVersion from './ProductVersion'
 export RisksTable from './RisksTable'
