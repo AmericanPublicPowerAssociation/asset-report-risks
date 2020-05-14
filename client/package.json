@@ -3,6 +3,7 @@
   "version": "0.0.5",
   "description": "Identify potential risks by vendor and product",
   "license": "MIT",
+  "main": "dist/index.js",
   "scripts": {
     "build": "webpack"
   },
