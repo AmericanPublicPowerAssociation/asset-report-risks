@@ -16,8 +16,10 @@ yarn add --dev \
     @babel/core \
     @babel/preset-env \
     @babel/preset-react \
-    eslint eslint-plugin-react \
-    parcel-bundler
+    babel-loader \
+    eslint \
+    eslint-plugin-react \
+    webpack
 yarn add --peer \
     @material-ui/core \
     @material-ui/icons \
