@@ -1,14 +1,5 @@
-const path = require('path')
-
 module.exports = {
-  entry: './src/index.js',
-  /*
-  optimization: {
-    minimize: false,
-  },
-  */
   output: {
-    path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
     libraryTarget: 'commonjs2',
   },
@@ -31,13 +22,13 @@ module.exports = {
     ],
   },
   externals: [
+    'downshift',
+    'material-table',
     'react',
     'react-redux',
     'react-router-dom',
-    /redux-saga\/.*/,
     'reselect',
-    'downshift',
-    'material-table',
     /@material-ui\/.*/,
+    /redux-saga\/.*/,
   ],
 }
