@@ -4,6 +4,7 @@
 
     git clone git@github.com:AmericanPublicPowerAssociation/asset-report-risks
     cd asset-report-risks/client
+    yarn build
     yarn install
 
 ## Configuration from Scratch
