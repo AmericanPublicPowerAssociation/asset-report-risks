@@ -1,0 +1,73 @@
+{
+  "p": {
+    "name": "Pole"
+  },
+  "l": {
+    "name": "Line"
+  },
+  "m": {
+    "name": "Meter",
+    "assetAttributes": [
+      ["vendorName", "vendorName"],
+      ["productName", "productName"],
+      ["productVersion", "productVersion"]
+    ]
+  },
+  "t": {
+    "name": "Transformer",
+    "assetAttributes": [
+      ["vendorName", "vendorName"],
+      ["productName", "productName"],
+      ["productVersion", "productVersion"]
+    ]
+  },
+  "x": {
+    "name": "Switch",
+    "assetAttributes": [
+      ["vendorName", "vendorName"],
+      ["productName", "productName"],
+      ["productVersion", "productVersion"]
+    ]
+  },
+  "q": {
+    "name": "Power Quality",
+    "assetAttributes": [
+      ["vendorName", "vendorName"],
+      ["productName", "productName"],
+      ["productVersion", "productVersion"]
+    ]
+  },
+  "c": {
+    "name": "Control"
+  },
+  "o": {
+    "name": "Storage",
+    "assetAttributes": [
+      ["vendorName", "vendorName"],
+      ["productName", "productName"],
+      ["productVersion", "productVersion"]
+    ]
+  },
+  "g": {
+    "name": "Generator",
+    "assetAttributes": [
+      ["vendorName", "vendorName"],
+      ["productName", "productName"],
+      ["productVersion", "productVersion"]
+    ]
+  },
+  "s": {
+    "name": "Substation"
+  },
+  "S": {
+    "name": "Station"
+  },
+  "X": {
+    "name": "Asset",
+    "assetAttributes": [
+      ["vendorName", "vendorName"],
+      ["productName", "productName"],
+      ["productVersion", "productVersion"]
+    ]
+  }
+}
