@@ -21,7 +21,6 @@ import {
   getRisks,
 } from '../selectors'
 
-
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -73,17 +72,13 @@ const RISK_TABLE_COLUMN_NAMES = [
 export default function RisksTable(props) {
   const tableName = 'Risks'
   const columns = RISK_TABLE_COLUMN_NAMES
-  const data = useSelector(getRisks)
+  const risks = useSelector(getRisks)
   const {
     onRowClick,
     pageSizeOptions,
   } = props
 
-  function getHeaderLabel(header) {
-    const result = header.replace( /([A-Z])/g, " $1" );
-    var headerLabel = result.charAt(0).toUpperCase() + result.slice(1);
-    return headerLabel
-  }
+  const editableRisks = risks.map(risk => ({ ...risk }))
 
   function handleRowClick(e, rowData) {
     const { assetId } = rowData
@@ -102,7 +97,7 @@ export default function RisksTable(props) {
         pageSizeOptions,
       }}
       columns={columns}
-      data={data}
+      data={editableRisks}
       onRowClick={handleRowClick}
     />
   )
