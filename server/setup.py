@@ -9,7 +9,7 @@ APP_CLASSIFIERS = [
 ]
 APP_REQUIREMENTS = [
     'fuzzywuzzy',
-    'invisibleroads-macros-disk>=1.0.1',
+    'invisibleroads-macros-disk >= 1.0.1',
     'packaging',
     'pymongo',
     'pyramid',
