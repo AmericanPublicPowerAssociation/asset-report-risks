@@ -7,12 +7,13 @@ from asset_report_risks.routines import (
     yield_nvd_pack)
 from asset_report_risks.settings import (
     MINIMUM_SIMILARITY)
-from asset_tracker.models import Asset
-# from asset_tracker.routines.network import get_downstream_meters
+from asset_tracker.models import Asset, AssetTypeCode
+# from asset_tracker.routines.network import AssetNetwork
 from os.path import join
 from pymongo import ASCENDING
 from pymongo.errors import BulkWriteError
 from pyramid.paster import bootstrap, setup_logging
+from sqlalchemy.orm import joinedload
 
 
 if __name__ == '__main__':
@@ -28,7 +29,9 @@ if __name__ == '__main__':
     risks = []
     with bootstrap(a.configuration_path) as env, env['request'].tm:
         db = env['request'].db
-        for asset in db.query(Asset):
+        assets = db.query(Asset).options(joinedload('connections')).all()
+        # asset_network = AssetNetwork([_.get_json_dictionary() for _ in assets])
+        for asset in assets:
             asset_type_code = asset.type_code
             component_type = '*' if asset_type_code == 'X' else 'h'
             asset_attributes = asset.attributes or {}
@@ -58,11 +61,13 @@ if __name__ == '__main__':
                 })
             if not vulnerabilities:
                 continue
-            # meters = get_downstream_meters(asset)
-            meters = []
+            asset_id = asset.id
+            # meter_ids = asset_network.get_downstream_asset_ids(
+                # asset_id, AssetTypeCode.METER.value)
+            meter_ids = []
             risks.append({
-                'assetId': asset.id,
-                'meterIds': [_.id for _ in meters],
+                'assetId': asset_id,
+                'meterIds': meter_ids,
                 'vulnerabilities': vulnerabilities,
             })
 
