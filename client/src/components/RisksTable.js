@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Link from '@material-ui/core/Link'
 import MaterialTable from 'material-table'
 import AddBox from '@material-ui/icons/AddBox'
@@ -18,7 +18,11 @@ import SaveAlt from '@material-ui/icons/SaveAlt'
 import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
 import {
+  setSelectedRiskIndex,
+} from '../actions'
+import {
   getRisks,
+  getSelectedRiskIndex,
 } from '../selectors'
 
 const tableIcons = {
@@ -54,11 +58,13 @@ const RISK_TABLE_COLUMN_NAMES = [
     title: 'Aggregated Threat',
     field: 'threatScore',
   },
+  /*
   {
     title: 'Vulnerability',
     field: 'threatDescription',
     width: '60%',
   },
+  */
   {
     title: 'Published',
     field: 'vulnerabilityUrl',
@@ -70,6 +76,8 @@ const RISK_TABLE_COLUMN_NAMES = [
 ]
 
 export default function RisksTable(props) {
+  const dispatch = useDispatch()
+  const selectedRiskIndex = useSelector(getSelectedRiskIndex)
   const tableName = 'Risks'
   const columns = RISK_TABLE_COLUMN_NAMES
   const risks = useSelector(getRisks)
@@ -83,6 +91,7 @@ export default function RisksTable(props) {
   function handleRowClick(e, rowData) {
     const { assetId } = rowData
     onRowClick && onRowClick(assetId)
+    dispatch(setSelectedRiskIndex(rowData.tableData.id))
   }
 
   return (
@@ -93,7 +102,12 @@ export default function RisksTable(props) {
       icons={tableIcons}
       title={tableName}
       options={{
+        rowStyle: rowData => ({
+          backgroundColor: selectedRiskIndex === rowData.tableData.id ?
+            '#FFFF00' : '#FFF'
+        }),
         search: true,
+        // toolbar: false,
         pageSizeOptions,
       }}
       columns={columns}

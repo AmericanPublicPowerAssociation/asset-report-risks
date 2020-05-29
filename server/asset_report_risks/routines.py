@@ -68,12 +68,14 @@ def get_risks(asset_ids):
         'assetId': 1,
         'meterIds': 1,
         'vulnerabilities': 1,
+        'lineGeoJson': 1,
     })
     risks = []
     for r in results:
         asset_id = r['assetId']
         meter_ids = r['meterIds']
         meter_count = len(meter_ids)
+        line_geojson = r['lineGeoJson']
         for d in r['vulnerabilities']:
             impact = d['impact']
             texts = d['texts']
@@ -85,6 +87,7 @@ def get_risks(asset_ids):
                 'vulnerabilityUri': 'nvd:%s' % d['id'],
                 'vulnerabilityUrl': d['url'],
                 'vulnerabilityDate': d['date'].strftime('%Y%m%d'),
+                'lineGeoJson': line_geojson,
             })
     return risks
 

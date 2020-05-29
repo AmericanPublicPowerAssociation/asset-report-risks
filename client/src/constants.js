@@ -16,3 +16,5 @@ export const SET_TASK = 'SET_TASK'
 
 export const SET_RISKS = 'SET_RISKS'
 export const SET_SORTED_RISKS = 'SET_SORTED_RISKS'
+
+export const SET_SELECTED_RISK_INDEX = 'SET_SELECTED_RISK_INDEX'

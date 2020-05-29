@@ -106,11 +106,13 @@ def get_risks_json(request):
             'assetId': asset_id,
             'assetName': asset_name,
             'meterCount': meter_count,
+            'meterIds': meter_ids,
             'threatScore': r['threatScore'],
             'threatDescription': r['threatDescription'],
             'vulnerabilityUri': reference_uri,
             'vulnerabilityUrl': r['vulnerabilityUrl'],
             'vulnerabilityDate': r['vulnerabilityDate'],
+            'lineGeoJson': r['lineGeoJson'],
         }
         '''
         if task:
@@ -130,6 +132,7 @@ def get_risks_json(request):
     request_sort_key = request.GET.get('sort_key', '')
     reverse = request.GET.get('order', 'asc') == 'desc'
     sort_key = valid_sort_keys.get(request_sort_key, 'threatScore')
+    # TODO: Consider having separate view that returns sorted ids
     return sorted(ds, key=lambda _: _[sort_key], reverse=reverse)
 
 

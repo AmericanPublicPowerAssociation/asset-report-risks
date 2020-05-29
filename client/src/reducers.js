@@ -3,13 +3,14 @@ import {
   SET_PRODUCT_NAME_SUGGESTIONS,
   SET_PRODUCT_VERSION_SUGGESTIONS,
   SET_RISKS,
+  SET_SELECTED_RISK_INDEX,
   SET_SORTED_RISKS,
   SET_TASK,
   SET_VENDOR_NAME_SUGGESTIONS,
 } from './constants'
 
-export const vendorNameSuggestions = (state=[], action) => {
-  switch(action.type) {
+export const vendorNameSuggestions = (state = [], action) => {
+  switch (action.type) {
     case SET_VENDOR_NAME_SUGGESTIONS: {
       const vendorNames = action.payload
       return vendorNames
@@ -86,10 +87,10 @@ export const risks = (state=[], action) => {
 }
 
 export const sortedRisks = (
-  state = {sortKey: 'threat-score', order: 'desc'},
+  state = { sortKey: 'threat-score', order: 'desc' },
   action,
 ) => {
- switch (action.type) {
+  switch (action.type) {
     case SET_SORTED_RISKS: {
       const { sortKey, order } = action.payload
       return { sortKey, order }
@@ -97,5 +98,19 @@ export const sortedRisks = (
     default: {
       return state
     }
- }
+  }
+}
+
+export const selectedRiskIndex = (
+  state = null,
+  action,
+) => {
+  switch (action.type) {
+    case SET_SELECTED_RISK_INDEX: {
+      return action.payload
+    }
+    default: {
+      return state
+    }
+  }
 }

@@ -6,12 +6,12 @@ import {
   SET_PRODUCT_NAME_SUGGESTIONS,
   SET_PRODUCT_VERSION_SUGGESTIONS,
   SET_RISKS,
+  SET_SELECTED_RISK_INDEX,
   SET_SORTED_RISKS,
   SUGGEST_VENDOR_NAMES,
   SUGGEST_PRODUCT_NAMES,
   SUGGEST_PRODUCT_VERSIONS,
 } from './constants'
-
 
 export const logError = payload => ({
   payload, type: LOG_ERROR})
@@ -45,3 +45,10 @@ export const setRisks = payload => ({
 export const sortRisks = payload => ({
   payload, type: SET_SORTED_RISKS
 })
+
+export function setSelectedRiskIndex(riskIndex) {
+  return {
+    type: SET_SELECTED_RISK_INDEX,
+    payload: riskIndex,
+  }
+}
