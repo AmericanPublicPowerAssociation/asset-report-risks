@@ -102,7 +102,10 @@ export const sortedRisks = (
 }
 
 export const selectedRiskIndex = (
-  state = null,
+  state = {
+    assetId: null,
+    vulnerabilityUri: null,
+  },
   action,
 ) => {
   switch (action.type) {

@@ -46,9 +46,12 @@ export const sortRisks = payload => ({
   payload, type: SET_SORTED_RISKS
 })
 
-export function setSelectedRiskIndex(riskIndex) {
+export function setSelectedRiskIndex(assetId, vulnerabilityUri) {
   return {
     type: SET_SELECTED_RISK_INDEX,
-    payload: riskIndex,
+    payload: {
+      assetId,
+      vulnerabilityUri,
+    },
   }
 }

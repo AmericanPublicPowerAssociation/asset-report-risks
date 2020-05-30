@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { useEffect, forwardRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Link from '@material-ui/core/Link'
 import MaterialTable from 'material-table'
@@ -47,7 +47,7 @@ const tableIcons = {
 
 const RISK_TABLE_COLUMN_NAMES = [
   {
-    title: 'Name',
+    title: 'Asset Name',
     field: 'assetName',
   },
   {
@@ -83,15 +83,31 @@ export default function RisksTable(props) {
   const risks = useSelector(getRisks)
   const {
     onRowClick,
-    pageSizeOptions,
+    focusingAssetId,
+    tableOptions,
   } = props
+
+  useEffect(() => {
+    return () => {
+      dispatch(setSelectedRiskIndex(null, null))
+    }
+  }, [dispatch])
 
   const editableRisks = risks.map(risk => ({ ...risk }))
 
   function handleRowClick(e, rowData) {
     const { assetId } = rowData
     onRowClick && onRowClick(assetId)
-    dispatch(setSelectedRiskIndex(rowData.tableData.id))
+    dispatch(setSelectedRiskIndex(rowData.assetId, rowData.vulnerabilityUri))
+  }
+
+  function rowStyle(rowData) {
+    let backgroundColor = '#FFF'
+    const { assetId, vulnerabilityUri } = selectedRiskIndex
+    if (assetId === rowData.assetId && vulnerabilityUri === rowData.vulnerabilityUri) {
+      backgroundColor = '#EEE'
+    }
+    return { backgroundColor }
   }
 
   return (
@@ -101,15 +117,7 @@ export default function RisksTable(props) {
       }}
       icons={tableIcons}
       title={tableName}
-      options={{
-        rowStyle: rowData => ({
-          backgroundColor: selectedRiskIndex === rowData.tableData.id ?
-            '#FFFF00' : '#FFF'
-        }),
-        search: true,
-        // toolbar: false,
-        pageSizeOptions,
-      }}
+      options={{ ...tableOptions, rowStyle }}
       columns={columns}
       data={editableRisks}
       onRowClick={handleRowClick}
