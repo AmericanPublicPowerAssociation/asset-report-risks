@@ -21,7 +21,6 @@ from .settings import (
 
 @FUNCTION_CACHE.cache_on_arguments()
 def get_cve():
-    print('XXX Loading CVE...')
     return load_cve()
 
 
@@ -35,7 +34,6 @@ def get_vendor_names_json(request):
     vendor_name = params.get('vendorName', '').strip()
     if not vendor_name:
         return []
-    print('XXX Getting vendor names...')
     cve = get_cve()
     component_type = '*' if asset_type_code[0] == 'X' else 'h'
     return get_similar_vendor_names(
