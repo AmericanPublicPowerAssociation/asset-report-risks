@@ -4,6 +4,7 @@ from asset_tracker.models import (
     # TaskStatus,
 )
 from collections import defaultdict
+from invisibleroads_posts.variables import FUNCTION_CACHE
 from pyramid.view import view_config
 
 from .macros.calculator import get_percent
@@ -18,15 +19,10 @@ from .settings import (
     MINIMUM_SIMILARITY)
 
 
-# TODO: Load using dogpile.cache to refresh from disk periodically
-CVE = load_cve()
-
-
+@FUNCTION_CACHE.cache_on_arguments()
 def get_cve():
-    global CVE
-    if not CVE:
-        CVE = load_cve()
-    return CVE
+    print('XXX Loading CVE...')
+    return load_cve()
 
 
 @view_config(
@@ -39,6 +35,7 @@ def get_vendor_names_json(request):
     vendor_name = params.get('vendorName', '').strip()
     if not vendor_name:
         return []
+    print('XXX Getting vendor names...')
     cve = get_cve()
     component_type = '*' if asset_type_code[0] == 'X' else 'h'
     return get_similar_vendor_names(
