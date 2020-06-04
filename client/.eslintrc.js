@@ -26,10 +26,11 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'quotes': ['error', 'single'],
     'quote-props': ['error', 'consistent'],
+    'react/display-name': 'off',
+    'react/prop-types': 'off',
     'semi': ['error', 'never'],
-    'space-before-function-paren': ['error', {
-      'anonymous': 'always',
-      'named': 'never',
-    }],
+    'space-before-function-paren': [
+      'error', { 'anonymous': 'always', 'named': 'never' },
+    ],
   },
 }

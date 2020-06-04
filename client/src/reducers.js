@@ -24,7 +24,7 @@ export const vendorNameSuggestions = (state = [], action) => {
   }
 }
 
-export const productNameSuggestions = (state=[], action) => {
+export const productNameSuggestions = (state = [], action) => {
   switch (action.type) {
     case SET_PRODUCT_NAME_SUGGESTIONS: {
       const productNames = action.payload
@@ -39,8 +39,8 @@ export const productNameSuggestions = (state=[], action) => {
   }
 }
 
-export const productVersionSuggestions = (state=[], action) => {
-  switch(action.type) {
+export const productVersionSuggestions = (state = [], action) => {
+  switch (action.type) {
     case SET_PRODUCT_VERSION_SUGGESTIONS: {
       const productVersions = action.payload
       return productVersions
@@ -54,7 +54,7 @@ export const productVersionSuggestions = (state=[], action) => {
   }
 }
 
-export const risks = (state=[], action) => {
+export const risks = (state = [], action) => {
   switch (action.type) {
     case SET_SORTED_RISKS:
     case SET_RISKS: {
@@ -77,7 +77,7 @@ export const risks = (state=[], action) => {
         ) {
           return risk
         }
-        return {...risk, ...{taskId, taskName, taskStatus}}
+        return { ...risk, ...{ taskId, taskName, taskStatus } }
       })
     }
     default: {
