@@ -60,7 +60,7 @@ export default function RisksTable({
   }, [dispatch])
   */
 
-  // const editableRisks = risks.map(risk => ({ ...risk }))
+  const editableRisks = risks.map(risk => ({ ...risk }))
 
   function handleRowClick(e, rowData) {
     const { assetId } = rowData
@@ -84,7 +84,7 @@ export default function RisksTable({
         }),
       }}
       columns={columns}
-      data={risks}
+      data={editableRisks}
       onRowClick={handleRowClick}
     />
   )
