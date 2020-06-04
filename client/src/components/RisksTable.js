@@ -45,7 +45,6 @@ const RISK_TABLE_COLUMN_NAMES = [
 
 export default function RisksTable({
   onRowClick,
-  tableOptions,
 }) {
   const dispatch = useDispatch()
   const selectedRiskIndex = useSelector(getSelectedRiskIndex)
@@ -83,7 +82,6 @@ export default function RisksTable({
           backgroundColor: rowData.tableData.id === selectedRiskIndex
             ? '#FFFF00' : '#FFF',
         }),
-        ...tableOptions,
       }}
       columns={columns}
       data={risks}

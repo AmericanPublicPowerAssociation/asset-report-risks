@@ -15,7 +15,6 @@ import {
   SUGGEST_PRODUCT_VERSIONS,
 } from './constants'
 
-
 export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
     const { typeCode, vendorName } = action.payload
