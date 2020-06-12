@@ -72,25 +72,12 @@ export function* watchSuggestProductVersions() {
 
 export function* watchRefreshRisks() {
   yield takeLatest(REFRESH_RISKS, function* (action) {
-    const payload = action.payload
-    const { sortKey, order } = payload
     const url = '/risks.json'
-    if (false) {
-        yield fetchSafely(url, {}, {
-        on200: function* (risks) {
-          yield put(setRisks(risks))
-        },
-      })
-    }
-    else {
-      const params = `?sort_key=${sortKey}&order=${order}`
-      yield fetchSafely(url + params, {}, {
-        on200: function* (risks) {
-          const payload = {sortKey, order, risks}
-          yield put(sortRisks(payload))
-        },
-      })
-    }
+    yield fetchSafely(url, {}, {
+      on200: function* (risks) {
+        yield put(setRisks(risks))
+      },
+    })
   })
 }
 

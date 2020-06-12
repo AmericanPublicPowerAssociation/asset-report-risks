@@ -8,6 +8,7 @@ from pymongo import MongoClient
 from .settings import CVE_PATH, MONGO_HOST, MONGO_PORT
 
 
+CVE = {}
 WILDCARD_VERSIONS = '*', '-', '.', '', None
 
 
@@ -53,6 +54,13 @@ def save_cve(cve):
     return pickle.dump(cve, open(CVE_PATH, 'wb'), protocol=-1)
 
 
+def get_cve():
+    global CVE
+    if not CVE:
+        CVE = load_cve()
+    return CVE
+
+
 def load_cve():
     if not exists(CVE_PATH):
         return {}
@@ -89,7 +97,7 @@ def get_risks(asset_ids):
                 'vulnerabilityDate': d['date'].strftime('%Y%m%d'),
                 'lineGeoJson': line_geojson,
             })
-    return risks
+    return sorted(risks, key=lambda _: _['threatScore'], reverse=True)
 
 
 def get_matching_nvd_ids(

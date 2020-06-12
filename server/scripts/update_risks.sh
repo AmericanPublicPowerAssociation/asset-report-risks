@@ -6,6 +6,6 @@ ROOT_FOLDER=$(dirname "$THIS_FOLDER")
 DATABASE_PATH=$(dirname $(dirname "$ROOT_FOLDER"))/asset-tracker-server/development.ini
 
 while [ 1 ]; do
-    sleep 3
+    sleep 5
     python $THIS_FOLDER/update_risks.py "$DATABASE_PATH"
 done

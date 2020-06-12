@@ -3,25 +3,17 @@ from asset_tracker.models import (
     # Task,
     # TaskStatus,
 )
-from collections import defaultdict
-from invisibleroads_posts.variables import FUNCTION_CACHE
 from pyramid.view import view_config
 
-from .macros.calculator import get_percent
 from .routines import (
+    get_cve,
     get_risks,
     get_similar_product_names,
     get_similar_product_versions,
-    get_similar_vendor_names,
-    load_cve)
+    get_similar_vendor_names)
 from .settings import (
     MAXIMUM_COUNT,
     MINIMUM_SIMILARITY)
-
-
-@FUNCTION_CACHE.cache_on_arguments()
-def get_cve():
-    return load_cve()
 
 
 @view_config(
@@ -128,86 +120,4 @@ def get_risks_json(request):
             })
         '''
         ds.append(d)
-    valid_sort_keys = {
-        'name': 'assetName',
-        'meter-count': 'meterCount',
-        'threat-score': 'threatScore',
-        'published': 'vulnerabilityDate',
-    }
-    request_sort_key = request.GET.get('sort_key', '')
-    reverse = request.GET.get('order', 'asc') == 'desc'
-    sort_key = valid_sort_keys.get(request_sort_key, 'threatScore')
-    # TODO: Consider having separate view that returns sorted ids
-    return sorted(ds, key=lambda _: _[sort_key], reverse=reverse)
-
-
-@view_config(
-    route_name='risks_metrics.json',
-    renderer='json',
-    request_method='GET')
-# !!! cache these metrics using dogpile cache
-def see_risks_metrics_json(request):
-    asset_ids = Asset.get_readable_ids(request)
-    asset_count = len(asset_ids)
-    if not asset_count:
-        return {}
-
-    risks = get_risks(asset_ids)
-    # reference_uris = [_['vulnerabilityUri'] for _ in risks]
-
-    db = request.db
-    '''
-    tasks = db.query(Task).filter(
-        Task.status == TaskStatus.Done,
-        Task.reference_uri.in_(reference_uris),
-    ).all()
-    closed_uris = [_.reference_uri for _ in tasks]
-    '''
-    closed_uris = []
-
-    open_risks = []
-    for risk in risks:
-        uri = risk['vulnerabilityUri']
-        if uri in closed_uris:
-            continue
-        open_risks.append(risk)
-
-    impacted_asset_ids = set()
-    for risk in open_risks:
-        impacted_asset_ids.add(risk['assetId'])
-    impacted_asset_count = len(impacted_asset_ids)
-
-    risks_by_uri = defaultdict(list)
-    for risk in open_risks:
-        uri = risk['vulnerabilityUri']
-        risks_by_uri[uri].append(risk)
-    greatest_threat_score = 0
-    greatest_threat_description = None
-    for uri, uri_risks in risks_by_uri.items():
-        threat_score = sum(_['threatScore'] for _ in uri_risks)
-        if threat_score > greatest_threat_score:
-            greatest_threat_score = threat_score
-            greatest_threat_description = uri_risks[0]['threatDescription']
-
-    aggregated_threat_score = sum(_['threatScore'] for _ in risks)
-
-    downstream_meter_ids = set()
-    for risk in risks:
-        downstream_meter_ids.update(risk['meterIds'])
-    downstream_meter_count = len(downstream_meter_ids)
-    meter_count = db.query(Asset.id).filter(
-        Asset.id.in_(asset_ids),
-        Asset.type_code.startswith('m'),
-    ).count()
-
-    return {
-        'riskCount': len(open_risks),
-        'aggregatedThreatScore': aggregated_threat_score,
-        'impactedAssetCount': impacted_asset_count,
-        'impactedAssetPercent': get_percent(
-            impacted_asset_count, asset_count),
-        'greatestThreatDescription': greatest_threat_description,
-        'downstreamMeterCount': downstream_meter_count,
-        'downstreamMeterPercent': get_percent(
-            downstream_meter_count, meter_count),
-    }
+    return ds
