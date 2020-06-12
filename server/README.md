@@ -32,7 +32,7 @@
 
     # Update nvd monthly
     python scripts/download_nvd.py
-    python scripts/update_nvd.py
+    python scripts/update_nvd.py --from-scratch
     python scripts/prepare_cve.py
 
     # Update nvd weekly
