@@ -47,20 +47,8 @@ export default function RisksTable({
   onRowClick,
 }) {
   const dispatch = useDispatch()
-  const selectedRiskIndex = useSelector(getSelectedRiskIndex)
-  const tableName = 'Risks'
   const columns = RISK_TABLE_COLUMN_NAMES
   const risks = useSelector(getRisks)
-
-  /*
-  useEffect(() => {
-    return () => {
-      dispatch(setSelectedRiskIndex(null))
-    }
-  }, [dispatch])
-  */
-
-  const editableRisks = risks.map(risk => ({ ...risk }))
 
   function handleRowClick(e, rowData) {
     const { assetId } = rowData
@@ -70,13 +58,6 @@ export default function RisksTable({
 
   return (
     <MaterialTable
-      /*
-      components={{
-        Container: props => <div style={{background: 'white'}}>{props.children}</div>
-      }}
-      icons={tableIcons}
-       */
-      title={tableName}
       options={{
         rowStyle: rowData => ({
           backgroundColor: rowData.tableData.id === selectedRiskIndex
@@ -84,7 +65,7 @@ export default function RisksTable({
         }),
       }}
       columns={columns}
-      data={editableRisks}
+      data={risks}
       onRowClick={handleRowClick}
     />
   )

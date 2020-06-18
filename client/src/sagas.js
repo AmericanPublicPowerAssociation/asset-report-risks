@@ -1,11 +1,9 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { put, takeLatest } from 'redux-saga/effects'
 import {
   clearSuggestions,
-  logError,
   setProductNameSuggestions,
   setProductVersionSuggestions,
   setRisks,
-  sortRisks,
   setVendorNameSuggestions,
 } from './actions'
 import {
@@ -14,6 +12,9 @@ import {
   SUGGEST_PRODUCT_NAMES,
   SUGGEST_PRODUCT_VERSIONS,
 } from './constants'
+import {
+  fetchSafely,
+} from './macros'
 
 export function* watchSuggestVendorNames() {
   yield takeLatest(SUGGEST_VENDOR_NAMES, function* (action) {
@@ -79,21 +80,4 @@ export function* watchRefreshRisks() {
       },
     })
   })
-}
-
-export function* fetchSafely(url, options, callbacks) {
-  try {
-    const response = yield call(fetch, url, options)
-    const status = response.status
-    const { on200, on400 } = callbacks
-    if (on200 && status === 200) {
-      yield on200(yield response.json())
-    } else if (on400 && status === 400) {
-      yield on400(yield response.json())
-    } else {
-      yield put(logError({ status }))
-    }
-  } catch (error) {
-    yield put(logError({ text: error }))
-  }
 }

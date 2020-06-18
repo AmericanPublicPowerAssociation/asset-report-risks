@@ -53,10 +53,24 @@ const TABLE_ICONS = {
     <ViewColumn {...props} ref={ref} />),
 }
 
-export default function WrappedMaterialTable(props) {
+export default function WrappedMaterialTable({
+  isSelectedRow,
+  ...props
+}) {
+
+  function getRowStyle(rowData) {
+    return {
+      backgroundColor: isSelectedRow(rowData)
+        ? 'yellow' : 'white',
+    }
+  }
+
   return (
     <MaterialTable
       icons={TABLE_ICONS}
+      options={{
+        rowStyle: getRowStyle,
+      }}
       {...props}
     />
   )
