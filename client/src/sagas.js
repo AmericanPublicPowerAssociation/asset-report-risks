@@ -76,6 +76,7 @@ export function* watchRefreshRisks() {
     const url = '/risks.json'
     yield fetchSafely(url, {}, {
       on200: function* (risks) {
+        console.log(risks)
         yield put(setRisks(risks))
       },
     })

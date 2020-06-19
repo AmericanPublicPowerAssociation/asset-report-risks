@@ -1,10 +1,11 @@
+// TODO: Review from scratch
+
 import {
   CLEAR_SUGGESTIONS,
   SET_PRODUCT_NAME_SUGGESTIONS,
   SET_PRODUCT_VERSION_SUGGESTIONS,
   SET_RISKS,
   SET_SELECTED_RISK_INDEX,
-  SET_SORTED_RISKS,
   SET_TASK,
   SET_VENDOR_NAME_SUGGESTIONS,
 } from './constants'
@@ -12,8 +13,7 @@ import {
 export const vendorNameSuggestions = (state = [], action) => {
   switch (action.type) {
     case SET_VENDOR_NAME_SUGGESTIONS: {
-      const vendorNames = action.payload
-      return vendorNames
+      return action.payload
     }
     case CLEAR_SUGGESTIONS: {
       return []
@@ -27,8 +27,7 @@ export const vendorNameSuggestions = (state = [], action) => {
 export const productNameSuggestions = (state = [], action) => {
   switch (action.type) {
     case SET_PRODUCT_NAME_SUGGESTIONS: {
-      const productNames = action.payload
-      return productNames
+      return action.payload
     }
     case CLEAR_SUGGESTIONS: {
       return []
@@ -42,8 +41,7 @@ export const productNameSuggestions = (state = [], action) => {
 export const productVersionSuggestions = (state = [], action) => {
   switch (action.type) {
     case SET_PRODUCT_VERSION_SUGGESTIONS: {
-      const productVersions = action.payload
-      return productVersions
+      return action.payload
     }
     case CLEAR_SUGGESTIONS: {
       return []
@@ -56,10 +54,8 @@ export const productVersionSuggestions = (state = [], action) => {
 
 export const risks = (state = [], action) => {
   switch (action.type) {
-    case SET_SORTED_RISKS:
     case SET_RISKS: {
-      const { risks } = action.payload
-      return risks
+      return action.payload
     }
     case SET_TASK: {
       const task = action.payload
@@ -86,28 +82,7 @@ export const risks = (state = [], action) => {
   }
 }
 
-export const sortedRisks = (
-  state = { sortKey: 'threat-score', order: 'desc' },
-  action,
-) => {
-  switch (action.type) {
-    case SET_SORTED_RISKS: {
-      const { sortKey, order } = action.payload
-      return { sortKey, order }
-    }
-    default: {
-      return state
-    }
-  }
-}
-
 export const selectedRiskIndex = (
-  /*
-  state = {
-    assetId: null,
-    vulnerabilityUri: null,
-  },
-  */
   state = null,
   action,
 ) => {

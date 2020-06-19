@@ -1,3 +1,5 @@
+// TODO: Review from scratch
+
 import {
   CLEAR_SUGGESTIONS,
   LOG_ERROR,
@@ -6,7 +8,6 @@ import {
   SET_PRODUCT_VERSION_SUGGESTIONS,
   SET_RISKS,
   SET_SELECTED_RISK_INDEX,
-  SET_SORTED_RISKS,
   SET_VENDOR_NAME_SUGGESTIONS,
   SUGGEST_PRODUCT_NAMES,
   SUGGEST_PRODUCT_VERSIONS,
@@ -33,24 +34,18 @@ export const suggestProductVersions = payload => ({
   payload,
 })
 
-export const refreshRisks = payload => {
-  if (!payload) {
-    payload = {}
-  }
-  return {
-    type: REFRESH_RISKS,
-    payload,
-  }
+export const refreshRisks = () => {
+  return { type: REFRESH_RISKS }
 }
 
 export const setVendorNameSuggestions = payload => ({
-  payload,
   type: SET_VENDOR_NAME_SUGGESTIONS,
+  payload,
 })
 
 export const setProductNameSuggestions = payload => ({
-  payload,
   type: SET_PRODUCT_NAME_SUGGESTIONS,
+  payload,
 })
 
 export const setProductVersionSuggestions = payload => ({
@@ -68,12 +63,7 @@ export const setRisks = payload => ({
   payload,
 })
 
-export const sortRisks = payload => ({
-  type: SET_SORTED_RISKS,
-  payload,
-})
-
-export const setSelectedRiskIndex = selectedRiskIndex => ({
+export const setSelectedRiskIndex = payload => ({
   type: SET_SELECTED_RISK_INDEX,
-  payload: selectedRiskIndex,
+  payload,
 })
