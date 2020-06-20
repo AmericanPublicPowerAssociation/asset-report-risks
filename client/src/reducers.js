@@ -82,10 +82,7 @@ export const risks = (state = [], action) => {
   }
 }
 
-export const selectedRiskIndex = (
-  state = null,
-  action,
-) => {
+export const selectedRiskIndex = (state = null, action) => {
   switch (action.type) {
     case SET_SELECTED_RISK_INDEX: {
       return action.payload
