@@ -1,6 +1,7 @@
 export * from './actions'
 export * from './components'
 export * from './constants'
+export * from './macros'
 export * from './reducers'
 export * from './sagas'
 export * from './selectors'
