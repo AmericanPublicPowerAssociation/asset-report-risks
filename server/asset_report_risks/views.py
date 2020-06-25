@@ -20,7 +20,7 @@ from .settings import (
     route_name='vendor_names.json',
     renderer='json',
     request_method='GET')
-def get_vendor_names_json(request):
+def see_vendor_names_json(request):
     params = request.params
     asset_type_code = params.get('typeCode', 'X')
     vendor_name = params.get('vendorName', '').strip()
@@ -37,7 +37,7 @@ def get_vendor_names_json(request):
     route_name='product_names.json',
     renderer='json',
     request_method='GET')
-def get_product_names_json(request):
+def see_product_names_json(request):
     params = request.params
     asset_type_code = params.get('typeCode', 'X')
     vendor_name = params.get('vendorName', '').strip()
@@ -53,7 +53,7 @@ def get_product_names_json(request):
     route_name='product_versions.json',
     renderer='json',
     request_method='GET')
-def get_product_versions_json(request):
+def see_product_versions_json(request):
     params = request.params
     asset_type_code = params.get('typeCode', 'X')
     vendor_name = params.get('vendorName', '').strip()
@@ -70,7 +70,7 @@ def get_product_versions_json(request):
     route_name='risks.json',
     renderer='json',
     request_method='GET')
-def get_risks_json(request):
+def see_risks_json(request):
     db = request.db
     asset_ids = Asset.get_viewable_ids(request)
     asset_name_by_id = dict(db.query(Asset.id, Asset.name).filter(
