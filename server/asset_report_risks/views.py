@@ -1,3 +1,5 @@
+import math
+
 from asset_tracker.models import (
     Asset,
     # Task,
@@ -104,7 +106,7 @@ def see_risks_json(request):
             'assetName': asset_name,
             'meterCount': meter_count,
             'meterIds': meter_ids,
-            'threatScore': r['threatScore'],
+            'threatScore': math.ceil(r['threatScore']),
             'threatDescription': r['threatDescription'],
             'vulnerabilityUri': reference_uri,
             'vulnerabilityUrl': r['vulnerabilityUrl'],
