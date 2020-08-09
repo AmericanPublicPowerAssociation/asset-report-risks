@@ -1,2 +1,2 @@
 include *.md
-recursive-include asset_report_risks *.json
+recursive-include asset_report_risks *.json *.py
