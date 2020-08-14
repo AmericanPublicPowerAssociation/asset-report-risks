@@ -73,10 +73,9 @@ def see_product_versions_json(request):
     renderer='json',
     request_method='GET')
 def see_risks_json(request):
-    db = request.db
-    asset_ids = Asset.get_viewable_ids(request)
-    asset_name_by_id = dict(db.query(Asset.id, Asset.name).filter(
-        Asset.id.in_(asset_ids)))
+    assets = Asset.get_viewable_query(request, with_connections=False).all()
+    asset_ids = [_.id for _ in assets]
+    asset_name_by_id = {_.id: _.name for _ in assets}
     risks = get_risks(asset_ids)
     '''
     reference_uris = [_['vulnerabilityUri'] for _ in risks]

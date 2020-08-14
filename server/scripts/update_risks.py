@@ -7,13 +7,15 @@ from asset_report_risks.routines import (
     yield_nvd_pack)
 from asset_report_risks.settings import (
     MINIMUM_SIMILARITY)
+from asset_tracker.models import Asset
 from asset_tracker.routines.asset import (
-    get_assets_geojson_dictionary, get_viewable_assets)
+    get_assets_geojson_dictionary)
 from asset_tracker.routines.network import AssetNetwork
 from os.path import join
 from pymongo import ASCENDING
 from pymongo.errors import BulkWriteError
 from pyramid.paster import bootstrap, setup_logging
+from sqlalchemy.orm import joinedload
 
 
 if __name__ == '__main__':
@@ -30,7 +32,8 @@ if __name__ == '__main__':
     with bootstrap(a.configuration_path) as env, env['request'].tm:
         request = env['request']
         db = env['request'].db
-        assets = get_viewable_assets(request)
+        assets = db.query(Asset).filter_by(is_deleted=False).options(
+            joinedload(Asset.connections)).all()
         asset_dictionaries = [_.get_json_dictionary() for _ in assets]
         assets_geojson = get_assets_geojson_dictionary(assets)
         asset_network = AssetNetwork(asset_dictionaries, assets_geojson)
