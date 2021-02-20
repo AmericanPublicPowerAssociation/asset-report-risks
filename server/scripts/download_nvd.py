@@ -19,7 +19,7 @@ from asset_report_risks.macros.disk import (
 from asset_report_risks.settings import DATASET_FOLDER
 
 
-URL_TEMPLATE = 'https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-{}'
+URL_TEMPLATE = 'https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-{}'
 BASE_YEAR = 2002
 NVDPack = namedtuple('NVDContent', ('url', 'path', 'content'))
 
