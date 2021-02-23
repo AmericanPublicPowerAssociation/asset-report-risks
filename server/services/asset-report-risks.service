@@ -4,7 +4,7 @@ Requires=mongod.service
 After=mongod.service
 
 [Service]
-ExecStart=/home/asset-tracker/.virtualenvs/asset-tracker/bin/python3 /home/asset-tracker/Projects/asset-report-risks/server/scripts/update_risks.py /home/asset-tracker/Experiments/asset-tracker-server/production.ini
+ExecStart=/home/asset-tracker/.virtualenvs/asset-tracker/bin/python3 /home/asset-tracker/Projects/asset-report-risks/server/scripts/update_risks.py /home/asset-tracker/Experiments/asset-tracker-server/test.ini
 WorkingDirectory=/home/asset-tracker/Experiments/asset-tracker-server
 User=asset-tracker
 Group=asset-tracker
